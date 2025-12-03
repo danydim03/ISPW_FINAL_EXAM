@@ -1,9 +1,9 @@
 package org.example;
 
-import it.uniroma2.dicii.ispw.gradely.beans_general.UserBean;
-import it.uniroma2.dicii.ispw.gradely.enums.UserErrorMessagesEnum;
-import it.uniroma2.dicii.ispw.gradely.loggers_general.GeneralLogger;
-import it.uniroma2.dicii.ispw.gradely.use_cases.enroll_to_degree_course.beans.UserData;
+import org.example.beans_general.UserBean;
+import org.example.enums.UserErrorMessagesEnum;
+import org.example.loggers_general.GeneralLogger;
+import org.example.use_cases.enroll_to_degree_course.beans.UserData;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 

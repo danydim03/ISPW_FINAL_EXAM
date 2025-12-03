@@ -1,0 +1,52 @@
+package org.example.model.role.Cliente;
+
+import org.example.model.role.AbstractRole;
+import org.example.model.user.User;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Cliente extends AbstractRole {
+    private String Id;
+    private List<String> voucherUtilizzati;
+    private List<Long> ordiniEffettuati;
+    private int punteggio;
+
+    protected Cliente(User user, String matricola) {
+        super(user);
+        this.Id = matricola;
+        this.voucherUtilizzati = new ArrayList<>();
+        this.ordiniEffettuati = new ArrayList<>();
+        this.punteggio = 0;
+
+    }
+
+
+    public List<String> getVoucherUtilizzati() {
+        return new ArrayList<>(voucherUtilizzati);
+    }
+
+    public void aggiungiVoucherUtilizzato(String voucherId) {
+        this.voucherUtilizzati.add(voucherId);
+    }
+
+    public List<Long> getOrdiniEffettuati() {
+        return new ArrayList<>(ordiniEffettuati);
+    }
+
+    public void aggiungiOrdine(Long ordineId) {
+        this.ordiniEffettuati.add(ordineId);
+    }
+
+    public int getPunteggio() {
+        return punteggio;
+    }
+
+    public void setPunteggio(int punteggio) {
+        this.punteggio = punteggio;
+    }
+
+    public void aggiornaPunteggio(int punti) {
+        this.punteggio += punti;
+    }
+}

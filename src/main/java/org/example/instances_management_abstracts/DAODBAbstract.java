@@ -1,8 +1,8 @@
 package org.example.instances_management_abstracts;
 
-import it.uniroma2.dicii.ispw.gradely.dao_manager.DBConnection;
-import it.uniroma2.dicii.ispw.gradely.enums.ExceptionMessagesEnum;
-import it.uniroma2.dicii.ispw.gradely.exceptions.*;
+import org.example.dao_manager.DBConnection;
+import org.example.enums.ExceptionMessagesEnum;
+import org.example.exceptions.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

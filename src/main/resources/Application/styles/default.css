@@ -1,0 +1,45 @@
+Button:hover {
+    -fx-cursor: hand;
+}
+
+.background {
+    -fx-background-color: white;
+}
+
+.text-field {
+    -fx-font-family: Cantarell;
+    -fx-font-size: 14px;
+
+    -fx-pref-height: 18px;
+    -fx-padding: 2px;
+}
+
+.simple-button {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.action-button {
+    -fx-background-color: #2d7c5f;
+    -fx-text-fill: white;
+    -fx-border-radius: 3px;
+}
+
+.action-button:hover {
+    -fx-background-color: white;
+    -fx-border-width: 1px;
+    -fx-border-color: #2d7c5f;
+    -fx-text-fill: black;
+}
+
+.second-action-button {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+    -fx-border-color: white;
+}
+
+.second-action-button:hover {
+    -fx-cursor: hand;
+}

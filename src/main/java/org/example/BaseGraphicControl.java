@@ -1,13 +1,13 @@
 package org.example;
 
-import it.uniroma2.dicii.ispw.gradely.beans_general.PendingEventBean;
-import it.uniroma2.dicii.ispw.gradely.enums.ExceptionMessagesEnum;
-import it.uniroma2.dicii.ispw.gradely.enums.UserErrorMessagesEnum;
-import it.uniroma2.dicii.ispw.gradely.exceptions.*;
-import it.uniroma2.dicii.ispw.gradely.facades.UserFacade;
-import it.uniroma2.dicii.ispw.gradely.use_cases.controllers_general.pending_event.graphic.PendingEventExamVerbalizationGraphicController;
-import it.uniroma2.dicii.ispw.gradely.use_cases.controllers_general.pending_event.graphic.PendingEventGradeAcceptanceGraphicController;
-import it.uniroma2.dicii.ispw.gradely.use_cases.controllers_general.pending_event.graphic.PendingEventSimpleGraphicController;
+import org.example.beans_general.PendingEventBean;
+import org.example.enums.ExceptionMessagesEnum;
+import org.example.enums.UserErrorMessagesEnum;
+import org.example.exceptions.*;
+import org.example.facades.UserFacade;
+import org.example.use_cases.controllers_general.pending_event.graphic.PendingEventExamVerbalizationGraphicController;
+import org.example.use_cases.controllers_general.pending_event.graphic.PendingEventGradeAcceptanceGraphicController;
+import org.example.use_cases.controllers_general.pending_event.graphic.PendingEventSimpleGraphicController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;

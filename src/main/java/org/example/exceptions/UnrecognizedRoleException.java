@@ -1,4 +1,4 @@
-package org.example.exeptions;
+package org.example.exceptions;
 
 public class UnrecognizedRoleException extends Exception {
 

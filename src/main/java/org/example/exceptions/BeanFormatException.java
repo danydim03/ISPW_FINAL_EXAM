@@ -1,4 +1,4 @@
-package org.example.exeptions;
+package org.example.exceptions;
 
 public class BeanFormatException extends Exception{
     public BeanFormatException(String message) {

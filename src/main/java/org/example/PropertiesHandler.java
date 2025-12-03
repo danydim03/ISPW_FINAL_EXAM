@@ -1,8 +1,8 @@
 package org.example;
 
-import it.uniroma2.dicii.ispw.gradely.enums.ExceptionMessagesEnum;
-import it.uniroma2.dicii.ispw.gradely.exceptions.PropertyException;
-import it.uniroma2.dicii.ispw.gradely.exceptions.ResourceNotFoundException;
+import org.example.enums.ExceptionMessagesEnum;
+import org.example.exceptions.PropertyException;
+import org.example.exceptions.ResourceNotFoundException;
 
 import java.io.IOException;
 import java.util.Properties;

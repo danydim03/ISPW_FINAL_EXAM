@@ -1,4 +1,4 @@
-package org.example.exeptions;
+package org.example.exceptions;
 
 public class MissingAuthorizationException extends Exception{
     public MissingAuthorizationException(String message){

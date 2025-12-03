@@ -1,7 +1,7 @@
 package org.example.session_manager;
 
-import it.uniroma2.dicii.ispw.gradely.enums.FrontEndTypeEnum;
-import it.uniroma2.dicii.ispw.gradely.model.user.User;
+import org.example.enums.FrontEndTypeEnum;
+import org.example.model.user.User;
 
 public class Session {
     private User user;

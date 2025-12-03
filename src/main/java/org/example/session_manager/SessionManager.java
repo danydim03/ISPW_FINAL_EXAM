@@ -1,10 +1,10 @@
 package org.example.session_manager;
 
-import it.uniroma2.dicii.ispw.gradely.PropertiesHandler;
-import it.uniroma2.dicii.ispw.gradely.enums.FrontEndTypeEnum;
-import it.uniroma2.dicii.ispw.gradely.exceptions.PropertyException;
-import it.uniroma2.dicii.ispw.gradely.exceptions.ResourceNotFoundException;
-import it.uniroma2.dicii.ispw.gradely.model.user.User;
+import org.example.PropertiesHandler;
+import org.example.enums.FrontEndTypeEnum;
+import org.example.exceptions.PropertyException;
+import org.example.exceptions.ResourceNotFoundException;
+import org.example.model.user.User;
 
 import java.util.ArrayList;
 import java.util.List;

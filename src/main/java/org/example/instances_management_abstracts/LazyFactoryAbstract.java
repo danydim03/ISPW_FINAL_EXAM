@@ -1,9 +1,9 @@
 package org.example.instances_management_abstracts;
 
-import it.uniroma2.dicii.ispw.gradely.exceptions.DAOException;
-import it.uniroma2.dicii.ispw.gradely.exceptions.MissingAuthorizationException;
-import it.uniroma2.dicii.ispw.gradely.exceptions.PropertyException;
-import it.uniroma2.dicii.ispw.gradely.exceptions.ResourceNotFoundException;
+import org.example.exceptions.DAOException;
+import org.example.exceptions.MissingAuthorizationException;
+import org.example.exceptions.PropertyException;
+import org.example.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 

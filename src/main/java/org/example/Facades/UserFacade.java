@@ -1,8 +1,8 @@
 package org.example.Facades;
 
-import it.uniroma2.dicii.ispw.gradely.beans_general.PendingEventBean;
-import it.uniroma2.dicii.ispw.gradely.exceptions.*;
-import it.uniroma2.dicii.ispw.gradely.use_cases.controllers_general.pending_event.PendingEventController;
+import org.example.beans_general.PendingEventBean;
+import org.example.exceptions.*;
+import org.example.use_cases.controllers_general.pending_event.PendingEventController;
 
 import java.util.List;
 
