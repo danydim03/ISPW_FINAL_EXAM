@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
+
+<!--
+    Struttura modificata a GRIGLIA come richiesto.
+    Controller mantenuto: com.tuoprogetto.controller.ClientHomeController
+    CSS: styles/home-card-style.css
+-->
+<GridPane alignment="CENTER" hgap="30" prefHeight="500.0" prefWidth="800.0" stylesheets="@styles/home-card-style.css" vgap="30" xmlns="http://javafx.com/javafx/17.0.17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuoprogetto.controller.ClientHomeController">
+
+    <!-- Definizione Colonne e Righe per centratura -->
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" />
+        <ColumnConstraints hgrow="NEVER" />
+        <ColumnConstraints hgrow="NEVER" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER" />
+        <RowConstraints vgrow="NEVER" />
+    </rowConstraints>
+
+    <!-- ================= RIGA 1 ================= -->
+
+    <!-- Card 1: Nuovo Ordine -->
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <!-- Immagine di sfondo/copertina -->
+        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <!-- Sostituisci con la tua immagine locale -->
+            <Image url="@images/bg_ordine.jpg" />
+        </ImageView>
+
+        <!-- Parte inferiore Card -->
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
+            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+                <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                    <Label styleClass="card-title" text="Nuovo Ordine" />
+                    <Text styleClass="card-description" text="Crea una nuova spedizione" wrappingWidth="130" />
+                </VBox>
+                <Button maxWidth="Infinity" onAction="#handleNuovoOrdine" styleClass="card-button" HBox.hgrow="NEVER">
+                    <shape>
+                        <Circle radius="15" />
+                    </shape>
+                    <graphic>
+                        <!-- Icona freccia -->
+                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                            <Image url="@images/right_arrow.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </AnchorPane>
+    </AnchorPane>
+
+    <!-- Card 2: Storico Ordini -->
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/bg_storico.jpg" />
+        </ImageView>
+
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
+            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+                <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                    <Label styleClass="card-title" text="Storico" />
+                    <Text styleClass="card-description" text="Visualizza i tuoi ordini passati" wrappingWidth="130" />
+                </VBox>
+                <Button maxWidth="Infinity" onAction="#handleStoricoOrdini" styleClass="card-button" HBox.hgrow="NEVER">
+                    <shape>
+                        <Circle radius="15" />
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                            <Image url="@images/right_arrow.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </AnchorPane>
+    </AnchorPane>
+
+    <!-- Card 3: Mappa -->
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/bg_mappa.jpg" />
+        </ImageView>
+
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
+            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+                <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                    <Label styleClass="card-title" text="Mappa" />
+                    <Text styleClass="card-description" text="Traccia le tue consegne" wrappingWidth="130" />
+                </VBox>
+                <Button maxWidth="Infinity" onAction="#handleVisualizzaMappa" styleClass="card-button" HBox.hgrow="NEVER">
+                    <shape>
+                        <Circle radius="15" />
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                            <Image url="@images/right_arrow.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </AnchorPane>
+    </AnchorPane>
+
+    <!-- ================= RIGA 2 ================= -->
+
+    <!-- Card 4: Profilo -->
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/bg_profilo.jpg" />
+        </ImageView>
+
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
+            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+                <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                    <Label styleClass="card-title" text="Il mio Profilo" />
+                    <Text styleClass="card-description" text="Gestisci i tuoi dati personali" wrappingWidth="130" />
+                </VBox>
+                <Button maxWidth="Infinity" styleClass="card-button" HBox.hgrow="NEVER">
+                    <shape>
+                        <Circle radius="15" />
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                            <Image url="@images/right_arrow.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </AnchorPane>
+    </AnchorPane>
+
+    <!-- Card 5: Assistenza -->
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/bg_assistenza.jpg" />
+        </ImageView>
+
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
+            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+                <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                    <Label styleClass="card-title" text="Assistenza" />
+                    <Text styleClass="card-description" text="Contatta il supporto clienti" wrappingWidth="130" />
+                </VBox>
+                <Button maxWidth="Infinity" styleClass="card-button" HBox.hgrow="NEVER">
+                    <shape>
+                        <Circle radius="15" />
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                            <Image url="@images/right_arrow.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </AnchorPane>
+    </AnchorPane>
+
+    <!-- Card 6: Logout -->
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="1">
+        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/bg_logout.jpg" />
+        </ImageView>
+
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
+            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <padding>
+                    <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+                <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                    <Label styleClass="card-title" text="Esci" />
+                    <Text styleClass="card-description" text="Disconnettiti dall'applicazione" wrappingWidth="130" />
+                </VBox>
+                <Button maxWidth="Infinity" onAction="#handleLogout" styleClass="card-button" HBox.hgrow="NEVER">
+                    <shape>
+                        <Circle radius="15" />
+                    </shape>
+                    <graphic>
+                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                            <Image url="@images/right_arrow.png" />
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </AnchorPane>
+    </AnchorPane>
+
+</GridPane>
