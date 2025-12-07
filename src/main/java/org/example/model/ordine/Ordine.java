@@ -1,7 +1,7 @@
 package org.example.model.ordine;
 
 
-import org.example.model.Food.Food;
+import org.example.model.food.Food;
 import org.example.model.voucher.NessunVoucher;
 import org.example.model. voucher. Voucher;
 import java.util.ArrayList;

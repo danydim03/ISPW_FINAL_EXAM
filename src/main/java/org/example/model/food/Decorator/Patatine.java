@@ -1,5 +1,5 @@
-package org.example.model.Food.Decorator;
-import org.example.model.Food.Food;
+package org.example.model.food.Decorator;
+import org.example.model.food.Food;
 
 
 public class Patatine extends DecoratorAddON {
