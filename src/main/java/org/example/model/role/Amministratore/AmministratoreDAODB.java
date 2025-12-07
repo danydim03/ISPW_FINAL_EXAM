@@ -40,7 +40,6 @@ public class AmministratoreDAODB extends DAODBAbstract<Amministratore> implement
     public void insert(Amministratore amministratore) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
         insertQuery(
                 AMMINISTRATORE,
-                List.of(CODICE, DEPARTMENT, ACCESS_LEVEL),
                 List.of(
                         amministratore.getUser().getID(),
                         amministratore.getDepartment(),

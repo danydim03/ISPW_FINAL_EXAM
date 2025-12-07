@@ -32,5 +32,5 @@ public interface KebabbaroDAOInterface {
      */
     void update(Kebabbaro kebabbaro) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException;
 
-    abstract Cliente getKebabbaroByUser(User user) throws DAOException, UserNotFoundException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException,WrongListQueryIdentifierValue;
+    abstract Kebabbaro getKebabbaroByUser(User user) throws DAOException, UserNotFoundException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException,WrongListQueryIdentifierValue;
 }

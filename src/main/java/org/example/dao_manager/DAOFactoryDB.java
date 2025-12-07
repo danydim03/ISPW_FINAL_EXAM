@@ -32,7 +32,11 @@ package org.example.dao_manager;
 //import org.example.model.timer.TimerDAOInterface;
 //import org.example.model.title.TitleDAODB;
 //import org.example.model.title.TitleDAOInterface;
+import org.example.model.role.Amministratore.AmministratoreDAODB;
+import org.example.model.role.Amministratore.AmministratoreDAOInterface;
 import org.example.model.role.Cliente.ClientiDAODB;
+import org.example.model.role.Kebabbaro.KebabbaroDAODB;
+import org.example.model.role.Kebabbaro.KebabbaroDAOInterface;
 import org.example.model.user.UserDAODB;
 import org.example.model.user.UserDAOInterface;
 import org.example.model.role.Cliente.ClienteDAOInterface;
@@ -70,14 +74,14 @@ public class DAOFactoryDB extends DAOFactoryAbstract {
 //    public PendingEventDAOInterface getPendingEventDAO(){
 //        return PendingEventDAODB.getInstance();
 //    }
-//    @Override
-//    public AbstractProfessorDAO getProfessorDAO(){
-//        return ProfessorDAODB.getInstance();
-//    }
-//    @Override
-//    public AbstractSecretaryDAO getSecretaryDAO(){
-//        return SecretaryDAODB.getInstance();
-//    }
+    @Override
+    public KebabbaroDAOInterface getKebabbaroDAO(){
+        return KebabbaroDAODB.getInstance();
+    }
+    @Override
+   public AmministratoreDAOInterface  getAmministratoreDAO(){
+        return AmministratoreDAODB.getInstance();
+    }
 //    @Override
     public ClienteDAOInterface getStudentDAO(){
         return ClientiDAODB.getInstance();

@@ -40,7 +40,8 @@ public class AmministratoreLazyFactory {
     }
 
     public Amministratore newAmministratore(User user, String ID) throws DAOException, MissingAuthorizationException {
-        Amministratore admin = new Amministratore(user, ID);
+        // Usa il costruttore che accetta solo User (usa valori di default)
+        Amministratore admin = new Amministratore(user);
         user.setRole(admin);
         try {
             DAOFactoryAbstract.getInstance().getAmministratoreDAO().insert(admin);

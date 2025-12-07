@@ -47,7 +47,7 @@ public class ClientiDAODB extends DAODBAbstract<Cliente> implements ClienteDAOIn
     }
 
     @Override
-    public void insert(Cliente student) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
+    public void insert(Cliente cliente) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
 //        insertQuery(
 //                CLIENTE,
 //                List.of(student.getCodiceFiscale(),student.getMatricola())
@@ -55,16 +55,16 @@ public class ClientiDAODB extends DAODBAbstract<Cliente> implements ClienteDAOIn
     }
 
     @Override
-    public void delete(Cliente student) throws DAOException, PropertyException, ResourceNotFoundException {
+    public void delete(Cliente cliente) throws DAOException, PropertyException, ResourceNotFoundException {
         deleteQuery(
                 CLIENTE,
                 List.of(CODICE),
-                List.of(student.getCodiceFiscale())
+                List.of(cliente.getID())
         );
     }
 
     @Override
-    public void update(Cliente student) throws PropertyException, ResourceNotFoundException, DAOException, MissingAuthorizationException {
+    public void update(Cliente cliente) throws PropertyException, ResourceNotFoundException, DAOException, MissingAuthorizationException {
 //        updateQuery(
 //                CLIENTE,
 //                List.of("matricola"),
@@ -83,7 +83,7 @@ public class ClientiDAODB extends DAODBAbstract<Cliente> implements ClienteDAOIn
     }
 //
 //    @Override
-  protected String setGetListQueryIdentifiersValue(Cliente student, int valueNumber) throws DAOException {
+  protected String setGetListQueryIdentifiersValue(Cliente cliente, int valueNumber) throws DAOException {
       return null;
     }
 

@@ -19,7 +19,7 @@
     Controller mantenuto: com.tuoprogetto.controller.ClientHomeController
     CSS: styles/home-card-style.css
 -->
-<GridPane alignment="CENTER" hgap="30" prefHeight="500.0" prefWidth="800.0" stylesheets="@styles/home-card-style.css" vgap="30" xmlns="http://javafx.com/javafx/17.0.17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tuoprogetto.controller.ClientHomeController">
+<GridPane alignment="CENTER" hgap="30" prefHeight="500.0" prefWidth="800.0" stylesheets="@styles/home-card-style.css" vgap="30" xmlns="http://javafx.com/javafx/17.0.17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.graphic_controllers_general.homepages.ClienteHomepageGraphicController">
 
     <!-- Definizione Colonne e Righe per centratura -->
     <columnConstraints>
@@ -39,7 +39,7 @@
         <!-- Immagine di sfondo/copertina -->
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
             <!-- Sostituisci con la tua immagine locale -->
-            <Image url="@images/bg_ordine.jpg" />
+            <Image url="@images/habibi_comingSOON.png" />
         </ImageView>
 
         <!-- Parte inferiore Card -->
@@ -70,7 +70,7 @@
     <!-- Card 2: Storico Ordini -->
     <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="0">
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/bg_storico.jpg" />
+            <Image url="@images/habibi_comingSOON.png" />
         </ImageView>
 
         <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
@@ -99,7 +99,7 @@
     <!-- Card 3: Mappa -->
     <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="0">
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/bg_mappa.jpg" />
+            <Image url="@images/habibi_map.png" />
         </ImageView>
 
         <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
@@ -130,7 +130,7 @@
     <!-- Card 4: Profilo -->
     <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="1">
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/bg_profilo.jpg" />
+            <Image url="@images/habibi_comingSOON.png" />
         </ImageView>
 
         <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
@@ -159,7 +159,7 @@
     <!-- Card 5: Assistenza -->
     <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="1">
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/bg_assistenza.jpg" />
+            <Image url="@images/habibi_comingSOON.png" />
         </ImageView>
 
         <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
@@ -188,7 +188,7 @@
     <!-- Card 6: Logout -->
     <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="1">
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/bg_logout.jpg" />
+            <Image url="@images/habibi_comingSOON.png" />
         </ImageView>
 
         <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">

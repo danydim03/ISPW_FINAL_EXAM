@@ -36,8 +36,15 @@ public class ClienteHomepageGraphicController {
     @FXML
     void handleVisualizzaMappa(ActionEvent event) {
         System.out.println("Click su Mappa");
-        mostraPlaceholder("Mappa Tracking", "Apertura della mappa per il tracciamento consegne.");
-        // TODO: Caricare la scena 'Mappa.fxml' o aprire WebView
+        try {
+            ClienteHomepageController.getInstance().apriMappa();
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Impossibile aprire la mappa");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     /**

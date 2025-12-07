@@ -3,7 +3,6 @@ package org.example.model.role.Kebabbaro;
 import org.example.dao_manager.DAOFactoryAbstract;
 import org.example.enums.ExceptionMessagesEnum;
 import org.example.exceptions.*;
-import org.example.model.role.Amministratore.Amministratore;
 import org.example.model.user.User;
 
 import java.util.ArrayList;
@@ -39,13 +38,8 @@ public class KebabbaroLazyFactory {
         }
     }
 
-    public Kebabbaro newKebabbaro(User user, List<String> signatureDishes, int maxOrdersPerHour, String roleType) throws DAOException, MissingAuthorizationException {
-        Kebabbaro kebabbaro;
-        if ("Amministratore".equalsIgnoreCase(roleType)) {
-            kebabbaro = new Amministratore(user, signatureDishes, maxOrdersPerHour);
-        } else {
-            kebabbaro = new Kebabbaro(user, signatureDishes, maxOrdersPerHour);
-        }
+    public Kebabbaro newKebabbaro(User user, List<String> signatureDishes, int maxOrdersPerHour) throws DAOException, MissingAuthorizationException {
+        Kebabbaro kebabbaro = new Kebabbaro(user, signatureDishes, maxOrdersPerHour);
         user.setRole(kebabbaro);
         try {
             DAOFactoryAbstract.getInstance().getKebabbaroDAO().insert(kebabbaro);

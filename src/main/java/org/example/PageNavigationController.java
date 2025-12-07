@@ -31,7 +31,7 @@ public final class PageNavigationController {
         setUserData(userBean, sessionTokenKey);
         String viewName = "";
         switch (userBean.getRole()) {
-            case 1 -> viewName = "homepage_Cliente";
+            case 1 -> viewName = "homepage_Cliente2";
             case 2 -> viewName = "homepage_Kebabbaro";
             case 3 -> viewName = "homepage_Amministratore";
             default ->
