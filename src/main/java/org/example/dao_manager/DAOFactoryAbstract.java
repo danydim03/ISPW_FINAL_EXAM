@@ -7,6 +7,7 @@ import org.example.exceptions.PropertyException;
 import org.example.exceptions.ResourceNotFoundException;
 import org.example.model.role.Cliente.Cliente;
 import org.example.model.role.Cliente.ClienteDAOInterface;
+import org.example.model.ordine.OrdineDAOInterface;
 //import org.example.model.timer.TimerDAOInterface;
 //import org.example.model.association_classes.degree_course_enrollment.DegreeCourseEnrollmentDAOInterface;
 //import org.example.model.association_classes.exam_enrollment.ExamEnrollmentDAOInterface;
@@ -50,29 +51,12 @@ public abstract class                                                           
         }
         return me;
     }
-//
-//    public abstract SubjectCourseAssignmentDAOInterface getCourseAssignmentDAO();
-//
-//    public abstract DegreeCourseEnrollmentDAOInterface getDegreeCourseEnrollmentDAO();
-//
-//    public abstract ExamEnrollmentDAOInterface getExamEnrollmentDAO();
 
-    //    public abstract AbstractSubjectCourseEnrollmentDAO getSubjectCourseEnrollmentDAO();
-//    public abstract DegreeCourseDAOInterface getDegreeCourseDAO();
-//    public abstract ExamDAOInterface getExamDAO();
-//    public abstract ExamResultDAOInterface getExamResultDAO();
-//    public abstract PendingEventDAOInterface getPendingEventDAO();
     public abstract KebabbaroDAOInterface getKebabbaroDAO();
    public abstract AmministratoreDAOInterface getAmministratoreDAO();
     public abstract ClienteDAOInterface getClienteDAO();
+    public abstract OrdineDAOInterface getOrdineDAO();
 
-    //public abstract SubjectCourseDAOInterface getSubjectCourseDAO();
-  //  public abstract TimerDAOInterface getTimerDAO();
-
-    //  public abstract TitleDAOInterface getTitleDAO();
     public abstract UserDAOInterface getUserDAO();
-//    public abstract TestDAOAbstract getTestDAO();
-//    public abstract TestReservationDAOAbstract getTestReservationDAO();
-//    public abstract SubjectCourseAssignmentDAOInterface getSubjectCourseAssignmentDAO();
 
 }

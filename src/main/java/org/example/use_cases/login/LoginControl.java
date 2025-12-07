@@ -18,8 +18,8 @@ public class LoginControl {
         String ID;
         switch (user.getRole().getRoleEnumType()) {
             case CLIENTE -> ID = user.getRole().getClienteRole().getID();
-            //case KEBABBARO -> ID = user.getRole().getKebabbaroRole().describeRole().getID();
-            //case ADMIN -> ID = user.getRole().getAdminRole().describeRole().getID();
+            case KEBABBARO -> ID = user.getRole().getKebabbaroRole().getID();
+            case AMMINISTRATORE -> ID = user.getRole().getAmministratoreRole().getID();
             default -> ID = "";
         }
         return new LoginBean(

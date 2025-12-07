@@ -2,7 +2,7 @@ package org.example.model.food;
 
 import org.example. exceptions.*;
 import org.example. instances_management_abstracts.DAODBAbstract;
-import org. example.model.food.decorator.*;
+import org.example.model.food.Decorator.*;
 
 import java.sql. ResultSet;
 import java.sql. SQLException;
@@ -48,7 +48,9 @@ public class FoodDAODB extends DAODBAbstract<Food> implements FoodDAOInterface {
                 FOOD,
                 List.of(TIPO),
                 List.of("BASE"),
-                List.of()
+                List.of(),
+                List.of(),
+                Boolean.FALSE
         );
     }
     
@@ -59,7 +61,9 @@ public class FoodDAODB extends DAODBAbstract<Food> implements FoodDAOInterface {
                 FOOD,
                 List.of(TIPO),
                 List.of("ADDON"),
-                List.of()
+                List.of(),
+                List.of(),
+                Boolean.FALSE
         );
     }
     

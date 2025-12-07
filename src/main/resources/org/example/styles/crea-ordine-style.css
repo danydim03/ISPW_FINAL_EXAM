@@ -1,0 +1,361 @@
+/*
+ * Stili CSS per la vista Crea Ordine
+ * Coerente con lo stile card-based del progetto
+ */
+
+/* ==================== GENERALE ==================== */
+
+. background {
+    -fx-background-color: linear-gradient(to bottom right, #1a1a2e, #16213e);
+}
+
+.page-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+.page-subtitle {
+    -fx-font-size: 14px;
+    -fx-fill: #a0a0a0;
+}
+
+/* ==================== CARD ==================== */
+
+.card-container {
+    -fx-padding: 0;
+}
+
+.card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 0, 5);
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.card-description {
+    -fx-font-size: 12px;
+    -fx-fill: #7f8c8d;
+}
+
+/* ==================== FORM ELEMENTS ==================== */
+
+.combo-box-custom {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+}
+
+.combo-box-custom:hover {
+    -fx-border-color: #ff6b35;
+}
+
+.combo-box-custom:focused {
+    -fx-border-color: #ff6b35;
+    -fx-border-width: 2;
+}
+
+.text-field {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 8;
+    -fx-padding: 10 12;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused {
+    -fx-border-color: #ff6b35;
+    -fx-border-width: 2;
+}
+
+/* ==================== CHECKBOX ADD-ON ==================== */
+
+. addon-checkbox {
+    -fx-font-size: 13px;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 8 12;
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.addon-checkbox:hover {
+    -fx-background-color: #fff3e0;
+}
+
+.addon-checkbox:selected {
+    -fx-background-color: #ffe0b2;
+    -fx-text-fill: #e65100;
+}
+
+.addon-checkbox . box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.addon-checkbox:selected .box {
+    -fx-background-color: #ff6b35;
+    -fx-border-color: #ff6b35;
+}
+
+.addon-checkbox:selected .mark {
+    -fx-background-color: #ffffff;
+}
+
+/* ==================== BUTTONS ==================== */
+
+.action-button-primary {
+    -fx-background-color: linear-gradient(to right, #ff6b35, #f7931e);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 24;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255, 107, 53, 0.4), 10, 0, 0, 3);
+}
+
+.action-button-primary:hover {
+    -fx-background-color: linear-gradient(to right, #ff5722, #ff6b35);
+    -fx-effect: dropshadow(gaussian, rgba(255, 107, 53, 0.6), 15, 0, 0, 5);
+}
+
+.action-button-primary:pressed {
+    -fx-background-color: linear-gradient(to right, #e64a19, #ff5722);
+}
+
+.action-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.action-button:disabled {
+    -fx-background-color: #bdc3c7;
+    -fx-text-fill: #7f8c8d;
+}
+
+. remove-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 12;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+}
+
+.remove-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+.remove-button:disabled {
+    -fx-background-color: #bdc3c7;
+    -fx-opacity: 0.5;
+}
+
+. remove-button-small {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e74c3c;
+    -fx-font-size: 12px;
+    -fx-padding: 5 10;
+    -fx-border-color: #e74c3c;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+}
+
+.remove-button-small:hover {
+    -fx-background-color: #ffebee;
+}
+
+.remove-button-small:disabled {
+    -fx-opacity: 0.4;
+}
+
+/* ==================== CONFIRM / CANCEL BUTTONS ==================== */
+
+. confirm-button {
+    -fx-background-color: linear-gradient(to right, #27ae60, #2ecc71);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 15 30;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(39, 174, 96, 0.4), 10, 0, 0, 3);
+}
+
+.confirm-button:hover {
+    -fx-background-color: linear-gradient(to right, #229954, #27ae60);
+    -fx-effect: dropshadow(gaussian, rgba(39, 174, 96, 0.6), 15, 0, 0, 5);
+}
+
+.confirm-button:disabled {
+    -fx-background-color: #bdc3c7;
+    -fx-effect: none;
+}
+
+.cancel-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e74c3c;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 15 30;
+    -fx-border-color: #e74c3c;
+    -fx-border-width: 2;
+    -fx-border-radius: 25;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #ffebee;
+}
+
+/* ==================== TABLE ==================== */
+
+.table-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.table-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.order-table {
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.order-table .column-header-background {
+    -fx-background-color: #f8f9fa;
+}
+
+.order-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #dee2e6 transparent;
+}
+
+.order-table .column-header . label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 13px;
+}
+
+.order-table .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #ecf0f1 transparent;
+}
+
+.order-table .table-row-cell:selected {
+    -fx-background-color: #fff3e0;
+}
+
+.order-table .table-row-cell:hover {
+    -fx-background-color: #fafafa;
+}
+
+.order-table .table-cell {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 13px;
+    -fx-padding: 10 5;
+}
+
+.placeholder-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #bdc3c7;
+}
+
+/* ==================== TOTALS ==================== */
+
+.totals-container {
+    -fx-padding: 10 0 0 0;
+}
+
+. total-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.total-value {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+
+.discount-label {
+    -fx-text-fill: #27ae60;
+}
+
+.discount-value {
+    -fx-text-fill: #27ae60;
+}
+
+.thin-separator {
+    -fx-padding: 5 0;
+}
+
+.total-label-big {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.total-value-big {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff6b35;
+}
+
+. time-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #95a5a6;
+}
+
+.time-value {
+    -fx-font-size: 13px;
+    -fx-text-fill: #3498db;
+    -fx-font-weight: bold;
+}
+
+/* ==================== VOUCHER INFO ==================== */
+
+.voucher-info {
+    -fx-font-size: 12px;
+    -fx-text-fill: #27ae60;
+    -fx-font-style: italic;
+}
+
+/* ==================== ANIMATIONS ==================== */
+
+. card {
+    -fx-transition: all 0.3s ease;
+}
+
+.action-button-primary,
+.confirm-button,
+.cancel-button,
+.action-button {
+    -fx-transition: all 0.2s ease;
+}
