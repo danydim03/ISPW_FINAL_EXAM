@@ -15,7 +15,7 @@
 
         <HBox alignment="CENTER">
             <ImageView>
-                <Image url="@images/Habibi-Clean-2.png" requestedWidth="250" preserveRatio="true"/>
+                <Image url="@images/habibi_banner.png" requestedWidth="250" preserveRatio="true"/>
             </ImageView>
         </HBox>
         <HBox alignment="CENTER">

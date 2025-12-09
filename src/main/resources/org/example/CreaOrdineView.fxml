@@ -1,130 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <!--
     Vista per lo Use Case "Crea Ordine"
     Controller: org.example.use_cases.crea_ordine.graphic_controllers.CreaOrdineGUIController
     Stile: Card-based design coerente con homepage_Cliente2.fxml
 -->
-<AnchorPane prefHeight="550.0" prefWidth="850.0"
-            stylesheets="@styles/crea-ordine-style.css"
-            styleClass="background"
-            xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.use_cases.crea_ordine.graphic_controllers.CreaOrdineGUIController">
+
+<AnchorPane prefHeight="550.0" prefWidth="850.0" styleClass="background" stylesheets="@styles/crea-ordine-style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.use_cases.crea_ordine.graphic_controllers.CreaOrdineGUIController">
 
     <!-- Intestazione -->
-    <VBox AnchorPane.topAnchor="10" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+    <VBox AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="10">
         <HBox alignment="CENTER_LEFT" spacing="15">
             <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
-                <Image url="@images/kebab1.png"/>
+                <Image url="@images/kebab1.png" />
             </ImageView>
             <VBox>
-                <Label fx:id="labelNumeroOrdine" text="Nuovo Ordine" styleClass="page-title"/>
-                <Text text="Componi il tuo ordine perfetto" styleClass="page-subtitle"/>
+                <Label fx:id="labelNumeroOrdine" styleClass="page-title" text="Nuovo Ordine" />
+                <Text styleClass="page-subtitle" text="Componi il tuo ordine perfetto" />
             </VBox>
         </HBox>
     </VBox>
 
     <!-- Layout principale a 2 colonne -->
-    <HBox AnchorPane.topAnchor="70" AnchorPane.bottomAnchor="20"
-          AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" spacing="20">
+    <HBox spacing="20" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="70">
 
         <!-- ==================== COLONNA SINISTRA: Selezione Prodotti ==================== -->
         <VBox prefWidth="400" spacing="15" styleClass="card-container">
 
             <!-- Card: Seleziona Prodotto Base -->
-            <AnchorPane styleClass="card" prefHeight="180">
+            <AnchorPane prefHeight="180" styleClass="card">
                 <!-- Header Card con immagine -->
-                <ImageView fitHeight="80" fitWidth="400" preserveRatio="false"
-                           AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-                    <Image url="@images/habibi_banner.png"/>
+                <ImageView fitHeight="80" fitWidth="400" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                    <Image url="@images/habibi_banner.png" />
                 </ImageView>
 
                 <!-- Contenuto Card -->
-                <VBox AnchorPane.topAnchor="85" AnchorPane.leftAnchor="15"
-                      AnchorPane.rightAnchor="15" AnchorPane.bottomAnchor="10" spacing="10">
-                    <Label text="🥙 Scegli il Prodotto Base" styleClass="card-title"/>
-                    <ComboBox fx:id="comboProdottoBase" prefWidth="360" promptText="Seleziona un prodotto..."
-                              styleClass="combo-box-custom"/>
+                <VBox spacing="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="15" AnchorPane.rightAnchor="15" AnchorPane.topAnchor="85">
+                    <Label styleClass="card-title" text="🥙 Scegli il Prodotto Base" />
+                    <ComboBox fx:id="comboProdottoBase" prefWidth="360" promptText="Seleziona un prodotto..." styleClass="combo-box-custom" />
                 </VBox>
             </AnchorPane>
 
             <!-- Card: Seleziona Add-On -->
-            <AnchorPane styleClass="card" prefHeight="200">
-                <VBox AnchorPane.topAnchor="15" AnchorPane.leftAnchor="15"
-                      AnchorPane.rightAnchor="15" AnchorPane.bottomAnchor="15" spacing="12">
-                    <Label text="🧅 Aggiungi Extra" styleClass="card-title"/>
-                    <Text text="Personalizza il tuo ordine con gli add-on" styleClass="card-description"/>
+            <AnchorPane prefHeight="200" styleClass="card">
+                <VBox spacing="12" AnchorPane.bottomAnchor="15" AnchorPane.leftAnchor="15" AnchorPane.rightAnchor="15" AnchorPane.topAnchor="15">
+                    <Label styleClass="card-title" text="🧅 Aggiungi Extra" />
+                    <Text styleClass="card-description" text="Personalizza il tuo ordine con gli add-on" />
 
                     <GridPane hgap="15" vgap="10">
                         <columnConstraints>
-                            <ColumnConstraints percentWidth="50"/>
-                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50" />
+                            <ColumnConstraints percentWidth="50" />
                         </columnConstraints>
                         <rowConstraints>
-                            <RowConstraints/>
-                            <RowConstraints/>
+                            <RowConstraints />
+                            <RowConstraints />
                         </rowConstraints>
 
                         <!-- Riga 1 -->
-                        <CheckBox fx:id="checkCipolla" text="🧅 Cipolla (+€0.50)"
-                                  styleClass="addon-checkbox" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                        <CheckBox fx:id="checkSalsaYogurt" text="🥛 Salsa Yogurt (+€0.80)"
-                                  styleClass="addon-checkbox" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <CheckBox fx:id="checkCipolla" styleClass="addon-checkbox" text="🧅 Cipolla (+€0.50)" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <CheckBox fx:id="checkSalsaYogurt" styleClass="addon-checkbox" text="🥛 Salsa Yogurt (+€0.80)" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
                         <!-- Riga 2 -->
-                        <CheckBox fx:id="checkPatatine" text="🍟 Patatine (+€2.00)"
-                                  styleClass="addon-checkbox" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <CheckBox fx:id="checkMixVerdure" text="🥗 Mix Verdure (+€1.50)"
-                                  styleClass="addon-checkbox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <CheckBox fx:id="checkPatatine" styleClass="addon-checkbox" text="🍟 Patatine (+€2.00)" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <CheckBox fx:id="checkMixVerdure" styleClass="addon-checkbox" text="🥗 Mix Verdure (+€1.50)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     </GridPane>
 
                     <!-- Bottone Aggiungi -->
                     <HBox alignment="CENTER_RIGHT">
-                        <Button fx:id="btnAggiungiProdotto" text="➕ Aggiungi all'Ordine"
-                                onAction="#onAggiungiProdotto" styleClass="action-button-primary"/>
+                        <Button fx:id="btnAggiungiProdotto" onAction="#onAggiungiProdotto" styleClass="action-button-primary" text="➕ Aggiungi all'Ordine" />
                     </HBox>
                 </VBox>
             </AnchorPane>
 
             <!-- Card: Voucher Sconto -->
-            <AnchorPane styleClass="card" prefHeight="130">
-                <VBox AnchorPane.topAnchor="15" AnchorPane.leftAnchor="15"
-                      AnchorPane.rightAnchor="15" AnchorPane.bottomAnchor="15" spacing="10">
-                    <Label text="🎫 Hai un Voucher?" styleClass="card-title"/>
+            <AnchorPane prefHeight="130" styleClass="card">
+                <VBox spacing="10" AnchorPane.bottomAnchor="15" AnchorPane.leftAnchor="15" AnchorPane.rightAnchor="15" AnchorPane.topAnchor="15">
+                    <Label styleClass="card-title" text="🎫 Hai un Voucher?" />
 
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <TextField fx:id="textFieldVoucher" promptText="Inserisci codice voucher..."
-                                   prefWidth="220" styleClass="text-field"/>
-                        <Button fx:id="btnApplicaVoucher" text="Applica"
-                                onAction="#onApplicaVoucher" styleClass="action-button"/>
-                        <Button fx:id="btnRimuoviVoucher" text="✕"
-                                onAction="#onRimuoviVoucher" styleClass="remove-button"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <TextField fx:id="textFieldVoucher" prefWidth="220" promptText="Inserisci codice voucher..." styleClass="text-field" />
+                        <Button fx:id="btnApplicaVoucher" onAction="#onApplicaVoucher" styleClass="action-button" text="Applica" />
+                        <Button fx:id="btnRimuoviVoucher" onAction="#onRimuoviVoucher" styleClass="remove-button" text="✕" />
                     </HBox>
 
                     <!-- Info voucher applicato -->
-                    <Label fx:id="labelVoucherInfo" text="" styleClass="voucher-info"/>
+                    <Label fx:id="labelVoucherInfo" styleClass="voucher-info" text="" />
                 </VBox>
             </AnchorPane>
         </VBox>
@@ -134,77 +101,74 @@
 
             <!-- Card: Riepilogo Ordine -->
             <AnchorPane styleClass="card" VBox.vgrow="ALWAYS">
-                <VBox AnchorPane.topAnchor="15" AnchorPane.leftAnchor="15"
-                      AnchorPane.rightAnchor="15" AnchorPane.bottomAnchor="15" spacing="10">
+                <VBox spacing="10" AnchorPane.bottomAnchor="15" AnchorPane.leftAnchor="15" AnchorPane.rightAnchor="15" AnchorPane.topAnchor="15">
 
                     <!-- Header Riepilogo -->
                     <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Label text="📋 Il Tuo Ordine" styleClass="card-title"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="btnRimuoviProdotto" text="🗑️ Rimuovi"
-                                onAction="#onRimuoviProdotto" styleClass="remove-button-small"/>
+                        <Label styleClass="card-title" text="📋 Il Tuo Ordine" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="btnRimuoviProdotto" onAction="#onRimuoviProdotto" styleClass="remove-button-small" text="🗑️ Rimuovi" />
                     </HBox>
 
                     <!-- Tabella Prodotti -->
-                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="table-scroll">
+                    <ScrollPane fitToWidth="true" styleClass="table-scroll" VBox.vgrow="ALWAYS">
                         <TableView fx:id="tabellaOrdine" styleClass="order-table">
                             <columns>
-                                <TableColumn fx:id="colonnaDescrizione" text="Prodotto" prefWidth="220"/>
-                                <TableColumn fx:id="colonnaPrezzo" text="Prezzo" prefWidth="80"/>
-                                <TableColumn fx:id="colonnaDurata" text="Tempo" prefWidth="60"/>
+                                <TableColumn fx:id="colonnaDescrizione" prefWidth="220" text="Prodotto" />
+                                <TableColumn fx:id="colonnaPrezzo" prefWidth="80" text="Prezzo" />
+                                <TableColumn fx:id="colonnaDurata" prefWidth="60" text="Tempo" />
                             </columns>
                             <placeholder>
-                                <Label text="🛒 Il carrello è vuoto" styleClass="placeholder-text"/>
+                                <Label styleClass="placeholder-text" text="🛒 Il carrello è vuoto" />
                             </placeholder>
                         </TableView>
                     </ScrollPane>
 
                     <!-- Separatore -->
-                    <Separator/>
+                    <Separator />
 
                     <!-- Totali -->
                     <VBox spacing="8" styleClass="totals-container">
                         <!-- Subtotale -->
                         <HBox alignment="CENTER_LEFT">
-                            <Label text="Subtotale:" styleClass="total-label"/>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="labelSubtotale" text="€0.00" styleClass="total-value"/>
+                            <Label styleClass="total-label" text="Subtotale:" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label fx:id="labelSubtotale" styleClass="total-value" text="€0.00" />
                         </HBox>
 
                         <!-- Sconto (visibile solo se voucher applicato) -->
-                        <HBox fx:id="panelSconto" alignment="CENTER_LEFT" visible="false" managed="false">
-                            <Label text="Sconto:" styleClass="total-label discount-label"/>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="labelSconto" text="-€0.00" styleClass="total-value discount-value"/>
+                        <HBox fx:id="panelSconto" alignment="CENTER_LEFT" managed="false" visible="false">
+                            <Label styleClass="total-label discount-label" text="Sconto:" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label fx:id="labelSconto" styleClass="total-value discount-value" text="-€0.00" />
                         </HBox>
 
                         <!-- Separatore sottile -->
-                        <Separator styleClass="thin-separator"/>
+                        <Separator styleClass="thin-separator" />
 
                         <!-- Totale Finale -->
                         <HBox alignment="CENTER_LEFT">
-                            <Label text="TOTALE:" styleClass="total-label-big"/>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="labelTotale" text="€0.00" styleClass="total-value-big"/>
+                            <Label styleClass="total-label-big" text="TOTALE:" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label fx:id="labelTotale" styleClass="total-value-big" text="€0.00" />
                         </HBox>
 
                         <!-- Tempo di preparazione -->
                         <HBox alignment="CENTER_LEFT">
-                            <Label text="⏱️ Tempo stimato:" styleClass="time-label"/>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="labelDurata" text="0 min" styleClass="time-value"/>
+                            <Label styleClass="time-label" text="⏱️ Tempo stimato:" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label fx:id="labelDurata" styleClass="time-value" text="0 min" />
                         </HBox>
                     </VBox>
                 </VBox>
             </AnchorPane>
 
             <!-- Bottoni Azione -->
-            <HBox spacing="15" alignment="CENTER">
-                <Button fx:id="btnAnnullaOrdine" text="🚫 Annulla Ordine"
-                        onAction="#onAnnullaOrdine" styleClass="cancel-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                <Button fx:id="btnConfermaOrdine" text="✅ Conferma Ordine"
-                        onAction="#onConfermaOrdine" styleClass="confirm-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            <HBox alignment="CENTER" spacing="15">
+                <Button fx:id="btnAnnullaOrdine" maxWidth="Infinity" onAction="#onAnnullaOrdine" styleClass="cancel-button" text="🚫 Annulla Ordine" HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnConfermaOrdine" maxWidth="Infinity" onAction="#onConfermaOrdine" styleClass="confirm-button" text="✅ Conferma Ordine" HBox.hgrow="ALWAYS" />
             </HBox>
         </VBox>
     </HBox>
+
 </AnchorPane>

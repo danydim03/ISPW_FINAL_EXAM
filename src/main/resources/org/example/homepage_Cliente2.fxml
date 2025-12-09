@@ -70,7 +70,7 @@
     <!-- Card 2: Storico Ordini -->
     <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="0">
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/habibi_comingSOON.png" />
+            <Image url="@images/HABIBI_SHAWARMA2.png" />
         </ImageView>
 
         <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">

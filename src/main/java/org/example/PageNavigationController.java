@@ -9,6 +9,7 @@ import javafx.scene.layout.StackPane;
 import org.example.use_cases.crea_ordine.beans.UserData;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,15 +59,34 @@ public final class PageNavigationController {
         if (!fxmlPath.endsWith(FILE_EXTENSION)) {
             fxmlPath = fxmlPath.concat(FILE_EXTENSION);
         }
+
+        String fullPath = "/org/example/" + fxmlPath;
+        logger.log(Level.INFO, ">>> Tentativo caricamento: " + fullPath);
+        logger.log(Level.INFO, ">>> contentPane è null? " + (contentPane == null));
+
         try {
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(PageNavigationController.class.getResource("/org/example/" + fxmlPath)));
+            URL resource = PageNavigationController.class.getResource(fullPath);
+            logger.log(Level.INFO, ">>> Risorsa trovata? " + (resource != null));
+
+            if (resource == null) {
+                logger.log(Level.SEVERE, ">>> RISORSA NON TROVATA: " + fullPath);
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
             Parent view = loader.load();
+            logger.log(Level.INFO, ">>> View caricata con successo");
+
             setContent(view);
+            logger.log(Level.INFO, ">>> Contenuto impostato");
+
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Errore caricamento FXML: " + fxmlPath, e);
+            e.printStackTrace(); // Stampa lo stack trace completo
             showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message, UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
         }
     }
+
 
     /**
      * Naviga a una vista FXML, imposta il contenuto e restituisce il controller associato
@@ -114,6 +134,11 @@ public final class PageNavigationController {
      * @param pageName the name of the view (without the '.fxml' suffix) to be displayed
      */
     public void navigateTo(String pageName) {
+        if (baseGraphicController == null) {
+            logger.log(Level.WARNING, "baseGraphicController è NULL! Uso navigateToFXML come fallback per: " + pageName);
+            navigateToFXML(pageName);
+            return;
+        }
         if (!pageName.endsWith(FILE_EXTENSION))
             pageName = pageName.concat(FILE_EXTENSION);
         try {
@@ -124,6 +149,7 @@ public final class PageNavigationController {
             showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message, UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
         }
     }
+
 
     /**
      * Navigates to under construction page
