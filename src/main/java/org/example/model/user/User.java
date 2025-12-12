@@ -7,9 +7,10 @@ import org.example.model.role.AbstractRole;
 import java.time.LocalDate;
 
 public class User {
+    private String ID;
     private String name;
     private String surname;
-    private String ID;
+    private String codice_fiscale;
     private String email;
     private String password;
     private LocalDate registrationDate;

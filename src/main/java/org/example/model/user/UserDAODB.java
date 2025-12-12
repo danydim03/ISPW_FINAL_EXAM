@@ -84,14 +84,26 @@ public class UserDAODB extends DAODBAbstract<User> implements UserDAOInterface {
     @Override
     protected User queryObjectBuilder(ResultSet rs, List<Object> objects) throws SQLException, DAOException, PropertyException, ResourceNotFoundException, UnrecognizedRoleException, UserNotFoundException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         User user = new User(
+                rs.getString("ID"),
                 rs.getString("name"),
                 rs.getString("surname"),
-                rs.getString(ID),
-                rs.getString(EMAIL),
-                rs.getString("password"),
+                rs.getString("codice_fiscale"),
+                rs.getString("email"),
+                rs.getString("password"), // usa il nome colonna reale
                 rs.getDate("registration_date").toLocalDate()
         );
-        setUserRoleByRoleEnum(user, UserRoleEnum.getUserRoleByType(rs.getInt("role")));
+
+        int roleValue = rs.getInt("role");
+        if (rs.wasNull()) {
+            throw new UnrecognizedRoleException(ExceptionMessagesEnum.UNRECOGNIZED_ROLE.message + " (role column is NULL)");
+        }
+
+        UserRoleEnum roleEnum = UserRoleEnum.getUserRoleByType(roleValue);
+        if (roleEnum == null) {
+            throw new UnrecognizedRoleException(ExceptionMessagesEnum.UNRECOGNIZED_ROLE.message + " (role=" + roleValue + ")");
+        }
+
+        setUserRoleByRoleEnum(user, roleEnum);
         return user;
     }
 

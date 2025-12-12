@@ -51,6 +51,8 @@ public  abstract  class MAIN_TEST extends Application {
         //assertFalse(result, "Con email null dovrebbe restituire false");
     }
 
+
+
     public static void main(String[] args) {
 
         testExistsUserByEmailSafe_UtenteEsistente();
