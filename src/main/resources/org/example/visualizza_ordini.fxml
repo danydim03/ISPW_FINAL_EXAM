@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" prefHeight="500.0" prefWidth="800.0" spacing="20.0" styleClass="background" stylesheets="@styles/default.css" xmlns="http://javafx.com/javafx/17.0.17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.use_cases.visualizza_ordini.graphic_controllers.VisualizzaOrdiniGUIController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="20.0">
+        <Button text="Indietro" onAction="#handleIndietro" />
+        <Label text="Ordini in Creazione">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+    </HBox>
+
+    <TableView fx:id="tabellaOrdini" prefHeight="400.0" prefWidth="760.0" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colonnaNumero" prefWidth="100.0" text="Numero" />
+            <TableColumn fx:id="colonnaData" prefWidth="150.0" text="Data" />
+            <TableColumn fx:id="colonnaCliente" prefWidth="150.0" text="Cliente" />
+            <TableColumn fx:id="colonnaTotale" prefWidth="100.0" text="Totale (€)" />
+            <TableColumn fx:id="colonnaAzioni" prefWidth="150.0" text="Azioni" />
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
+</VBox>

@@ -21,9 +21,8 @@ public class ClienteHomepageGraphicController {
 
     @FXML
     void handleStoricoOrdini(ActionEvent event) {
-        logger.log(Level.INFO, "Click su Storico Ordini");
-        mostraPlaceholder("Storico Ordini", "Qui verrà mostrata la tabella con lo storico degli ordini.");
-        // TODO: PageNavigationController.getInstance().navigateTo("StoricoOrdini");
+        logger.log(Level.INFO, "Navigazione verso Storico Ordini");
+        PageNavigationController.getInstance().navigateTo("StoricoOrdiniView");
     }
 
     @FXML

@@ -47,12 +47,12 @@ public class LoginGraphicControl implements Initializable {
      */
     public void login() {
         //da reinserire
-        final String email = this.emailField.getText();
-        final String password = this.passwordField.getText();
+//        final String email = this.emailField.getText();
+//        final String password = this.passwordField.getText();
 
-//        // solo per testare la grafica senza dover inserire ogni volta le credenziali
-//        final String email = "mario.rossi@example.com";
-//        final String password = "hash-password";
+        // solo per testare la grafica senza dover inserire ogni volta le credenziali
+        final String email = "mario.rossi@example.com";
+        final String password = "hash-password";
 
         try {
             loginController.emailMatches(email);

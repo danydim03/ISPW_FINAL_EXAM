@@ -18,6 +18,7 @@ public class OrdineBean implements Serializable {
     private String clienteId;
     private java.time.LocalDateTime dataCreazione;
     private double totale;
+    private String stato;
 
     public OrdineBean() {
         this.prodotti = new ArrayList<>();
@@ -92,6 +93,14 @@ public class OrdineBean implements Serializable {
 
     public void setTotale(double totale) {
         this.totale = totale;
+    }
+
+    public String getStato() {
+        return stato;
+    }
+
+    public void setStato(String stato) {
+        this.stato = stato;
     }
 
     public boolean hasVoucher() {

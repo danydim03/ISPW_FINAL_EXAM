@@ -53,7 +53,8 @@ public final class PageNavigationController {
     }
 
     /**
-     * Naviga a una vista FXML specifica usando il contentPane (percorso relativo a /org/example/)
+     * Naviga a una vista FXML specifica usando il contentPane (percorso relativo a
+     * /org/example/)
      */
     public void navigateToFXML(String fxmlPath) {
         if (!fxmlPath.endsWith(FILE_EXTENSION)) {
@@ -83,26 +84,29 @@ public final class PageNavigationController {
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Errore caricamento FXML: " + fxmlPath, e);
             e.printStackTrace(); // Stampa lo stack trace completo
-            showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message, UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
+            showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message,
+                    UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
         }
     }
 
-
     /**
-     * Naviga a una vista FXML, imposta il contenuto e restituisce il controller associato
+     * Naviga a una vista FXML, imposta il contenuto e restituisce il controller
+     * associato
      */
     public <T> T navigateToAndGetControllerFXML(String fxmlPath) {
         if (!fxmlPath.endsWith(FILE_EXTENSION)) {
             fxmlPath = fxmlPath.concat(FILE_EXTENSION);
         }
         try {
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(PageNavigationController.class.getResource("/org/example/" + fxmlPath)));
+            FXMLLoader loader = new FXMLLoader(
+                    Objects.requireNonNull(PageNavigationController.class.getResource("/org/example/" + fxmlPath)));
             Parent view = loader.load();
             setContent(view);
             return loader.getController();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Errore caricamento FXML: " + fxmlPath, e);
-            showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message, UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
+            showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message,
+                    UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
             return null;
         }
     }
@@ -115,23 +119,27 @@ public final class PageNavigationController {
             case 2 -> viewName = "homepage_Kebabbaro";
             case 3 -> viewName = "homepage_Amministratore";
             default ->
-                    showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.ROLE_ERROR_TITLE.message, UserErrorMessagesEnum.ROLE_ERROR_MSG.message);
+                showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.ROLE_ERROR_TITLE.message,
+                        UserErrorMessagesEnum.ROLE_ERROR_MSG.message);
         }
         viewName = viewName.concat(FILE_EXTENSION);
         try {
             baseGraphicController.openMainPage(
                     FXMLLoader.load(Objects.requireNonNull(PageNavigationController.class.getResource(viewName))),
-                    String.format("%c%c", this.userData.getUserName().toUpperCase().charAt(0), this.userData.getUserSurname().toUpperCase().charAt(0)));
+                    String.format("%c%c", this.userData.getUserName().toUpperCase().charAt(0),
+                            this.userData.getUserSurname().toUpperCase().charAt(0)));
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Errore caricamento risorsa: " + viewName, e);
-            showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message, UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
+            showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message,
+                    UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
         }
     }
 
     /**
      * Loads a specific .fxml file into a view and navigates to it
      *
-     * @param pageName the name of the view (without the '.fxml' suffix) to be displayed
+     * @param pageName the name of the view (without the '.fxml' suffix) to be
+     *                 displayed
      */
     public void navigateTo(String pageName) {
         try {
@@ -145,7 +153,6 @@ public final class PageNavigationController {
         }
     }
 
-
     /**
      * Navigates to under construction page
      */
@@ -158,16 +165,49 @@ public final class PageNavigationController {
     }
 
     public void returnToMainPage() {
-        baseGraphicController.returnToMainPage();
+        if (this.userData == null) {
+            navigateTo("login");
+            return;
+        }
+
+        String viewName = "";
+        switch (this.userData.getUserRole()) {
+            case 1 -> viewName = "homepage_Cliente2";
+            case 2 -> viewName = "homepage_Kebabbaro";
+            case 3 -> viewName = "homepage_Amministratore";
+            default -> {
+                showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.ROLE_ERROR_TITLE.message,
+                        UserErrorMessagesEnum.ROLE_ERROR_MSG.message);
+                return;
+            }
+        }
+
+        if (!viewName.endsWith(FILE_EXTENSION)) {
+            viewName = viewName.concat(FILE_EXTENSION);
+        }
+
+        try {
+            String initials = String.format("%c%c",
+                    this.userData.getUserName().toUpperCase().charAt(0),
+                    this.userData.getUserSurname().toUpperCase().charAt(0));
+
+            baseGraphicController.openMainPage(
+                    FXMLLoader.load(Objects
+                            .requireNonNull(PageNavigationController.class.getResource("/org/example/" + viewName))),
+                    initials);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Errore caricamento home: " + viewName, e);
+            showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message,
+                    UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
+        }
     }
 
-    public String getSessionTokenKey()
-    {
+    public String getSessionTokenKey() {
         if (userData == null) {
             return null;
         }
 
-    return this.userData.getSessionTokenKey();
+        return this.userData.getSessionTokenKey();
 
     }
 
@@ -190,10 +230,9 @@ public final class PageNavigationController {
                 userBean.getSurname(),
                 userBean.getEmail(),
                 userBean.getCodiceFiscale(),
-                //    userBean.getMatricola(),
+                // userBean.getMatricola(),
                 userBean.getRole(),
-                tokenKey
-        );
+                tokenKey);
     }
 
     // TBI implement user switch
@@ -216,7 +255,8 @@ public final class PageNavigationController {
 
     /**
      * Creates an alert message relative to a specific thrown exception,
-     * with custom type, title and message. This method manages the alerts globally on the current
+     * with custom type, title and message. This method manages the alerts globally
+     * on the current
      * * instance of the application when GUI user interface is applied
      *
      * @param alertType the type of Alert to be displayed

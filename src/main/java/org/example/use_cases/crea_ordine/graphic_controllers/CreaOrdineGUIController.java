@@ -370,7 +370,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                                 "Totale: " + riepilogo.getTotaleFormattato() + "\n" +
                                 "Tempo di preparazione stimato: " + riepilogo.getDurataFormattata());
                 // ritorno alla home page();
-                PageNavigationController.getInstance().navigateTo("homepage_cliente2");
+                org.example.PageNavigationController.getInstance().returnToMainPage();
             } else {
                 mostraErrore("Errore", "Si è verificato un errore durante la conferma dell'ordine.");
             }
@@ -383,7 +383,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
     @FXML
     private void onAnnullaOrdine() {
         if (righeOrdineObservable.isEmpty()) {
-            navigaToHome();
+            org.example.PageNavigationController.getInstance().returnToMainPage();
             return;
         }
 
@@ -394,8 +394,8 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
 
             try {
                 resetVistaCompleta();
-                iniziaNuovoOrdine();
-            } catch (CreaOrdineException e) {
+                org.example.PageNavigationController.getInstance().returnToMainPage();
+            } catch (Exception e) { // Catching Exception to cover CreaOrdineException
                 mostraErrore("Errore", e.getMessage());
             }
         }
@@ -493,14 +493,6 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         sb.append("Tempo di preparazione: ").append(riepilogo.getDurataFormattata()).append("\n\n");
         sb.append("Vuoi confermare l'ordine?");
         return sb.toString();
-    }
-
-    private void navigaToPagamento() {
-        // PageNavigationController.getInstance().navigateTo("PagamentoView.fxml");
-    }
-
-    private void navigaToHome() {
-        // PageNavigationController.getInstance().navigateTo("HomeView.fxml");
     }
 
     private void mostraErrore(String titolo, String messaggio) {

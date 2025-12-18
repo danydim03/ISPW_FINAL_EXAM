@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<!-- 
+    Controller: org.example.use_cases.storico_ordini.graphic_controllers.StoricoOrdiniGUIController
+    CSS: styles/default.css (assuming common style)
+-->
+<VBox alignment="TOP_CENTER" prefHeight="500.0" prefWidth="800.0" spacing="20.0" styleClass="background" stylesheets="@styles/default.css" xmlns="http://javafx.com/javafx/17.0.17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.use_cases.storico_ordini.graphic_controllers.StoricoOrdiniGUIController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="20.0">
+         <!-- Back Button - requires logic in controller if not handled globally -->
+         <Button text="Indietro" onAction="#handleIndietro" /> <!-- Assuming a handler might be needed or handled by base -->
+         
+         <Label text="Il mio Storico Ordini">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+    </HBox>
+
+    <TableView fx:id="tableViewOrdini" prefHeight="400.0" prefWidth="760.0" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colNumeroOrdine" prefWidth="100.0" text="N. Ordine" />
+            <TableColumn fx:id="colData" prefWidth="200.0" text="Data Creazione" />
+            <TableColumn fx:id="colStato" prefWidth="150.0" text="Stato" />
+            <TableColumn fx:id="colTotale" prefWidth="100.0" text="Totale (€)" />
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
+</VBox>
