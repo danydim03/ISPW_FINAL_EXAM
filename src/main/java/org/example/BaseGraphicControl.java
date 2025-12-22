@@ -51,8 +51,6 @@ public class BaseGraphicControl implements Initializable {
         System.out.println(">>> BaseGraphicControl inizializzato e registrato!");
     }
 
-
-
     @FXML
     private void goBack() {
         content.getChildren().remove(content.getChildren().size() - 1);
@@ -74,8 +72,12 @@ public class BaseGraphicControl implements Initializable {
     void openMainPage(Node node, String name) {
         content.getChildren().clear();
         content.getChildren().add(node);
-        accountButton.setText(name);
-        accountButton.setVisible(true);
-        notificationButton.setVisible(true);
+        if (accountButton != null) {
+            accountButton.setText(name);
+            accountButton.setVisible(true);
+        }
+        if (notificationButton != null) {
+            notificationButton.setVisible(true);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package org.example.model. voucher;
+package org.example.model.voucher;
 
 import java.time.LocalDate;
 
@@ -34,7 +34,7 @@ public class VoucherFisso implements Voucher {
         this.importoSconto = importoSconto;
         this.minimoOrdine = minimoOrdine;
         this.dataScadenza = dataScadenza;
-        this. attivo = true;
+        this.attivo = true;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class VoucherFisso implements Voucher {
         if (!attivo) {
             return false;
         }
-        if (dataScadenza != null && LocalDate.now(). isAfter(dataScadenza)) {
+        if (dataScadenza != null && LocalDate.now().isAfter(dataScadenza)) {
             return false;
         }
         return true;
@@ -79,7 +79,7 @@ public class VoucherFisso implements Voucher {
 
     @Override
     public void setId(Long id) {
-        this. id = id;
+        this.id = id;
     }
 
     @Override

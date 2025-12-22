@@ -34,7 +34,7 @@ public class LoginGraphicControl implements Initializable {
     private LoginControl loginController;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle){
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         loginController = new LoginControl();
         loginButton.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER))
@@ -46,35 +46,41 @@ public class LoginGraphicControl implements Initializable {
      * Executes login graphical operation
      */
     public void login() {
-        //da reinserire
-//        final String email = this.emailField.getText();
-//        final String password = this.passwordField.getText();
-
-        // solo per testare la grafica senza dover inserire ogni volta le credenziali
-        final String email = "mario.rossi@example.com";
-        final String password = "hash-password";
+        final String email = this.emailField.getText();
+        final String password = this.passwordField.getText();
 
         try {
             loginController.emailMatches(email);
             LoginBean loginBean = loginController.login(email, password);
             PageNavigationController.getInstance().openMainPage(loginBean.getTokenKey(), loginBean.getUserBean());
         } catch (EmailFormatException e) {
-            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.MALFORMED_EMAIL_MSG.message, e);
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR,
+                    UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.MALFORMED_EMAIL_MSG.message,
+                    e);
         } catch (UserNotFoundException e) {
-            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.USER_NOT_FOUND_MSG.message, e);
-        }
-        catch (DAOException | UnrecognizedRoleException | ObjectNotFoundException |
-               WrongListQueryIdentifierValue e) {
-            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.DATA_RETRIEVAL_TITLE.message, UserErrorMessagesEnum.DATA_RETRIEVAL_MSG.message, e);
-        }
-        catch (WrongPasswordException e) {
-            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.WRONG_PASSWORD_MSG.message, e);
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR,
+                    UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.USER_NOT_FOUND_MSG.message,
+                    e);
+        } catch (DAOException | UnrecognizedRoleException | ObjectNotFoundException | WrongListQueryIdentifierValue e) {
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR,
+                    UserErrorMessagesEnum.DATA_RETRIEVAL_TITLE.message,
+                    UserErrorMessagesEnum.DATA_RETRIEVAL_MSG.message, e);
+        } catch (WrongPasswordException e) {
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR,
+                    UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.WRONG_PASSWORD_MSG.message,
+                    e);
         } catch (MissingAuthorizationException e) {
-            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message, UserErrorMessagesEnum.MISSING_AUTHORIZATION_MSG.message, e);
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR,
+                    UserErrorMessagesEnum.LOGIN_ERROR_TITLE.message,
+                    UserErrorMessagesEnum.MISSING_AUTHORIZATION_MSG.message, e);
         } catch (PropertyException e) {
-            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.PROPERTY_VALUE_TITLE.message, UserErrorMessagesEnum.PROPERTY_VALUE_MSG.message, e);
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR,
+                    UserErrorMessagesEnum.PROPERTY_VALUE_TITLE.message,
+                    UserErrorMessagesEnum.PROPERTY_VALUE_MSG.message, e);
         } catch (ResourceNotFoundException e) {
-            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message, UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
+            PageNavigationController.getInstance().showAlert(Alert.AlertType.ERROR,
+                    UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message,
+                    UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
         }
     }
 }

@@ -1,10 +1,10 @@
-package org.example. model.voucher;
+package org.example.model.voucher;
 
 import org.example.exceptions.*;
 import org.example.instances_management_abstracts.DAODBAbstract;
 
-import java.sql. ResultSet;
-import java.sql. SQLException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -33,42 +33,45 @@ public class VoucherDAODB extends DAODBAbstract<Voucher> implements VoucherDAOIn
     }
 
     @Override
-    public Voucher getVoucherById(Long id) throws DAOException, ObjectNotFoundException, PropertyException, ResourceNotFoundException,
-            UserNotFoundException, UnrecognizedRoleException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    public Voucher getVoucherById(Long id)
+            throws DAOException, ObjectNotFoundException, PropertyException, ResourceNotFoundException,
+            UserNotFoundException, UnrecognizedRoleException, MissingAuthorizationException,
+            WrongListQueryIdentifierValue {
         return getQuery(
                 VOUCHER,
                 List.of(ID),
                 List.of(id),
-                List.of()
-        );
+                List.of());
     }
 
     @Override
-    public Voucher getVoucherByCodice(String codice) throws DAOException, ObjectNotFoundException, PropertyException, ResourceNotFoundException,
-            UserNotFoundException, UnrecognizedRoleException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    public Voucher getVoucherByCodice(String codice)
+            throws DAOException, ObjectNotFoundException, PropertyException, ResourceNotFoundException,
+            UserNotFoundException, UnrecognizedRoleException, MissingAuthorizationException,
+            WrongListQueryIdentifierValue {
         return getQuery(
                 VOUCHER,
                 List.of(CODICE),
                 List.of(codice),
-                List.of()
-        );
+                List.of());
     }
 
     @Override
     public List<Voucher> getAllVoucherAttivi() throws DAOException, PropertyException, ResourceNotFoundException,
-            UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+            UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException,
+            WrongListQueryIdentifierValue {
         return getListQuery(
                 VOUCHER,
                 List.of(ATTIVO),
                 List.of(true),
                 List.of(),
                 List.of(),
-                Boolean.FALSE
-        );
+                Boolean.FALSE);
     }
 
     @Override
-    public void insert(Voucher voucher) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
+    public void insert(Voucher voucher)
+            throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
         double valore = 0;
         double minimoOrdine = 0;
 
@@ -85,12 +88,10 @@ public class VoucherDAODB extends DAODBAbstract<Voucher> implements VoucherDAOIn
                         voucher.getCodice(),
                         voucher.getDescrizione(),
                         voucher.getDataScadenza(),
-                        voucher. isAttivo(),
+                        voucher.isAttivo(),
                         voucher.getTipoVoucher(),
                         valore,
-                        minimoOrdine
-                )
-        );
+                        minimoOrdine));
     }
 
     @Override
@@ -98,12 +99,12 @@ public class VoucherDAODB extends DAODBAbstract<Voucher> implements VoucherDAOIn
         deleteQuery(
                 VOUCHER,
                 List.of(ID),
-                List.of(voucher.getId())
-        );
+                List.of(voucher.getId()));
     }
 
     @Override
-    public void update(Voucher voucher) throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
+    public void update(Voucher voucher)
+            throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
         double valore = 0;
         double minimoOrdine = 0;
 
@@ -120,8 +121,7 @@ public class VoucherDAODB extends DAODBAbstract<Voucher> implements VoucherDAOIn
                 List.of(voucher.getCodice(), voucher.getDescrizione(), voucher.getDataScadenza(),
                         voucher.isAttivo(), voucher.getTipoVoucher(), valore, minimoOrdine),
                 List.of(ID),
-                List.of(voucher.getId())
-        );
+                List.of(voucher.getId()));
     }
 
     @Override
@@ -134,7 +134,7 @@ public class VoucherDAODB extends DAODBAbstract<Voucher> implements VoucherDAOIn
         String tipoVoucher = rs.getString(TIPO_VOUCHER);
         double valore = rs.getDouble(VALORE);
         double minOrdine = rs.getDouble(MINIMO_ORDINE);
-        LocalDate dataScadenza = rs. getDate(DATA_SCADENZA) != null ? rs.getDate(DATA_SCADENZA).toLocalDate() : null;
+        LocalDate dataScadenza = rs.getDate(DATA_SCADENZA) != null ? rs.getDate(DATA_SCADENZA).toLocalDate() : null;
         boolean attivo = rs.getBoolean(ATTIVO);
 
         Voucher voucher;

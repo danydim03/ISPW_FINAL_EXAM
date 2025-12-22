@@ -1,9 +1,9 @@
 package org.example.enums;
 
-
 public enum PersistenceTypeEnum {
     DB("DB"),
-    FS("MEM");
+    FS("FS"),
+    DEMO("DEMO");
 
     public final String value;
 

@@ -233,6 +233,9 @@ public final class PageNavigationController {
                 // userBean.getMatricola(),
                 userBean.getRole(),
                 tokenKey);
+        // IMPORTANT: Also set the current token key in SessionManager for session
+        // management
+        org.example.session_manager.SessionManager.getInstance().setCurrentTokenKey(tokenKey);
     }
 
     // TBI implement user switch
