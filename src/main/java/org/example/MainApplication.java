@@ -1,6 +1,5 @@
 package org.example;
 
-
 import org.example.enums.ExceptionMessagesEnum;
 import org.example.enums.FrontEndTypeEnum;
 import org.example.exceptions.PropertyException;
@@ -18,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainApplication extends Application {
-    //test ci analysis
+    // test ci analysis
     private static final Logger LOGGER = Logger.getLogger(MainApplication.class.getName());
 
     @Override
@@ -35,13 +34,17 @@ public class MainApplication extends Application {
         // CORREZIONE: Imposta la finestra come ridimensionabile a 'true'
         stage.setResizable(true);
         // *************************************************************
+        // Imposta dimensioni minime per evitare contenuti tagliati
+        stage.setMinWidth(950);
+        stage.setMinHeight(700);
         stage.show();
     }
 
     public static void main(String[] args) {
         try {
 
-            FrontEndTypeEnum frontEndType = FrontEndTypeEnum.getFrontEndTypeByValue(PropertiesHandler.getInstance().getProperty("front_end_type"));
+            FrontEndTypeEnum frontEndType = FrontEndTypeEnum
+                    .getFrontEndTypeByValue(PropertiesHandler.getInstance().getProperty("front_end_type"));
             if (frontEndType != null)
                 switch (frontEndType) {
                     case JAVAFX -> launch(args);
