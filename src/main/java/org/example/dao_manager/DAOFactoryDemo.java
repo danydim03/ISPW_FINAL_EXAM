@@ -1,19 +1,19 @@
 package org.example.dao_manager;
 
-import org.example.model.role.Amministratore.AmministratoreDAOInterface;
-import org.example.model.role.Amministratore.AmministratoreDAODemo;
-import org.example.model.role.Cliente.ClienteDAOInterface;
-import org.example.model.role.Cliente.ClienteDAODemo;
-import org.example.model.role.Kebabbaro.KebabbaroDAOInterface;
-import org.example.model.role.Kebabbaro.KebabbaroDAODemo;
-import org.example.model.food.FoodDAODemo;
-import org.example.model.food.FoodDAOInterface;
-import org.example.model.ordine.OrdineDAODemo;
-import org.example.model.ordine.OrdineDAOInterface;
-import org.example.model.user.UserDAODemo;
-import org.example.model.user.UserDAOInterface;
-import org.example.model.voucher.VoucherDAODemo;
-import org.example.model.voucher.VoucherDAOInterface;
+import org.example.model.role.Amministratore.DAO.AmministratoreDAOInterface;
+import org.example.model.role.Amministratore.DAO.AmministratoreDAODemo;
+import org.example.model.role.Cliente.DAO.ClienteDAOInterface;
+import org.example.model.role.Cliente.DAO.ClienteDAODemo;
+import org.example.model.role.Kebabbaro.DAO.KebabbaroDAOInterface;
+import org.example.model.role.Kebabbaro.DAO.KebabbaroDAODemo;
+import org.example.model.food.DAO.FoodDAODemo;
+import org.example.model.food.DAO.FoodDAOInterface;
+import org.example.model.ordine.DAO.OrdineDAODemo;
+import org.example.model.ordine.DAO.OrdineDAOInterface;
+import org.example.model.user.DAO.UserDAODemo;
+import org.example.model.user.DAO.UserDAOInterface;
+import org.example.model.voucher.DAO.VoucherDAODemo;
+import org.example.model.voucher.DAO.VoucherDAOInterface;
 
 public class DAOFactoryDemo extends DAOFactoryAbstract {
 

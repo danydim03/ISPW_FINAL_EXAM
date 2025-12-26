@@ -2,7 +2,7 @@ package org.example.use_cases.storico_ordini;
 
 import org.example.dao_manager.DAOFactoryAbstract;
 import org.example.model.ordine.Ordine;
-import org.example.model.ordine.OrdineDAOInterface;
+import org.example.model.ordine.DAO.OrdineDAOInterface;
 import org.example.model.user.User;
 
 import java.util.List;

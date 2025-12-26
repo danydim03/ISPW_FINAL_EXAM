@@ -3,7 +3,7 @@ package org.example.use_cases.visualizza_ordini;
 import org.example.dao_manager.DAOFactoryAbstract;
 import org.example.enums.StatoOrdine;
 import org.example.model.ordine.Ordine;
-import org.example.model.ordine.OrdineDAOInterface;
+import org.example.model.ordine.DAO.OrdineDAOInterface;
 
 import java.util.List;
 
