@@ -1,7 +1,8 @@
-package org.example.model.voucher;
+package org.example.model.voucher.DAO;
 
 import org.example.exceptions.*;
 import org.example.instances_management_abstracts.DAODBAbstract;
+import org.example.model.voucher.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

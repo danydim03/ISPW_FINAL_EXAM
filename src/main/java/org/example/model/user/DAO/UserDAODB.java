@@ -1,5 +1,5 @@
 
-package org.example.model.user;
+package org.example.model.user.DAO;
 
 import org.example.enums.ExceptionMessagesEnum;
 import org.example.enums.UserRoleEnum;
@@ -12,10 +12,11 @@ import org.example.exceptions.ObjectNotFoundException;
 import org.example.exceptions.MissingAuthorizationException;
 import org.example.exceptions.WrongListQueryIdentifierValue;
 import org.example.instances_management_abstracts.DAODBAbstract;
-import org.example.model.role.Amministratore.AmministratoreDAODB;
+import org.example.model.role.Amministratore.DAO.AmministratoreDAODB;
 import org.example.model.role.Amministratore.AmministratoreLazyFactory;
 import org.example.model.role.Cliente.ClienteLazyFactory;
 import org.example.model.role.Kebabbaro.KebabbaroLazyFactory;
+import org.example.model.user.User;
 
 import java.sql.Date;
 import java.sql.ResultSet;

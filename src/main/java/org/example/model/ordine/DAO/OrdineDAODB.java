@@ -1,9 +1,10 @@
-package org.example.model.ordine;
+package org.example.model.ordine.DAO;
 
 import org.example.dao_manager.DBConnection;
 import org.example.exceptions.*;
 import org.example.instances_management_abstracts.DAODBAbstract;
 import org.example.enums.StatoOrdine;
+import org.example.model.ordine.Ordine;
 
 import java.sql.*;
 import java.time.LocalDateTime;

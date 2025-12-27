@@ -1,7 +1,7 @@
-package org.example.model.role.Cliente;
+package org.example.model.role.Cliente.DAO;
 
 import org.example.exceptions.DAOException;
-import org.example.model.role.Cliente.ClienteDAOInterface;
+import org.example.model.role.Cliente.Cliente;
 import org.example.model.user.User;
 
 public class ClienteDAODemo implements ClienteDAOInterface {

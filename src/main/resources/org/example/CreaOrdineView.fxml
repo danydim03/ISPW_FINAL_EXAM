@@ -9,7 +9,8 @@
 
 
 
-<AnchorPane prefHeight="550.0" prefWidth="750.0"
+<AnchorPane minHeight="550.0" minWidth="750.0"
+            prefHeight="600.0" prefWidth="900.0"
             stylesheets="@styles/crea-ordine-style.css"
             styleClass="background"
             xmlns="http://javafx.com/javafx/17"

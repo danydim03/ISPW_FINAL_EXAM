@@ -1,10 +1,8 @@
-package org.example.model.role.Cliente;
+package org.example.model.role.Cliente.DAO;
 
 import org.example.exceptions.*;
 import org.example.instances_management_abstracts.DAODBAbstract;
-//import org.example.model.association_classes.degree_course_enrollment.DegreeCourseEnrollmentLazyFactory;
-//import it.uniroma2.dicii.ispw.gradely.model.association_classes.subject_course_enrollment.SubjectCourseEnrollmentLazyFactory;
-//import org.example.model.title.TitleLazyFactory;
+import org.example.model.role.Cliente.Cliente;
 import org.example.model.user.User;
 
 import java.sql.ResultSet;

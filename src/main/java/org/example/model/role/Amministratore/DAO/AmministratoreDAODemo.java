@@ -1,7 +1,7 @@
-package org.example.model.role.Amministratore;
+package org.example.model.role.Amministratore.DAO;
 
 import org.example.exceptions.DAOException;
-import org.example.model.role.Amministratore.AmministratoreDAOInterface;
+import org.example.model.role.Amministratore.Amministratore;
 import org.example.model.user.User;
 
 public class AmministratoreDAODemo implements AmministratoreDAOInterface {

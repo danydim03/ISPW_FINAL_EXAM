@@ -5,13 +5,13 @@ import org.example.enums.ExceptionMessagesEnum;
 import org.example.enums.PersistenceTypeEnum;
 import org.example.exceptions.PropertyException;
 import org.example.exceptions.ResourceNotFoundException;
-import org.example.model.role.Cliente.ClienteDAOInterface;
-import org.example.model.ordine.OrdineDAOInterface;
-import org.example.model.role.Kebabbaro.KebabbaroDAOInterface;
-import org.example.model.role.Amministratore.AmministratoreDAOInterface;
-import org.example.model.user.UserDAOInterface;
-import org.example.model.voucher.VoucherDAOInterface;
-import org.example.model.food.FoodDAOInterface;
+import org.example.model.role.Cliente.DAO.ClienteDAOInterface;
+import org.example.model.ordine.DAO.OrdineDAOInterface;
+import org.example.model.role.Kebabbaro.DAO.KebabbaroDAOInterface;
+import org.example.model.role.Amministratore.DAO.AmministratoreDAOInterface;
+import org.example.model.user.DAO.UserDAOInterface;
+import org.example.model.voucher.DAO.VoucherDAOInterface;
+import org.example.model.food.DAO.FoodDAOInterface;
 
 public abstract class DAOFactoryAbstract {
 
@@ -28,6 +28,7 @@ public abstract class DAOFactoryAbstract {
                 switch (persistenceType) {
                     case DB -> me = new DAOFactoryDB();
                     case DEMO -> me = new DAOFactoryDemo();
+                    case FS -> me = new DAOFactoryFS();
                     default -> throw new PropertyException(ExceptionMessagesEnum.UNEXPECTED_PROPERTY_NAME.message);
                 }
             else

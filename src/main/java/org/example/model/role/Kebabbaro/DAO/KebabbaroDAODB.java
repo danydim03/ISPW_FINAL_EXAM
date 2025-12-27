@@ -1,7 +1,8 @@
-package org.example.model.role.Kebabbaro;
+package org.example.model.role.Kebabbaro.DAO;
 
 import org.example.exceptions.*;
 import org.example.instances_management_abstracts.DAODBAbstract;
+import org.example.model.role.Kebabbaro.Kebabbaro;
 import org.example.model.user.User;
 
 import java.sql.ResultSet;

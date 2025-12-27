@@ -1,7 +1,8 @@
-package org.example.model.role.Amministratore;
+package org.example.model.role.Amministratore.DAO;
 
 import org.example.exceptions.*;
 import org.example.instances_management_abstracts.DAODBAbstract;
+import org.example.model.role.Amministratore.Amministratore;
 import org.example.model.user.User;
 
 import java.sql.ResultSet;

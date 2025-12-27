@@ -1,25 +1,25 @@
 package org.example.dao_manager;
 
-import org.example.model.food.FoodDAODB;
-import org.example.model.food.FoodDAOInterface;
-import org.example.model.role. Amministratore.AmministratoreDAODB;
-import org.example.model.role. Amministratore.AmministratoreDAOInterface;
-import org.example.model.role.Cliente.ClientiDAODB;
-import org.example.model.role.Cliente.ClienteDAOInterface;
-import org. example.model.role.Kebabbaro.KebabbaroDAODB;
-import org. example.model.role.Kebabbaro.KebabbaroDAOInterface;
-import org. example.model.user.UserDAODB;
-import org.example.model.user. UserDAOInterface;
-import org.example.model.voucher. VoucherDAODB;
-import org.example.model.voucher.VoucherDAOInterface;
-import org.example.model.ordine.OrdineDAODB;
-import org.example.model.ordine.OrdineDAOInterface;
+import org.example.model.food.DAO.FoodDAODB;
+import org.example.model.food.DAO.FoodDAOInterface;
+import org.example.model.role.Amministratore.DAO.AmministratoreDAODB;
+import org.example.model.role.Amministratore.DAO.AmministratoreDAOInterface;
+import org.example.model.role.Cliente.DAO.ClientiDAODB;
+import org.example.model.role.Cliente.DAO.ClienteDAOInterface;
+import org.example.model.role.Kebabbaro.DAO.KebabbaroDAODB;
+import org.example.model.role.Kebabbaro.DAO.KebabbaroDAOInterface;
+import org.example.model.user.DAO.UserDAODB;
+import org.example.model.user.DAO.UserDAOInterface;
+import org.example.model.voucher.DAO.VoucherDAODB;
+import org.example.model.voucher.DAO.VoucherDAOInterface;
+import org.example.model.ordine.DAO.OrdineDAODB;
+import org.example.model.ordine.DAO.OrdineDAOInterface;
 
 public class DAOFactoryDB extends DAOFactoryAbstract {
 
     @Override
     public KebabbaroDAOInterface getKebabbaroDAO() {
-        return KebabbaroDAODB. getInstance();
+        return KebabbaroDAODB.getInstance();
     }
 
     @Override
@@ -42,11 +42,11 @@ public class DAOFactoryDB extends DAOFactoryAbstract {
         return VoucherDAODB.getInstance();
     }
 
-
     @Override
     public OrdineDAOInterface getOrdineDAO() {
         return OrdineDAODB.getInstance();
     }
+
     @Override
     public FoodDAOInterface getFoodDAO() {
         return FoodDAODB.getInstance();

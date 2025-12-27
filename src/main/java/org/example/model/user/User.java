@@ -16,7 +16,7 @@ public class User {
     private LocalDate registrationDate;
     private AbstractRole role;
 
-    protected User(String name, String surname, String codiceFiscale, String email, String password,
+    public User(String name, String surname, String codiceFiscale, String email, String password,
             LocalDate registrationDate) {
         this.name = name;
         this.surname = surname;
@@ -96,7 +96,7 @@ public class User {
             throw new WrongPasswordException(ExceptionMessagesEnum.WRONG_PASSWORD.message);
     }
 
-    String getPassword() {
+    public String getPassword() {
         return this.password;
     }
 

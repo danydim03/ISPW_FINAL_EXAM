@@ -1,7 +1,8 @@
-package org.example.model.voucher;
+package org.example.model.voucher.DAO;
 
 import org.example.exceptions.DAOException;
 import org.example.exceptions.ObjectNotFoundException;
+import org.example.model.voucher.*;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,103 +1,86 @@
-package org.example.model.ordine;
+package org.example.model.food.DAO;
 
 import org.example.exceptions.*;
+import org.example.model.food.Food;
 
 import java.util.List;
-import org.example.enums.StatoOrdine;
 
-/**
- * Interfaccia DAO per la gestione della persistenza degli Ordini.
- */
-public interface OrdineDAOInterface {
+public interface FoodDAOInterface {
 
         /**
-         * Inserisce un nuovo Ordine nel DB
+         * Inserisce un Food nel DB
          * 
-         * @param ordine l'ordine da inserire
+         * @param food l'oggetto da inserire
          * @throws DAOException              errori durante l'accesso al persistence
          *                                   layer
          * @throws PropertyException         errori nel caricamento delle properties
          * @throws ResourceNotFoundException risorsa properties non trovata
          */
-        void insert(Ordine ordine) throws DAOException, PropertyException, ResourceNotFoundException,
+        void insert(Food food) throws DAOException, PropertyException, ResourceNotFoundException,
                         MissingAuthorizationException;
 
         /**
-         * Elimina un Ordine dal DB
+         * Elimina un Food dal DB
          * 
-         * @param ordine l'ordine da eliminare
+         * @param food l'oggetto da eliminare
          * @throws DAOException              errori durante l'accesso al persistence
          *                                   layer
          * @throws PropertyException         errori nel caricamento delle properties
          * @throws ResourceNotFoundException risorsa properties non trovata
          */
-        void delete(Ordine ordine) throws DAOException, PropertyException, ResourceNotFoundException;
+        void delete(Food food) throws DAOException, PropertyException, ResourceNotFoundException;
 
         /**
-         * Aggiorna un Ordine nel DB
+         * Aggiorna un Food nel DB
          * 
-         * @param ordine l'ordine da aggiornare
+         * @param food l'oggetto da aggiornare
          * @throws DAOException              errori durante l'accesso al persistence
          *                                   layer
          * @throws PropertyException         errori nel caricamento delle properties
          * @throws ResourceNotFoundException risorsa properties non trovata
          */
-        void update(Ordine ordine) throws DAOException, PropertyException, ResourceNotFoundException,
+        void update(Food food) throws DAOException, PropertyException, ResourceNotFoundException,
                         MissingAuthorizationException;
 
         /**
-         * Recupera un Ordine per numero ordine
+         * Recupera un Food per ID
          * 
-         * @param numeroOrdine il numero dell'ordine
-         * @return l'oggetto Ordine
+         * @param id l'ID del Food
+         * @return l'oggetto Food
          * @throws DAOException              errori durante l'accesso al persistence
          *                                   layer
-         * @throws ObjectNotFoundException   se l'ordine non viene trovato
+         * @throws ObjectNotFoundException   se il Food non viene trovato
          * @throws PropertyException         errori nel caricamento delle properties
          * @throws ResourceNotFoundException risorsa properties non trovata
          */
-        Ordine getOrdineByNumero(Long numeroOrdine) throws DAOException, ObjectNotFoundException, PropertyException,
-                        ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException,
-                        MissingAuthorizationException, WrongListQueryIdentifierValue;
+        Food getFoodById(Long id)
+                        throws DAOException, ObjectNotFoundException, PropertyException, ResourceNotFoundException,
+                        UserNotFoundException, UnrecognizedRoleException, MissingAuthorizationException,
+                        WrongListQueryIdentifierValue;
 
         /**
-         * Recupera tutti gli ordini di un cliente
+         * Recupera tutti i Food di tipo BASE (prodotti base)
          * 
-         * @param clienteId l'ID del cliente
-         * @return lista di Ordini del cliente
+         * @return lista di Food base
          * @throws DAOException              errori durante l'accesso al persistence
          *                                   layer
          * @throws PropertyException         errori nel caricamento delle properties
          * @throws ResourceNotFoundException risorsa properties non trovata
          */
-        List<Ordine> getOrdiniByCliente(String clienteId)
-                        throws DAOException, PropertyException, ResourceNotFoundException,
+        List<Food> getAllFoodBase() throws DAOException, PropertyException, ResourceNotFoundException,
                         UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
                         MissingAuthorizationException, WrongListQueryIdentifierValue;
 
         /**
-         * Recupera tutti gli ordini con un determinato stato
+         * Recupera tutti i Food di tipo ADDON
          * 
-         * @param stato lo stato degli ordini da cercare
-         * @return lista di Ordini con lo stato specificato
+         * @return lista di Food addon
          * @throws DAOException              errori durante l'accesso al persistence
          *                                   layer
          * @throws PropertyException         errori nel caricamento delle properties
          * @throws ResourceNotFoundException risorsa properties non trovata
          */
-        List<Ordine> getOrdiniByStato(StatoOrdine stato)
-                        throws DAOException, PropertyException, ResourceNotFoundException,
+        List<Food> getAllAddOn() throws DAOException, PropertyException, ResourceNotFoundException,
                         UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
                         MissingAuthorizationException, WrongListQueryIdentifierValue;
-
-        /**
-         * Genera il prossimo numero ordine disponibile
-         * 
-         * @return il prossimo numero ordine
-         * @throws DAOException              errori durante l'accesso al persistence
-         *                                   layer
-         * @throws PropertyException         errori nel caricamento delle properties
-         * @throws ResourceNotFoundException risorsa properties non trovata
-         */
-        Long getNextNumeroOrdine() throws DAOException, PropertyException, ResourceNotFoundException;
 }

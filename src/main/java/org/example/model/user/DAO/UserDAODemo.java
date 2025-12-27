@@ -1,10 +1,11 @@
-package org.example.model.user;
+package org.example.model.user.DAO;
 
 import org.example.enums.ExceptionMessagesEnum; // Fixed: Added import
 import org.example.exceptions.*;
-import org.example.model.role.Amministratore.AmministratoreDAODemo;
-import org.example.model.role.Cliente.ClienteDAODemo;
-import org.example.model.role.Kebabbaro.KebabbaroDAODemo;
+import org.example.model.role.Amministratore.DAO.AmministratoreDAODemo;
+import org.example.model.role.Cliente.DAO.ClienteDAODemo;
+import org.example.model.role.Kebabbaro.DAO.KebabbaroDAODemo;
+import org.example.model.user.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

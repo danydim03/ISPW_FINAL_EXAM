@@ -1,7 +1,7 @@
-package org.example.model.role.Kebabbaro;
+package org.example.model.role.Kebabbaro.DAO;
 
 import org.example.exceptions.DAOException;
-import org.example.model.role.Kebabbaro.KebabbaroDAOInterface;
+import org.example.model.role.Kebabbaro.Kebabbaro;
 import org.example.model.user.User;
 
 public class KebabbaroDAODemo implements KebabbaroDAOInterface {
