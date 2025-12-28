@@ -1,6 +1,6 @@
 package org.example.model.food.Decorator;
-import org.example.model.food.Food;
 
+import org.example.model.food.Food;
 
 public class Cipolla extends DecoratorAddON {
 
@@ -10,6 +10,9 @@ public class Cipolla extends DecoratorAddON {
 
     @Override
     public String getDescrizione() {
+        if (foodDecorato == null) {
+            return "Cipolla";
+        }
         return foodDecorato.getDescrizione() + ", Cipolla";
     }
 

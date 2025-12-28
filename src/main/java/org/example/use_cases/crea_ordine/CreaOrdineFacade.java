@@ -10,26 +10,33 @@ import java.util.List;
 public class CreaOrdineFacade {
 
     private final CreaOrdineController controller;
+    private final org.example.model.user.User sessionUser;
 
     public CreaOrdineFacade(String tokenKey) throws MissingAuthorizationException {
-        var sessionUser = SessionManager.getInstance().getSessionUserByTokenKey(tokenKey);
+        this.sessionUser = SessionManager.getInstance().getSessionUserByTokenKey(tokenKey);
         if (sessionUser == null || sessionUser.getRole() == null || sessionUser.getRole().getClienteRole() == null) {
             throw new MissingAuthorizationException("Accesso negato: token non autorizzato per ruolo cliente");
         }
         this.controller = new CreaOrdineController();
     }
 
-    public OrdineBean inizializzaNuovoOrdine(String clienteId) throws DAOException, MissingAuthorizationException {
-        return controller.inizializzaNuovoOrdine(clienteId);
+    public OrdineBean inizializzaNuovoOrdine(String ignoredClienteId)
+            throws DAOException, MissingAuthorizationException {
+        // Use actual client ID from session user (database ID), not the passed
+        // parameter
+        String actualClienteId = sessionUser.getId();
+        return controller.inizializzaNuovoOrdine(actualClienteId);
     }
 
     public List<FoodBean> getProdottiBaseDisponibili() throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
+            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
+            UnrecognizedRoleException {
         return controller.getProdottiBaseDisponibili();
     }
 
     public List<FoodBean> getAddOnDisponibili() throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
+            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
+            UnrecognizedRoleException {
         return controller.getAddOnDisponibili();
     }
 
@@ -41,7 +48,9 @@ public class CreaOrdineFacade {
         return controller.rimuoviProdottoDaOrdine(index);
     }
 
-    public VoucherBean applicaVoucher(String codiceVoucher) throws DAOException, ObjectNotFoundException,MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
+    public VoucherBean applicaVoucher(String codiceVoucher)
+            throws DAOException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue,
+            UserNotFoundException, UnrecognizedRoleException {
         return controller.applicaVoucher(codiceVoucher);
     }
 

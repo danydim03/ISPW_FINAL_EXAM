@@ -61,7 +61,18 @@ public class MainApplication extends Application {
     }
 
     private static void launchCLI() {
-        // To be implemented
+        System.out.println("\n");
+        System.out.println("  ╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("  ║                                                               ║");
+        System.out.println("  ║     🥙  HABIBI SHAWARMA - Sistema Gestione Ordini  🥙        ║");
+        System.out.println("  ║                                                               ║");
+        System.out.println("  ║          Interfaccia a Linea di Comando (CLI)                 ║");
+        System.out.println("  ║                                                               ║");
+        System.out.println("  ╚═══════════════════════════════════════════════════════════════╝");
+        System.out.println("\n");
+
+        // Start the CLI navigation controller
+        org.example.cli.CLINavigationController.getInstance().start();
     }
 
     private Pane loadLoginPane() {

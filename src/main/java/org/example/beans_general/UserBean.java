@@ -10,7 +10,8 @@ public class UserBean {
     private UserRoleEnum role;
     private String matricola;
 
-    public UserBean(String name, String surname, String codiceFiscale, String email, UserRoleEnum role, String matricola) {
+    public UserBean(String name, String surname, String codiceFiscale, String email, UserRoleEnum role,
+            String matricola) {
         this.name = name;
         this.surname = surname;
         this.codiceFiscale = codiceFiscale;
@@ -53,6 +54,10 @@ public class UserBean {
 
     public Integer getRole() {
         return this.role.type;
+    }
+
+    public UserRoleEnum getRoleEnum() {
+        return this.role;
     }
 
     public void setRole(UserRoleEnum role) {

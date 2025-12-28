@@ -1,4 +1,5 @@
 package org.example.model.food.Decorator;
+
 import org.example.model.food.Food;
 
 public abstract class DecoratorAddON extends Food {
@@ -7,6 +8,7 @@ public abstract class DecoratorAddON extends Food {
 
     public DecoratorAddON(Food food) {
         this.foodDecorato = food;
+        this.tipo = "ADDON";
     }
 
     @Override
@@ -20,11 +22,19 @@ public abstract class DecoratorAddON extends Food {
 
     @Override
     public double getCosto() {
+        // If used standalone (for listing addons), return only addon cost
+        if (foodDecorato == null) {
+            return getCostoPlus();
+        }
         return foodDecorato.getCosto() + getCostoPlus();
     }
 
     @Override
     public int getDurata() {
-        return foodDecorato. getDurata() + getDurataPlus();
+        // If used standalone (for listing addons), return only addon duration
+        if (foodDecorato == null) {
+            return getDurataPlus();
+        }
+        return foodDecorato.getDurata() + getDurataPlus();
     }
 }
