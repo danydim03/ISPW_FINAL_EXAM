@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
  * Gestisce anche la tabella di relazione ordine_prodotti.
  */
 public class OrdineDAOFS implements OrdineDAOInterface {
+
+    private static final Logger logger = Logger.getLogger(OrdineDAOFS.class.getName());
 
     private static OrdineDAOFS instance;
     private final CSVFileManager csvManager;
@@ -52,7 +56,7 @@ public class OrdineDAOFS implements OrdineDAOInterface {
             csvManager.createFileWithHeader(FILENAME, HEADER);
             csvManager.createFileWithHeader(PRODOTTI_FILENAME, PRODOTTI_HEADER);
         } catch (DAOException e) {
-            System.err.println("Warning: Could not initialize ordini.csv: " + e.getMessage());
+            logger.log(Level.WARNING, "Could not initialize ordini.csv", e);
         }
     }
 
@@ -194,7 +198,9 @@ public class OrdineDAOFS implements OrdineDAOInterface {
                 Voucher voucher = VoucherDAOFS.getInstance().getVoucherById(voucherId);
                 ordine.setVoucher(voucher);
             } catch (Exception e) {
-                // Voucher not found or error, ignore
+                // Log per debugging - il voucher potrebbe non essere valido/trovato
+                logger.log(Level.FINE,
+                        "Voucher not found or invalid for ordine " + numeroOrdine + ": " + e.getMessage(), e);
             }
         }
 

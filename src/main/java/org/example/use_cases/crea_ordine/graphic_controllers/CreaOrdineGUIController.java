@@ -217,7 +217,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             }
             aggiornaRiepilogo();
         } catch (DAOException | MissingAuthorizationException e) {
-            throw new CreaOrdineException("Impossibile inizializzare l'ordine: " + e.getMessage());
+            throw new CreaOrdineException("Impossibile inizializzare l'ordine: " + e.getMessage(), e);
         }
     }
 

@@ -1,6 +1,6 @@
 package org.example.exceptions;
 
-public class BeanFormatException extends Exception{
+public class BeanFormatException extends HabibiException {
     public BeanFormatException(String message) {
         super(message);
     }

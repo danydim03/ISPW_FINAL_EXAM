@@ -1,6 +1,6 @@
 package org.example.exceptions;
 
-public class ResourceNotFoundException extends Exception {
+public class ResourceNotFoundException extends HabibiException {
 
     public ResourceNotFoundException(String message) {
         super(message);
