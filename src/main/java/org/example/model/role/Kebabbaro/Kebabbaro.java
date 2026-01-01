@@ -14,7 +14,9 @@ public class Kebabbaro extends AbstractRole {
     private final int maxOrdersPerHour;
 
     public Kebabbaro(User user, List<String> signatureDishes, int maxOrdersPerHour) {
-        super(user);
+        super(user); // puntatore all'oggetto User
+        // lo user viene puntato correttamente tramite puntatori e non tramite
+        // l'utilizzo di chiavi esterne come nel modello relazionale.
         this.signatureDishes = signatureDishes == null ? Collections.emptyList() : List.copyOf(signatureDishes);
         this.maxOrdersPerHour = Math.max(0, maxOrdersPerHour);
     }

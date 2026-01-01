@@ -17,24 +17,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainApplication extends Application {
-    // test ci analysis
     private static final Logger LOGGER = Logger.getLogger(MainApplication.class.getName());
 
     @Override
     public void start(Stage stage) throws IOException {
         Pane basePane = loadLoginPane();
         if (basePane != null) {
-            // Nota: ho rimosso le dimensioni fisse 720, 512, lasciando che l'FXML (890x550)
-            // e il layout manager determinino le dimensioni iniziali.
             Scene scene = new Scene(basePane);
             stage.setTitle("ISPW PROJECT 2026");
             stage.setScene(scene);
         }
-        // *************************************************************
-        // CORREZIONE: Imposta la finestra come ridimensionabile a 'true'
         stage.setResizable(true);
-        // *************************************************************
-        // Imposta dimensioni minime per evitare contenuti tagliati
         stage.setMinWidth(950);
         stage.setMinHeight(700);
         stage.show();
@@ -64,7 +57,7 @@ public class MainApplication extends Application {
         System.out.println("\n");
         System.out.println("  ╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("  ║                                                               ║");
-        System.out.println("  ║     🥙  HABIBI SHAWARMA - Sistema Gestione Ordini  🥙        ║");
+        System.out.println("  ║     🥙  HABIBI SHAWARMA - Sistema Gestione Ordini  🥙          ║");
         System.out.println("  ║                                                               ║");
         System.out.println("  ║          Interfaccia a Linea di Comando (CLI)                 ║");
         System.out.println("  ║                                                               ║");
