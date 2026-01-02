@@ -14,8 +14,14 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.example.exceptions.HabibiException;
 
 public class StoricoOrdiniGUIController implements Initializable {
+
+    private static final Logger logger = Logger.getLogger(StoricoOrdiniGUIController.class.getName());
 
     @FXML
     private TableView<OrdineBean> tableViewOrdini;
@@ -54,10 +60,21 @@ public class StoricoOrdiniGUIController implements Initializable {
         try {
             List<OrdineBean> ordini = facade.getStoricoOrdini();
             ordiniList.setAll(ordini);
+        } catch (HabibiException e) {
+            logger.log(Level.SEVERE, "Errore nel caricamento storico ordini", e);
+            mostraErrore("Errore Caricamento", "Impossibile caricare lo storico ordini: " + e.getMessage());
         } catch (Exception e) {
-            // Gestione errore (es. log o alert se possibile)
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Errore imprevisto nel caricamento storico ordini", e);
+            mostraErrore("Errore Caricamento", "Impossibile caricare lo storico ordini: " + e.getMessage());
         }
+    }
+
+    private void mostraErrore(String titolo, String messaggio) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle(titolo);
+        alert.setHeaderText(null);
+        alert.setContentText(messaggio);
+        alert.showAndWait();
     }
 
     @FXML

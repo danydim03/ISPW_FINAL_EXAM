@@ -1,5 +1,6 @@
 package org.example.use_cases.visualizza_ordini;
 
+import org.example.exceptions.*;
 import org.example.use_cases.crea_ordine.beans.OrdineBean;
 import org.example.enums.StatoOrdine;
 import org.example.model.ordine.Ordine;
@@ -11,7 +12,9 @@ public class VisualizzaOrdiniFacade {
 
     private final VisualizzaOrdiniController controller = new VisualizzaOrdiniController();
 
-    public List<OrdineBean> getOrdiniInCreazione() throws Exception {
+    public List<OrdineBean> getOrdiniInCreazione() throws DAOException, PropertyException,
+            ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException,
+            ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         List<Ordine> ordini = controller.getOrdiniByStato(StatoOrdine.IN_CREAZIONE);
         List<OrdineBean> beans = new ArrayList<>();
 
@@ -21,16 +24,14 @@ public class VisualizzaOrdiniFacade {
             bean.setClienteId(o.getClienteId());
             bean.setDataCreazione(o.getDataCreazione());
             bean.setTotale(o.getTotale());
-            // Aggiungi altri campi se necessario
             beans.add(bean);
         }
         return beans;
     }
 
-    public void impostaInConsegna(OrdineBean ordineBean) throws Exception {
-        // Recupera l'ordine completo se necessario, o passa solo l'ID
-        // Qui assumiamo che il controller possa gestire l'aggiornamento tramite ID o
-        // oggetto
+    public void impostaInConsegna(OrdineBean ordineBean) throws DAOException, PropertyException,
+            ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException,
+            ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         controller.aggiornaStatoOrdine(ordineBean.getNumeroOrdine(), StatoOrdine.IN_CONSEGNA);
     }
 }

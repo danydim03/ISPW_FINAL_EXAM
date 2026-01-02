@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architettura Eccezioni - Habibi Shawarma</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent: #58a6ff;
+            --accent-glow: rgba(88, 166, 255, 0.3);
+            --border: #30363d;
+            --success: #3fb950;
+            --warning: #d29922;
+            --error: #f85149;
+            --purple: #a371f7;
+            --orange: #f0883e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 3rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--orange), var(--error));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .header .meta {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .header .meta span {
+            margin: 0 1rem;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .diagram-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .diagram-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .diagram-header {
+            background: var(--bg-secondary);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .diagram-number {
+            background: linear-gradient(135deg, var(--orange), var(--error));
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .diagram-title h2 {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+        }
+
+        .diagram-title p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .diagram-content {
+            padding: 2rem;
+            background: var(--bg-primary);
+            overflow-x: auto;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        .description {
+            padding: 1.5rem 2rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .description p {
+            margin-bottom: 0.5rem;
+        }
+
+        .description strong {
+            color: var(--text-primary);
+        }
+
+        .description code {
+            background: var(--bg-card);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            color: var(--orange);
+        }
+
+        .notes-section {
+            background: linear-gradient(135deg, rgba(240, 136, 62, 0.1), rgba(248, 81, 73, 0.1));
+            border: 1px solid var(--orange);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .notes-section h3 {
+            color: var(--orange);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notes-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes-section li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .notes-section li:last-child {
+            border-bottom: none;
+        }
+
+        .note-icon {
+            font-size: 1.2rem;
+        }
+
+        .note-title {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .note-desc {
+            color: var(--text-secondary);
+        }
+
+        .layer-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .layer-dao {
+            background: #ff9f1c33;
+            color: #ff9f1c;
+        }
+
+        .layer-control {
+            background: #2ec4b633;
+            color: #2ec4b6;
+        }
+
+        .layer-boundary {
+            background: #9b5de533;
+            color: #9b5de5;
+        }
+
+        .layer-entity {
+            background: #e71d3633;
+            color: #e71d36;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .diagram-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <h1>🥙 Architettura Gestione Eccezioni</h1>
+        <p class="subtitle">Sistema Habibi Shawarma - ISPW Project</p>
+        <p class="meta">
+            <span>🏗️ Pattern: BCE (Boundary-Control-Entity)</span>
+            <span>🔗 Tecnica: Exception Chaining</span>
+            <span>📦 Package: <code>org.example.exceptions</code></span>
+        </p>
+    </header>
+
+    <div class="container">
+        <!-- Diagram 1: Sequence Diagram - Crea Ordine Flow -->
+        <section class="diagram-section">
+            <div class="diagram-header">
+                <div class="diagram-number">1</div>
+                <div class="diagram-title">
+                    <h2>Flusso di Propagazione Errore - Caso d'Uso "Crea Ordine"</h2>
+                    <p>Sequence Diagram - Scenario: Errore DB durante salvataggio ordine</p>
+                </div>
+            </div>
+            <div class="diagram-content">
+                <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    participant User as 👤 Cliente
+    participant GUI as CreaOrdineGUIController<br/>(Boundary)
+    participant Facade as CreaOrdineFacade<br/>(Facade Pattern)
+    participant Ctrl as CreaOrdineController<br/>(Control)
+    participant DAO as OrdineDAO / DAODBAbstract<br/>(Entity/Integration)
+    participant DB as Database H2/MySQL
+
+    Note over User, GUI: 1. AVVIO OPERAZIONE
+    User->>GUI: Clicca "Conferma Ordine"
+    GUI->>Facade: confermaOrdine()
+    Facade->>Ctrl: confermaOrdine()
+    
+    Note over Ctrl, DAO: 2. DISCESA NEI LAYER
+    Ctrl->>DAO: save(ordineEntity)
+    DAO->>DB: executeUpdate(INSERT INTO ORDINE...)
+
+    Note over DB: 🛑 ERRORE!
+    Note right of DB: SQLException<br/>(Connection timeout / Constraint violation)
+    DB--xDAO: throws SQLException
+
+    rect rgb(255, 230, 230)
+        Note over DAO: 🛠️ LAYER DAO (Entity/Integration)
+        Note right of DAO: EXCEPTION TRANSLATION<br/>Wrappa eccezione tecnica
+        DAO->>DAO: catch(SQLException e)<br/>throw new DAOException(msg, e)
+        DAO--xCtrl: throws DAOException
+    end
+
+    rect rgb(255, 245, 230)
+        Note over Ctrl: ⚙️ LAYER CONTROLLER (Control)
+        Note right of Ctrl: CONTEXT ENRICHMENT<br/>Aggiunge contesto business
+        Ctrl->>Ctrl: catch(DAOException e)<br/>throw new CreaOrdineException(msg, e)
+        Ctrl--xFacade: throws CreaOrdineException
+    end
+
+    rect rgb(230, 245, 255)
+        Note over Facade: 🎭 FACADE PATTERN
+        Note right of Facade: PASSTHROUGH<br/>Rilancia senza modifiche
+        Facade--xGUI: throws DAOException / CreaOrdineException
+    end
+
+    rect rgb(230, 255, 230)
+        Note over GUI: 🖥️ LAYER GUI (Boundary)
+        Note right of GUI: FINAL HANDLING<br/>Logger + User Message
+        GUI->>GUI: catch(DAOException | CreaOrdineException e)<br/>logger.severe(e.getMessage())<br/>mostraErrore("Errore", e.getMessage())
+        GUI-->>User: Mostra Alert: "Errore durante la conferma dell'ordine"
+    end
+                </pre>
+            </div>
+            <div class="description">
+                <p><strong>Tecniche applicate:</strong></p>
+                <p>• <code>DAODBAbstract</code> cattura <code>SQLException</code> e la wrappa in
+                    <code>DAOException</code> (layer infrastruttura)</p>
+                <p>• <code>CreaOrdineController</code> aggiunge contesto business con <code>CreaOrdineException</code>
+                </p>
+                <p>• <code>CreaOrdineGUIController</code> gestisce l'errore finale, logga e mostra popup user-friendly
+                </p>
+            </div>
+        </section>
+
+        <!-- Diagram 2: Class Diagram -->
+        <section class="diagram-section">
+            <div class="diagram-header">
+                <div class="diagram-number">2</div>
+                <div class="diagram-title">
+                    <h2>Gerarchia delle Eccezioni Custom</h2>
+                    <p>Class Diagram - Package <code>org.example.exceptions</code></p>
+                </div>
+            </div>
+            <div class="diagram-content">
+                <pre class="mermaid">
+classDiagram
+    direction TB
+    
+    class Exception {
+        &lt;&lt;Java Standard&gt;&gt;
+        +getMessage()
+        +getCause()
+        +getStackTrace()
+    }
+
+    class HabibiException {
+        &lt;&lt;abstract&gt;&gt;
+        &lt;&lt;Checked Exception&gt;&gt;
+        #HabibiException(String message)
+        #HabibiException(String message, Throwable cause)
+        #HabibiException(Throwable cause)
+    }
+
+    class DAOException {
+        &lt;&lt;Infrastructure Layer&gt;&gt;
+        Wrappa SQLException, IOException
+        +DAOException(String message)
+        +DAOException(String message, Throwable cause)
+    }
+
+    class PropertyException {
+        &lt;&lt;Configuration&gt;&gt;
+        Errori caricamento properties
+    }
+
+    class CreaOrdineException {
+        &lt;&lt;Business Use Case&gt;&gt;
+        Errori creazione ordine
+    }
+
+    class VoucherNotValidException {
+        &lt;&lt;Business Rule&gt;&gt;
+        Voucher scaduto/non esistente
+    }
+
+    class UserNotFoundException {
+        &lt;&lt;Business Entity&gt;&gt;
+        Utente non trovato nel DB
+    }
+
+    class ObjectNotFoundException {
+        &lt;&lt;Business Entity&gt;&gt;
+        Entità generica non trovata
+    }
+
+    class MissingAuthorizationException {
+        &lt;&lt;Security&gt;&gt;
+        Accesso non autorizzato
+    }
+
+    class UnrecognizedRoleException {
+        &lt;&lt;Security&gt;&gt;
+        Ruolo utente non valido
+    }
+
+    class WrongPasswordException {
+        &lt;&lt;Authentication&gt;&gt;
+        Password errata durante login
+    }
+
+    Exception <|-- HabibiException : extends
+    
+    HabibiException <|-- DAOException
+    HabibiException <|-- PropertyException
+    HabibiException <|-- CreaOrdineException
+    HabibiException <|-- VoucherNotValidException
+    HabibiException <|-- UserNotFoundException
+    HabibiException <|-- ObjectNotFoundException
+    HabibiException <|-- MissingAuthorizationException
+    HabibiException <|-- UnrecognizedRoleException
+    HabibiException <|-- WrongPasswordException
+
+    note for HabibiException "Classe base astratta che garantisce:\n• Chaining con super(msg, cause)\n• Catch unificato per tutte le eccezioni app\n• Checked exception per gestione esplicita"
+                </pre>
+            </div>
+            <div class="description">
+                <p><strong>Categorie di eccezioni:</strong></p>
+                <p>• <span class="layer-badge layer-dao">DAO</span> <code>DAOException</code>,
+                    <code>PropertyException</code> - Layer infrastruttura/persistenza</p>
+                <p>• <span class="layer-badge layer-control">BUSINESS</span> <code>CreaOrdineException</code>,
+                    <code>VoucherNotValidException</code> - Regole di business</p>
+                <p>• <span class="layer-badge layer-entity">ENTITY</span> <code>UserNotFoundException</code>,
+                    <code>ObjectNotFoundException</code> - Entità non trovate</p>
+                <p>• <span class="layer-badge layer-boundary">SECURITY</span>
+                    <code>MissingAuthorizationException</code>, <code>UnrecognizedRoleException</code>,
+                    <code>WrongPasswordException</code> - Autenticazione/Autorizzazione</p>
+            </div>
+        </section>
+
+        <!-- Diagram 3: Exception Chaining in Memory -->
+        <section class="diagram-section">
+            <div class="diagram-header">
+                <div class="diagram-number">3</div>
+                <div class="diagram-title">
+                    <h2>Struttura in Memoria - Exception Chaining</h2>
+                    <p>Esempio concreto: Errore durante salvataggio ordine nel database</p>
+                </div>
+            </div>
+            <div class="diagram-content">
+                <pre class="mermaid">
+graph TD
+    subgraph HEAP["🧠 HEAP MEMORY - Eccezione catturata dalla GUI"]
+        direction TB
+        
+        E1["<b>CreaOrdineException</b><br/><i>(Wrapper Esterno - Use Case Layer)</i>"]
+        E1_MSG["message: 'Impossibile inizializzare l'ordine: errore accesso dati'<br/>cause: → PersistenceException"]
+        
+        E2["<b>DAOException</b><br/><i>(Wrapper Intermedio - DAO Layer)</i>"]
+        E2_MSG["message: 'Errore persistenza dati'<br/>cause: → SQLException"]
+        
+        E3["<b>SQLException</b><br/><i>(Root Cause - Driver JDBC)</i>"]
+        E3_MSG["message: 'Connection refused: connect'<br/>SQLState: 08001<br/>cause: → null"]
+        
+        E1 -- "getMessage()" --> E1_MSG
+        E1 -- "getCause()" --> E2
+        
+        E2 -- "getMessage()" --> E2_MSG
+        E2 -- "getCause()" --> E3
+        
+        E3 -- "getMessage()" --> E3_MSG
+        E3 -- "getCause()" --> NULL_PTR((NULL))
+    end
+
+    subgraph CODE["☕ CODICE - Come si crea la catena"]
+        direction TB
+        C1["// DAODBAbstract.java<br/>catch (SQLException e) {<br/>  throw new DAOException(msg, <b>e</b>);<br/>}"]
+        C2["// CreaOrdineGUIController.java<br/>catch (DAOException | MissingAuthException e) {<br/>  throw new CreaOrdineException(msg, <b>e</b>);<br/>}"]
+        C3["// CreaOrdineGUIController.initialize()<br/>catch (CreaOrdineException e) {<br/>  logger.severe(e.getMessage());<br/>  mostraErrore('Errore', e.getMessage());<br/>}"]
+    end
+
+    style E1 fill:#ff6b6b,stroke:#333,stroke-width:2px,color:#fff
+    style E2 fill:#ffa502,stroke:#333,stroke-width:2px,color:#fff
+    style E3 fill:#3498db,stroke:#333,stroke-width:2px,color:#fff
+    style NULL_PTR fill:#000,color:#fff
+    style C1 fill:#21262d,stroke:#ffa502,color:#e6edf3
+    style C2 fill:#21262d,stroke:#ff6b6b,color:#e6edf3
+    style C3 fill:#21262d,stroke:#3fb950,color:#e6edf3
+                </pre>
+            </div>
+            <div class="description">
+                <p><strong>Exception Chaining:</strong> Quando chiami <code>super(message, cause)</code> o
+                    <code>new DAOException(msg, e)</code>, l'eccezione originale viene preservata nella catena.</p>
+                <p><strong>Stack Trace completo:</strong> <code>e.printStackTrace()</code> stampa l'intera storia:
+                    CreaOrdineException → DAOException → SQLException</p>
+                <p><strong>Debugging:</strong> Puoi risalire alla root cause con <code>e.getCause().getCause()</code>
+                    fino a trovare <code>null</code></p>
+            </div>
+        </section>
+
+        <!-- Diagram 4: BCE Architecture Flow -->
+        <section class="diagram-section">
+            <div class="diagram-header">
+                <div class="diagram-number">4</div>
+                <div class="diagram-title">
+                    <h2>Architettura BCE - Flusso Eccezioni</h2>
+                    <p>Come le eccezioni attraversano i layer architetturali</p>
+                </div>
+            </div>
+            <div class="diagram-content">
+                <pre class="mermaid">
+flowchart LR
+    subgraph BOUNDARY["🖥️ BOUNDARY (GUI/CLI)"]
+        direction TB
+        B1[CreaOrdineGUIController]
+        B2[VisualizzaOrdiniGUIController]
+        B3[LoginGUIController]
+    end
+
+    subgraph CONTROL["⚙️ CONTROL (Controllers)"]
+        direction TB
+        C1[CreaOrdineController]
+        C2[CreaOrdineFacade]
+        C3[LoginControl]
+    end
+
+    subgraph ENTITY["📦 ENTITY (Model/DAO)"]
+        direction TB
+        E1[OrdineDAO]
+        E2[UserDAO]
+        E3[VoucherDAO]
+        E4[DAODBAbstract]
+    end
+
+    subgraph INFRA["⚡ INFRASTRUTTURA"]
+        direction TB
+        I1[(Database H2/MySQL)]
+        I2[FileSystem CSV]
+        I3[Properties Files]
+    end
+
+    %% Exception flow (reverse direction)
+    I1 -.->|SQLException| E4
+    I2 -.->|IOException| E1
+    I3 -.->|IOException| E4
+
+    E4 -->|"🔄 DAOException"| C1
+    E1 -->|"🔄 DAOException"| C1
+    E2 -->|"🔄 DAOException"| C3
+    E3 -->|"🔄 VoucherNotValidException"| C1
+
+    C1 -->|"🔄 CreaOrdineException"| C2
+    C2 -->|"⬆️ throws"| B1
+    C3 -->|"🔄 UserNotFoundException<br/>WrongPasswordException"| B3
+
+    B1 -->|"📢 mostraErrore()"| USER((👤 User))
+    B3 -->|"📢 mostraErrore()"| USER
+
+    style BOUNDARY fill:#9b5de522,stroke:#9b5de5
+    style CONTROL fill:#2ec4b622,stroke:#2ec4b6
+    style ENTITY fill:#ff9f1c22,stroke:#ff9f1c
+    style INFRA fill:#e71d3622,stroke:#e71d36
+    style USER fill:#fff,stroke:#333,color:#333
+                </pre>
+            </div>
+            <div class="description">
+                <p><strong>Regola fondamentale:</strong> Le eccezioni tecniche (<code>SQLException</code>,
+                    <code>IOException</code>) NON devono mai raggiungere il layer Boundary.</p>
+                <p>Ogni layer traduce l'eccezione nel proprio vocabolario semantico, nascondendo i dettagli
+                    implementativi ai layer superiori.</p>
+            </div>
+        </section>
+
+        <!-- Implementation Notes -->
+        <section class="notes-section">
+            <h3>📋 Note di Implementazione - Habibi Shawarma</h3>
+            <ul>
+                <li>
+                    <span class="note-icon">🔗</span>
+                    <div>
+                        <div class="note-title">Exception Chaining Corretto</div>
+                        <div class="note-desc">Tutti i costruttori in <code>HabibiException</code> chiamano
+                            <code>super(message, cause)</code>. Esempio:
+                            <code>throw new DAOException("Errore accesso dati", e)</code></div>
+                    </div>
+                </li>
+                <li>
+                    <span class="note-icon">📝</span>
+                    <div>
+                        <div class="note-title">Logging Centralizzato nella Boundary</div>
+                        <div class="note-desc">Il logging avviene solo in <code>CreaOrdineGUIController</code> con
+                            <code>logger.severe()</code>. I DAO non loggano, solo rilanciano.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="note-icon">🎭</span>
+                    <div>
+                        <div class="note-title">Facade Pattern</div>
+                        <div class="note-desc"><code>CreaOrdineFacade</code> semplifica l'interfaccia per la GUI ma non
+                            modifica le eccezioni - le rilancia direttamente.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="note-icon">👤</span>
+                    <div>
+                        <div class="note-title">Messaggi User-Friendly</div>
+                        <div class="note-desc">La GUI usa <code>e.getMessage()</code> per mostrare messaggi
+                            comprensibili. Mai esporre dettagli tecnici come <code>SQLException</code> all'utente.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="note-icon">✅</span>
+                    <div>
+                        <div class="note-title">Checked vs Unchecked</div>
+                        <div class="note-desc"><code>HabibiException</code> estende <code>Exception</code> (checked) per
+                            forzare la gestione esplicita. Tutte le eccezioni dell'app sono checked.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="note-icon">🗂️</span>
+                    <div>
+                        <div class="note-title">Catch Multipli nella GUI</div>
+                        <div class="note-desc">La GUI usa multi-catch:
+                            <code>catch (DAOException | MissingAuthorizationException e)</code> per gestire più tipi con
+                            lo stesso handler.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Code Example Section -->
+        <section class="diagram-section">
+            <div class="diagram-header">
+                <div class="diagram-number">5</div>
+                <div class="diagram-title">
+                    <h2>Esempio di Codice Reale</h2>
+                    <p>Come viene implementato l'exception chaining nel progetto</p>
+                </div>
+            </div>
+            <div class="diagram-content"
+                style="background: var(--bg-secondary); font-family: 'Fira Code', monospace; font-size: 0.9rem;">
+                <pre style="color: var(--text-primary); overflow-x: auto;">
+<span style="color: #8b949e;">// 1️⃣ DAODBAbstract.java - Layer DAO</span>
+<span style="color: #ff7b72;">try</span> {
+    connection = ConnectionFactory.getConnection();
+    <span style="color: #8b949e;">// ... operazioni DB</span>
+} <span style="color: #ff7b72;">catch</span> (SQLException e) {
+    <span style="color: #ff7b72;">throw new</span> <span style="color: #ffa657;">DAOException</span>(ExceptionMessagesEnum.DAO.message, e);
+    <span style="color: #8b949e;">             ↑ msg generico           ↑ causa originale (chaining!)</span>
+}
+
+<span style="color: #8b949e;">// 2️⃣ CreaOrdineGUIController.java - Layer GUI (iniziaNuovoOrdine)</span>
+<span style="color: #ff7b72;">try</span> {
+    OrdineBean ordine = facade.inizializzaNuovoOrdine(clienteId);
+} <span style="color: #ff7b72;">catch</span> (DAOException | MissingAuthorizationException e) {
+    <span style="color: #ff7b72;">throw new</span> <span style="color: #ffa657;">CreaOrdineException</span>(<span style="color: #a5d6ff;">"Impossibile inizializzare l'ordine: "</span> + e.getMessage(), e);
+    <span style="color: #8b949e;">                                ↑ contesto business                              ↑ causa</span>
+}
+
+<span style="color: #8b949e;">// 3️⃣ CreaOrdineGUIController.java - Handler finale (initialize)</span>
+<span style="color: #ff7b72;">catch</span> (CreaOrdineException e) {
+    logger.severe(<span style="color: #a5d6ff;">"Errore di inizializzazione ordine: "</span> + e.getMessage());
+    mostraErrore(<span style="color: #a5d6ff;">"Errore di inizializzazione"</span>, e.getMessage());
+    <span style="color: #8b949e;">// ℹ️ L'utente vede: "Impossibile inizializzare l'ordine: Errore persistenza dati"</span>
+    <span style="color: #8b949e;">// ℹ️ Il log contiene l'intero stack trace con SQLException</span>
+}
+                </pre>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            sequence: {
+                useMaxWidth: true,
+                showSequenceNumbers: true,
+                actorMargin: 50,
+                messageMargin: 40
+            }
+        });
+    </script>
+</body>
+
+</html>

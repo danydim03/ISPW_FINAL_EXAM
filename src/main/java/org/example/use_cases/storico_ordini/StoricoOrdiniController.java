@@ -1,6 +1,7 @@
 package org.example.use_cases.storico_ordini;
 
 import org.example.dao_manager.DAOFactoryAbstract;
+import org.example.exceptions.*;
 import org.example.model.ordine.Ordine;
 import org.example.model.ordine.DAO.OrdineDAOInterface;
 import org.example.model.user.User;
@@ -9,7 +10,9 @@ import java.util.List;
 
 public class StoricoOrdiniController {
 
-    public List<Ordine> getOrdiniByCliente(User cliente) throws Exception {
+    public List<Ordine> getOrdiniByCliente(User cliente) throws DAOException, PropertyException,
+            ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException,
+            ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         OrdineDAOInterface dao = DAOFactoryAbstract.getInstance().getOrdineDAO();
 
         // Debug: Print all relevant IDs

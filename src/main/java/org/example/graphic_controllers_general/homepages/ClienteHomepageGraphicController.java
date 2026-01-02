@@ -31,6 +31,7 @@ public class ClienteHomepageGraphicController {
         try {
             ClienteHomepageController.getInstance().apriMappa();
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Impossibile aprire la mappa", e);
             mostraErrore("Errore", "Impossibile aprire la mappa: " + e.getMessage());
         }
     }
@@ -60,6 +61,7 @@ public class ClienteHomepageGraphicController {
         try {
             java.awt.Desktop.getDesktop().browse(new java.net.URI("https://www.yahabibi.it"));
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Impossibile aprire il sito web", e);
             mostraErrore("Errore", "Impossibile aprire il sito web: " + e.getMessage());
         }
     }

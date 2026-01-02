@@ -13,8 +13,14 @@ import org.example.use_cases.visualizza_ordini.VisualizzaOrdiniFacade;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.example.exceptions.HabibiException;
 
 public class VisualizzaOrdiniGUIController {
+
+    private static final Logger logger = Logger.getLogger(VisualizzaOrdiniGUIController.class.getName());
 
     @FXML
     private TableView<OrdineBean> tabellaOrdini;
@@ -99,7 +105,11 @@ public class VisualizzaOrdiniGUIController {
             List<OrdineBean> ordini = facade.getOrdiniInCreazione();
             listaOrdini.setAll(ordini);
             tabellaOrdini.setItems(listaOrdini);
+        } catch (HabibiException e) {
+            logger.log(Level.SEVERE, "Errore nel caricamento ordini", e);
+            mostraErrore("Errore Caricamento", "Impossibile caricare gli ordini: " + e.getMessage());
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Errore imprevisto nel caricamento ordini", e);
             mostraErrore("Errore Caricamento", "Impossibile caricare gli ordini: " + e.getMessage());
         }
     }
@@ -109,7 +119,11 @@ public class VisualizzaOrdiniGUIController {
             facade.impostaInConsegna(ordine);
             mostraInfo("Successo", "Ordine #" + ordine.getNumeroOrdine() + " passato in consegna!");
             caricaOrdini(); // Ricarica la lista
+        } catch (HabibiException e) {
+            logger.log(Level.SEVERE, "Errore nell'aggiornamento ordine", e);
+            mostraErrore("Errore Aggiornamento", "Impossibile aggiornare l'ordine: " + e.getMessage());
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Errore imprevisto nell'aggiornamento ordine", e);
             mostraErrore("Errore Aggiornamento", "Impossibile aggiornare l'ordine: " + e.getMessage());
         }
     }

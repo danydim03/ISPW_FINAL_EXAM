@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CreaOrdineGUIController extends BaseGraphicControl implements Initializable {
@@ -110,17 +111,14 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             iniziaNuovoOrdine();
 
         } catch (MissingAuthorizationException e) {
-            logger.severe("Errore di autorizzazione: " + e.getMessage());
+            logger.log(Level.SEVERE, "Errore di autorizzazione", e);
             mostraErrore("Errore di autorizzazione", e.getMessage());
         } catch (CreaOrdineException e) {
-            logger.severe("Errore di inizializzazione ordine: " + e.getMessage());
+            logger.log(Level.SEVERE, "Errore di inizializzazione ordine", e);
             mostraErrore("Errore di inizializzazione", e.getMessage());
-        } catch (NullPointerException e) {
-            logger.severe("Sessione utente non valida: " + e.getMessage());
-            mostraErrore("Errore di sessione", "Sessione non valida. Effettua nuovamente il login.");
-        } catch (Exception e) {
-            logger.severe("Errore generico in initialize: " + e.getMessage());
-            mostraErrore("Errore", "Errore durante l'inizializzazione: " + e.getMessage());
+        } catch (HabibiException e) {
+            logger.log(Level.SEVERE, "Errore imprevisto", e);
+            mostraErrore("Errore", "Si è verificato un errore: " + e.getMessage());
         }
     }
 
@@ -213,7 +211,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
 
             OrdineBean ordine = facade.inizializzaNuovoOrdine(clienteId);
             if (labelNumeroOrdine != null && ordine.getNumeroOrdine() != null) {
-                labelNumeroOrdine.setText("Ordine #" + ordine.getNumeroOrdine());
+                labelNumeroOrdine.setText(" Numero Ordine: " + ordine.getNumeroOrdine());
             }
             aggiornaRiepilogo();
         } catch (DAOException | MissingAuthorizationException e) {
@@ -391,13 +389,8 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 "Sei sicuro di voler annullare l'ordine?\nTutti i prodotti selezionati verranno rimossi.")) {
 
             facade.annullaOrdine();
-
-            try {
-                resetVistaCompleta();
-                org.example.PageNavigationController.getInstance().returnToMainPage();
-            } catch (Exception e) { // Catching Exception to cover CreaOrdineException
-                mostraErrore("Errore", e.getMessage());
-            }
+            resetVistaCompleta();
+            org.example.PageNavigationController.getInstance().returnToMainPage();
         }
     }
 

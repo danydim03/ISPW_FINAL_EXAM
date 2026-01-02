@@ -2,6 +2,10 @@ package org.example.use_cases.login;
 
 import org.example.BaseCLIGraphicController;
 import org.example.beans_general.LoginBean;
+import org.example.exceptions.HabibiException;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * CLI Graphic Controller for the Login view.
@@ -10,6 +14,7 @@ import org.example.beans_general.LoginBean;
  */
 public class LoginCLIGraphicController extends BaseCLIGraphicController {
 
+    private static final Logger logger = Logger.getLogger(LoginCLIGraphicController.class.getName());
     private final LoginControl loginControl;
     private LoginBean loginBean;
     private boolean exitRequested = false;
@@ -65,8 +70,14 @@ public class LoginCLIGraphicController extends BaseCLIGraphicController {
 
                 waitForEnter();
 
-            } catch (Exception e) {
+            } catch (HabibiException e) {
+                logger.log(Level.WARNING, "Errore di login", e);
                 showError(getErrorMessage(e));
+                System.out.println("\n  Riprova oppure digita 'esci' per uscire.");
+                waitForEnter();
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "Errore imprevisto durante il login", e);
+                showError("Errore imprevisto durante il login");
                 System.out.println("\n  Riprova oppure digita 'esci' per uscire.");
                 waitForEnter();
             }

@@ -1,6 +1,7 @@
 package org.example.use_cases.crea_ordine.graphic_controllers;
 
 import org.example.BaseCLIGraphicController;
+import org.example.exceptions.HabibiException;
 import org.example.use_cases.crea_ordine.CreaOrdineFacade;
 import org.example.use_cases.crea_ordine.beans.FoodBean;
 import org.example.use_cases.crea_ordine.beans.OrdineBean;
@@ -9,12 +10,16 @@ import org.example.use_cases.crea_ordine.beans.VoucherBean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * CLI Controller for "Crea Ordine" use case.
  * Uses CreaOrdineFacade to maintain separation between UI and business logic.
  */
 public class CreaOrdineCLIController extends BaseCLIGraphicController {
+
+    private static final Logger logger = Logger.getLogger(CreaOrdineCLIController.class.getName());
 
     private CreaOrdineFacade facade;
     private List<FoodBean> prodottiBase;
@@ -44,8 +49,13 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
                 showOrderMenu();
             }
 
-        } catch (Exception e) {
+        } catch (HabibiException e) {
+            logger.log(Level.SEVERE, "Impossibile avviare la creazione ordine", e);
             showError("Impossibile avviare la creazione ordine: " + e.getMessage());
+            waitForEnter();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Errore imprevisto nell'avvio creazione ordine", e);
+            showError("Errore imprevisto: " + e.getMessage());
             waitForEnter();
         }
     }
@@ -54,8 +64,14 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
         try {
             prodottiBase = facade.getProdottiBaseDisponibili();
             addOns = facade.getAddOnDisponibili();
-        } catch (Exception e) {
+        } catch (HabibiException e) {
+            logger.log(Level.SEVERE, "Errore nel caricamento prodotti", e);
             showError("Errore nel caricamento prodotti: " + e.getMessage());
+            prodottiBase = new ArrayList<>();
+            addOns = new ArrayList<>();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Errore imprevisto nel caricamento prodotti", e);
+            showError("Errore imprevisto: " + e.getMessage());
             prodottiBase = new ArrayList<>();
             addOns = new ArrayList<>();
         }
@@ -96,6 +112,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
                 System.out.println("  📦 Il carrello è vuoto");
             }
         } catch (Exception e) {
+            // getRiepilogoOrdine non lancia eccezioni checked, catch per RuntimeException
             System.out.println("  📦 Carrello in attesa...");
         }
     }
@@ -156,8 +173,12 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             } else {
                 showError("Impossibile aggiungere il prodotto");
             }
-        } catch (Exception e) {
+        } catch (HabibiException e) {
+            logger.log(Level.SEVERE, "Errore nell'aggiunta prodotto", e);
             showError("Errore: " + e.getMessage());
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Errore imprevisto nell'aggiunta prodotto", e);
+            showError("Errore imprevisto: " + e.getMessage());
         }
 
         waitForEnter();
@@ -223,8 +244,12 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             } else {
                 showWarning("Voucher non valido o già utilizzato");
             }
-        } catch (Exception e) {
+        } catch (HabibiException e) {
+            logger.log(Level.SEVERE, "Errore nell'applicazione del voucher", e);
             showError("Errore nell'applicazione del voucher: " + e.getMessage());
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Errore imprevisto nell'applicazione del voucher", e);
+            showError("Errore imprevisto: " + e.getMessage());
         }
 
         waitForEnter();
@@ -268,7 +293,9 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             System.out.println("\n  ⏱️  Tempo di preparazione stimato: " + riepilogo.getDurataFormattata());
 
         } catch (Exception e) {
-            showError("Errore nel recupero del riepilogo: " + e.getMessage());
+            // getRiepilogoOrdine non lancia eccezioni checked
+            logger.log(Level.SEVERE, "Errore imprevisto nel recupero del riepilogo", e);
+            showError("Errore imprevisto: " + e.getMessage());
         }
 
         waitForEnter();
@@ -307,8 +334,12 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
                 showInfo("Ordine non confermato. Puoi continuare a modificarlo.");
             }
 
-        } catch (Exception e) {
+        } catch (HabibiException e) {
+            logger.log(Level.SEVERE, "Errore nella conferma ordine", e);
             showError("Errore nella conferma: " + e.getMessage());
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Errore imprevisto nella conferma ordine", e);
+            showError("Errore imprevisto: " + e.getMessage());
         }
 
         waitForEnter();
@@ -324,7 +355,9 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
                 showInfo("Ordine annullato.");
                 exitRequested = true;
             } catch (Exception e) {
-                showError("Errore nell'annullamento: " + e.getMessage());
+                // annullaOrdine non lancia eccezioni checked
+                logger.log(Level.SEVERE, "Errore imprevisto nell'annullamento ordine", e);
+                showError("Errore imprevisto: " + e.getMessage());
             }
         }
     }
