@@ -214,6 +214,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 labelNumeroOrdine.setText(" Numero Ordine: " + ordine.getNumeroOrdine());
             }
             aggiornaRiepilogo();
+            //new comment;
         } catch (DAOException | MissingAuthorizationException e) {
             throw new CreaOrdineException("Impossibile inizializzare l'ordine: " + e.getMessage(), e);
         }
