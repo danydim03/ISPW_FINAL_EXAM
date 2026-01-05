@@ -12,13 +12,14 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainApplication extends Application {
     private static final Logger LOGGER = Logger.getLogger(MainApplication.class.getName());
 
+    // Costante per evitare duplicazione della riga della cornice
+    private static final String BOX_EMPTY_ROW = "  ║                                                               ║";
     @Override
     public void start(Stage stage) throws IOException {
         Pane basePane = loadLoginPane();
@@ -56,17 +57,18 @@ public class MainApplication extends Application {
     private static void launchCLI() {
         System.out.println("\n");
         System.out.println("  ╔═══════════════════════════════════════════════════════════════╗");
-        System.out.println("  ║                                                               ║");
+        System.out.println(BOX_EMPTY_ROW);
         System.out.println("  ║     🥙  HABIBI SHAWARMA - Sistema Gestione Ordini  🥙          ║");
-        System.out.println("  ║                                                               ║");
+        System.out.println(BOX_EMPTY_ROW);
         System.out.println("  ║          Interfaccia a Linea di Comando (CLI)                 ║");
-        System.out.println("  ║                                                               ║");
+        System.out.println(BOX_EMPTY_ROW);
         System.out.println("  ╚═══════════════════════════════════════════════════════════════╝");
         System.out.println("\n");
 
         // Start the CLI navigation controller
         org.example.cli.CLINavigationController.getInstance().start();
     }
+
 
     private Pane loadLoginPane() {
         try {

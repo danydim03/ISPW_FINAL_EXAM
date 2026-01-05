@@ -14,10 +14,10 @@ public abstract class BaseCLIGraphicController {
     protected static final String SEPARATOR = "═══════════════════════════════════════════════════════════════";
     protected static final String THIN_SEPARATOR = "───────────────────────────────────────────────────────────────";
 
-    public BaseCLIGraphicController() {
+    protected BaseCLIGraphicController() {
     }
 
-    public BaseCLIGraphicController(String tokenKey) {
+    protected BaseCLIGraphicController(String tokenKey) {
         this.tokenKey = tokenKey;
     }
 
@@ -75,11 +75,37 @@ public abstract class BaseCLIGraphicController {
     /**
      * Reads a password (hides input if possible, otherwise just reads)
      */
+
     protected String readPassword(String prompt) {
         System.out.print("  " + prompt + ": ");
-        // In a real scenario, we'd use Console.readPassword(), but it doesn't work in
-        // IDEs
-        return scanner.nextLine().trim();
+        java.io.Console console = System.console();
+        if (console != null) {
+            char[] pwd = console.readPassword();
+            return pwd == null ? "" : new String(pwd).trim();
+        }
+
+        // Fallback GUI (funziona anche dentro IDE)
+        try {
+            javax.swing.JPasswordField pf = new javax.swing.JPasswordField();
+            Object[] message = { "  " + prompt + ":", pf };
+            int option = javax.swing.JOptionPane.showConfirmDialog(
+                    null,
+                    message,
+                    "Inserisci password",
+                    javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                    javax.swing.JOptionPane.PLAIN_MESSAGE
+            );
+            if (option == javax.swing.JOptionPane.OK_OPTION) {
+                char[] pwd = pf.getPassword();
+                return pwd == null ? "" : new String(pwd).trim();
+            } else {
+                return "";
+            }
+        } catch (Throwable t) {
+            // Ultimo fallback: lettura normale con avviso
+            showWarning("Console non disponibile, inserimento password non nascosto.");
+            return scanner.nextLine().trim();
+        }
     }
 
     /**
