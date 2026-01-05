@@ -71,6 +71,7 @@ public class UserDAODemo implements UserDAOInterface {
 
     @Override
     public void update(User user) {
-        // Automatic
+        // In-memory list updates automatically since objects are references
+        // No action needed for demo mode
     }
 }

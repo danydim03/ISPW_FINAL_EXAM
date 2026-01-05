@@ -58,20 +58,22 @@ public final class PageNavigationController {
      * /org/example/)
      */
     public void navigateToFXML(String fxmlPath) {
-        if (!fxmlPath.endsWith(FILE_EXTENSION)) {
-            fxmlPath = fxmlPath.concat(FILE_EXTENSION);
+        String pathToLoad = fxmlPath;
+        if (!pathToLoad.endsWith(FILE_EXTENSION)) {
+            pathToLoad = pathToLoad.concat(FILE_EXTENSION);
         }
 
-        String fullPath = RESOURCE_BASE_PATH + fxmlPath;
-        logger.log(Level.INFO, ">>> Tentativo caricamento: " + fullPath);
-        logger.log(Level.INFO, ">>> contentPane è null? " + (contentPane == null));
+        final String finalPath = pathToLoad;
+        String fullPath = RESOURCE_BASE_PATH + finalPath;
+        logger.log(Level.INFO, () -> ">>> Tentativo caricamento: " + fullPath);
+        logger.log(Level.INFO, () -> ">>> contentPane è null? " + (contentPane == null));
 
         try {
             URL resource = PageNavigationController.class.getResource(fullPath);
-            logger.log(Level.INFO, ">>> Risorsa trovata? " + (resource != null));
+            logger.log(Level.INFO, () -> ">>> Risorsa trovata? " + (resource != null));
 
             if (resource == null) {
-                logger.log(Level.SEVERE, ">>> RISORSA NON TROVATA: " + fullPath);
+                logger.log(Level.SEVERE, () -> ">>> RISORSA NON TROVATA: " + fullPath);
                 return;
             }
 
@@ -83,7 +85,7 @@ public final class PageNavigationController {
             logger.log(Level.INFO, ">>> Contenuto impostato");
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Errore caricamento FXML: " + fxmlPath, e);
+            logger.log(Level.SEVERE, () -> "Errore caricamento FXML: " + finalPath);
             e.printStackTrace(); // Stampa lo stack trace completo
             showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message,
                     UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
@@ -105,7 +107,8 @@ public final class PageNavigationController {
             setContent(view);
             return loader.getController();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Errore caricamento FXML: " + fxmlPath, e);
+            final String pathForLog = fxmlPath;
+            logger.log(Level.SEVERE, () -> "Errore caricamento FXML: " + pathForLog);
             showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message,
                     UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
             return null;
@@ -130,7 +133,8 @@ public final class PageNavigationController {
                     String.format("%c%c", this.userData.getUserName().toUpperCase().charAt(0),
                             this.userData.getUserSurname().toUpperCase().charAt(0)));
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Errore caricamento risorsa: " + viewName, e);
+            final String viewForLog = viewName;
+            logger.log(Level.SEVERE, () -> "Errore caricamento risorsa: " + viewForLog);
             showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message,
                     UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
         }
@@ -269,7 +273,7 @@ public final class PageNavigationController {
      * @param e         the Exception which caused the Alert to be shown
      */
     public void showAlert(Alert.AlertType alertType, String title, String message, Exception e) {
-        // GeneralLogger.logSevere(e.getMessage());
+        logger.log(Level.SEVERE, e.getMessage());
         showAlert(alertType, title, message);
     }
 }

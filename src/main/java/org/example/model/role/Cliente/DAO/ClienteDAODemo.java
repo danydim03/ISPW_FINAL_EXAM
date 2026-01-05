@@ -14,13 +14,16 @@ public class ClienteDAODemo implements ClienteDAOInterface {
 
     @Override
     public void insert(Cliente cliente) {
+        throw new UnsupportedOperationException("Insert not supported in demo mode");
     }
 
     @Override
     public void delete(Cliente cliente) {
+        throw new UnsupportedOperationException("Delete not supported in demo mode");
     }
 
     @Override
     public void update(Cliente cliente) {
+        throw new UnsupportedOperationException("Update not supported in demo mode");
     }
 }

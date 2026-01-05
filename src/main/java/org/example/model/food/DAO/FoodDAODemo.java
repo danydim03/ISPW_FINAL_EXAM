@@ -32,17 +32,17 @@ public class FoodDAODemo implements FoodDAOInterface {
 
     @Override
     public void insert(Food food) {
-        // No-op for demo
+        throw new UnsupportedOperationException("Insert not supported in demo mode");
     }
 
     @Override
     public void delete(Food food) {
-        // No-op for demo
+        throw new UnsupportedOperationException("Delete not supported in demo mode");
     }
 
     @Override
     public void update(Food food) {
-        // No-op for demo
+        throw new UnsupportedOperationException("Update not supported in demo mode");
     }
 
     @Override

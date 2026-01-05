@@ -92,8 +92,7 @@ public abstract class BaseCLIGraphicController {
                     message,
                     "Inserisci password",
                     javax.swing.JOptionPane.OK_CANCEL_OPTION,
-                    javax.swing.JOptionPane.PLAIN_MESSAGE
-            );
+                    javax.swing.JOptionPane.PLAIN_MESSAGE);
             if (option == javax.swing.JOptionPane.OK_OPTION) {
                 char[] pwd = pf.getPassword();
                 return pwd == null ? "" : new String(pwd).trim();
@@ -151,17 +150,6 @@ public abstract class BaseCLIGraphicController {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
-
-    /**
-     * Prints a formatted table row
-     */
-//    protected void printTableRow(String... columns) {
-//        StringBuilder row = new StringBuilder("  │");
-//        for (String col : columns) {
-//            row.append(String.format(" %-15s│", truncate(col, 15)));
-//        }
-//        System.out.println(row);
-//    }
 
     /**
      * Truncates a string to max length with ellipsis
