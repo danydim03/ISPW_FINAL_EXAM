@@ -10,6 +10,8 @@ import org.example.use_cases.storico_ordini.graphic_controllers.StoricoOrdiniCLI
  */
 public class ClienteHomepageCLIController extends BaseCLIGraphicController {
 
+    private static final String CLI_NOT_IMPLEMENTED_MSG = "View CLI implementata in seguito";
+    private static final String CLI_FUTURE_VERSION_MSG = "  in una futura versione dell'interfaccia CLI.";
     private boolean loggedOut = false;
 
     public ClienteHomepageCLIController(String tokenKey) {
@@ -82,9 +84,9 @@ public class ClienteHomepageCLIController extends BaseCLIGraphicController {
 
     private void handleProfilo() {
         printHeader("PROFILO UTENTE");
-        showInfo("View CLI implementata in seguito");
+        showInfo(CLI_NOT_IMPLEMENTED_MSG);
         System.out.println("\n  La gestione del profilo utente sarà disponibile");
-        System.out.println("  in una futura versione dell'interfaccia CLI.");
+        System.out.println(CLI_FUTURE_VERSION_MSG);
         waitForEnter();
     }
 

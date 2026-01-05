@@ -9,6 +9,8 @@ import org.example.use_cases.visualizza_ordini.graphic_controllers.VisualizzaOrd
  */
 public class AdminHomepageCLIController extends BaseCLIGraphicController {
 
+    private static final String CLI_NOT_IMPLEMENTED_MSG = "View CLI implementata in seguito";
+    private static final String CLI_FUTURE_VERSION_MSG = "  in una futura versione dell'interfaccia CLI.";
     private boolean loggedOut = false;
 
     public AdminHomepageCLIController(String tokenKey) {
@@ -56,33 +58,33 @@ public class AdminHomepageCLIController extends BaseCLIGraphicController {
 
     private void handleGestioneVoucher() {
         printHeader("GESTIONE VOUCHER");
-        showInfo("View CLI implementata in seguito");
+        showInfo(CLI_NOT_IMPLEMENTED_MSG);
         System.out.println("\n  La gestione dei voucher sarà disponibile");
-        System.out.println("  in una futura versione dell'interfaccia CLI.");
+        System.out.println(CLI_FUTURE_VERSION_MSG);
         waitForEnter();
     }
 
     private void handleReport() {
         printHeader("REPORT E STATISTICHE");
-        showInfo("View CLI implementata in seguito");
+        showInfo(CLI_NOT_IMPLEMENTED_MSG);
         System.out.println("\n  I report e le statistiche saranno disponibili");
-        System.out.println("  in una futura versione dell'interfaccia CLI.");
+        System.out.println(CLI_FUTURE_VERSION_MSG);
         waitForEnter();
     }
 
     private void handleGestioneUtenti() {
         printHeader("GESTIONE UTENTI");
-        showInfo("View CLI implementata in seguito");
+        showInfo(CLI_NOT_IMPLEMENTED_MSG);
         System.out.println("\n  La gestione degli utenti sarà disponibile");
-        System.out.println("  in una futura versione dell'interfaccia CLI.");
+        System.out.println(CLI_FUTURE_VERSION_MSG);
         waitForEnter();
     }
 
     private void handleImpostazioni() {
         printHeader("IMPOSTAZIONI");
-        showInfo("View CLI implementata in seguito");
+        showInfo(CLI_NOT_IMPLEMENTED_MSG);
         System.out.println("\n  Le impostazioni di sistema saranno disponibili");
-        System.out.println("  in una futura versione dell'interfaccia CLI.");
+        System.out.println(CLI_FUTURE_VERSION_MSG);
         waitForEnter();
     }
 

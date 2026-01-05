@@ -22,6 +22,7 @@ public class FoodDAOFS implements FoodDAOInterface {
 
     // CSV columns: id, descrizione, tipo, costo, durata, classe_java
     private static final String[] HEADER = { "id", "descrizione", "tipo", "costo", "durata", "classe_java" };
+    private static final String ADDON_TYPE = "ADDON";
 
     private FoodDAOFS() {
         this.csvManager = CSVFileManager.getInstance();
@@ -58,11 +59,12 @@ public class FoodDAOFS implements FoodDAOInterface {
                     new String[] { "3", "Kebab al Piatto", "BASE", "7.50", "8", "KebabAlPiatto" });
 
             // Add add-ons
-            csvManager.appendLine(FILENAME, new String[] { "4", "Cipolla", "ADDON", "0.50", "0", "Cipolla" });
-            csvManager.appendLine(FILENAME, new String[] { "5", "Patatine", "ADDON", "1.50", "3", "Patatine" });
-            csvManager.appendLine(FILENAME, new String[] { "6", "Salsa Yogurt", "ADDON", "0.50", "0", "SalsaYogurt" });
+            csvManager.appendLine(FILENAME, new String[] { "4", "Cipolla", ADDON_TYPE, "0.50", "0", "Cipolla" });
+            csvManager.appendLine(FILENAME, new String[] { "5", "Patatine", ADDON_TYPE, "1.50", "3", "Patatine" });
             csvManager.appendLine(FILENAME,
-                    new String[] { "7", "Mix Verdure Grigliate", "ADDON", "1.00", "2", "MixVerdureGrigliate" });
+                    new String[] { "6", "Salsa Yogurt", ADDON_TYPE, "0.50", "0", "SalsaYogurt" });
+            csvManager.appendLine(FILENAME,
+                    new String[] { "7", "Mix Verdure Grigliate", ADDON_TYPE, "1.00", "2", "MixVerdureGrigliate" });
         } catch (DAOException e) {
             System.err.println("Warning: Could not initialize default food: " + e.getMessage());
         }
@@ -101,7 +103,7 @@ public class FoodDAOFS implements FoodDAOInterface {
         try {
             List<String[]> allFood = csvManager.readAllWithoutHeader(FILENAME);
             return allFood.stream()
-                    .filter(row -> row.length > 2 && "ADDON".equalsIgnoreCase(row[2]))
+                    .filter(row -> row.length > 2 && ADDON_TYPE.equalsIgnoreCase(row[2]))
                     .map(this::buildFoodFromRow)
                     .collect(Collectors.toList());
         } catch (DAOException e) {

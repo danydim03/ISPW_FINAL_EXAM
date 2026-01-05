@@ -26,6 +26,11 @@ import java.util.logging.Logger;
 public class CreaOrdineGUIController extends BaseGraphicControl implements Initializable {
 
     private static final Logger logger = Logger.getLogger(CreaOrdineGUIController.class.getName());
+    private static final String ERROR_TITLE = "Errore";
+    private static final String ADDON_TYPE = "ADDON";
+    private static final String ADDON_CIPOLLA = "Cipolla";
+    private static final String ADDON_PATATINE = "Patatine";
+    private static final String ZERO_CURRENCY = "€0.00";
 
     @FXML
     private RadioButton radioPanino;
@@ -118,7 +123,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             mostraErrore("Errore di inizializzazione", e.getMessage());
         } catch (HabibiException e) {
             logger.log(Level.SEVERE, "Errore imprevisto", e);
-            mostraErrore("Errore", "Si è verificato un errore: " + e.getMessage());
+            mostraErrore(ERROR_TITLE, "Si è verificato un errore: " + e.getMessage());
         }
     }
 
@@ -174,10 +179,10 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 new FoodBean(null, "Kebab al Piatto", 8.00, 8, "BASE", "KebabAlPiatto"));
 
         addOnDisponibili = List.of(
-                new FoodBean(null, "Cipolla", 0.50, 1, "ADDON", "Cipolla"),
-                new FoodBean(null, "Salsa Yogurt", 0.80, 0, "ADDON", "SalsaYogurt"),
-                new FoodBean(null, "Patatine", 2.00, 3, "ADDON", "Patatine"),
-                new FoodBean(null, "Mix Verdure Grigliate", 1.50, 2, "ADDON", "MixVerdureGrigliate"));
+                new FoodBean(null, ADDON_CIPOLLA, 0.50, 1, ADDON_TYPE, ADDON_CIPOLLA),
+                new FoodBean(null, "Salsa Yogurt", 0.80, 0, ADDON_TYPE, "SalsaYogurt"),
+                new FoodBean(null, ADDON_PATATINE, 2.00, 3, ADDON_TYPE, ADDON_PATATINE),
+                new FoodBean(null, "Mix Verdure Grigliate", 1.50, 2, ADDON_TYPE, "MixVerdureGrigliate"));
     }
 
     private FoodBean getProdottoBaseSelezionato() {
@@ -214,7 +219,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 labelNumeroOrdine.setText(" Numero Ordine: " + ordine.getNumeroOrdine());
             }
             aggiornaRiepilogo();
-            //new comment;
+            // new comment;
         } catch (DAOException | MissingAuthorizationException e) {
             throw new CreaOrdineException("Impossibile inizializzare l'ordine: " + e.getMessage(), e);
         }
@@ -238,7 +243,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         if (success) {
             aggiornaRiepilogo();
         } else {
-            mostraErrore("Errore", "Impossibile rimuovere il prodotto.");
+            mostraErrore(ERROR_TITLE, "Impossibile rimuovere il prodotto.");
         }
     }
 
@@ -265,11 +270,11 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             richiesta.setTipo(prodottoSelezionato.getTipo());
 
             if (checkCipolla != null && checkCipolla.isSelected())
-                richiesta.aggiungiAddOn("Cipolla");
+                richiesta.aggiungiAddOn(ADDON_CIPOLLA);
             if (checkSalsaYogurt != null && checkSalsaYogurt.isSelected())
                 richiesta.aggiungiAddOn("SalsaYogurt");
             if (checkPatatine != null && checkPatatine.isSelected())
-                richiesta.aggiungiAddOn("Patatine");
+                richiesta.aggiungiAddOn(ADDON_PATATINE);
             if (checkMixVerdure != null && checkMixVerdure.isSelected())
                 richiesta.aggiungiAddOn("MixVerdureGrigliate");
 
@@ -279,11 +284,11 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 resetSelezioniAddOn();
                 mostraInfo("Prodotto aggiunto", "Prodotto aggiunto all'ordine con successo!");
             } else {
-                mostraErrore("Errore", "Impossibile aggiungere il prodotto.");
+                mostraErrore(ERROR_TITLE, "Impossibile aggiungere il prodotto.");
             }
 
         } catch (DAOException e) {
-            mostraErrore("Errore", e.getMessage());
+            mostraErrore(ERROR_TITLE, e.getMessage());
         }
     }
 
@@ -371,11 +376,11 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 // ritorno alla home page();
                 org.example.PageNavigationController.getInstance().returnToMainPage();
             } else {
-                mostraErrore("Errore", "Si è verificato un errore durante la conferma dell'ordine.");
+                mostraErrore(ERROR_TITLE, "Si è verificato un errore durante la conferma dell'ordine.");
             }
 
         } catch (DAOException | MissingAuthorizationException e) {
-            mostraErrore("Errore", e.getMessage());
+            mostraErrore(ERROR_TITLE, e.getMessage());
         }
     }
 
@@ -422,7 +427,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             }
         } else {
             if (labelSconto != null)
-                labelSconto.setText("€0.00");
+                labelSconto.setText(ZERO_CURRENCY);
             if (labelVoucherInfo != null)
                 labelVoucherInfo.setText("");
             if (panelSconto != null) {
@@ -456,10 +461,10 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
 
         righeOrdineObservable.clear();
 
-        labelSubtotale.setText("€0.00");
+        labelSubtotale.setText(ZERO_CURRENCY);
         if (labelSconto != null)
-            labelSconto.setText("€0.00");
-        labelTotale.setText("€0.00");
+            labelSconto.setText(ZERO_CURRENCY);
+        labelTotale.setText(ZERO_CURRENCY);
         labelDurata.setText("0 min");
         if (labelVoucherInfo != null)
             labelVoucherInfo.setText("");

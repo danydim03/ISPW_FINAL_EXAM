@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 public final class PageNavigationController {
 
     private static final String FILE_EXTENSION = ".fxml";
+    private static final String RESOURCE_BASE_PATH = "/org/example/";
     private static PageNavigationController instance;
     private static final Logger logger = Logger.getLogger(PageNavigationController.class.getName());
 
@@ -61,7 +62,7 @@ public final class PageNavigationController {
             fxmlPath = fxmlPath.concat(FILE_EXTENSION);
         }
 
-        String fullPath = "/org/example/" + fxmlPath;
+        String fullPath = RESOURCE_BASE_PATH + fxmlPath;
         logger.log(Level.INFO, ">>> Tentativo caricamento: " + fullPath);
         logger.log(Level.INFO, ">>> contentPane è null? " + (contentPane == null));
 
@@ -99,7 +100,7 @@ public final class PageNavigationController {
         }
         try {
             FXMLLoader loader = new FXMLLoader(
-                    Objects.requireNonNull(PageNavigationController.class.getResource("/org/example/" + fxmlPath)));
+                    Objects.requireNonNull(PageNavigationController.class.getResource(RESOURCE_BASE_PATH + fxmlPath)));
             Parent view = loader.load();
             setContent(view);
             return loader.getController();
@@ -143,7 +144,7 @@ public final class PageNavigationController {
      */
     public void navigateTo(String pageName) {
         try {
-            String resourcePath = "/org/example/" + pageName + FILE_EXTENSION; // FILE_EXTENSION = ".fxml"
+            String resourcePath = RESOURCE_BASE_PATH + pageName + FILE_EXTENSION;
             FXMLLoader loader = new FXMLLoader(getClass().getResource(resourcePath));
             Parent view = loader.load();
             setContent(view);
@@ -193,7 +194,7 @@ public final class PageNavigationController {
 
             baseGraphicController.openMainPage(
                     FXMLLoader.load(Objects
-                            .requireNonNull(PageNavigationController.class.getResource("/org/example/" + viewName))),
+                            .requireNonNull(PageNavigationController.class.getResource(RESOURCE_BASE_PATH + viewName))),
                     initials);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Errore caricamento home: " + viewName, e);

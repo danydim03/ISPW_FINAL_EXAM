@@ -7,27 +7,29 @@ import org.example.model.food.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class OrdineDAODemo implements OrdineDAOInterface {
 
     private static final List<Ordine> MOCK_ORDINI = new ArrayList<>();
-    private static long sequence = 1;
+    private static final String DEMO_CLIENT_ID = "CLI001";
+    private static final AtomicLong sequence = new AtomicLong(1);
 
     static {
         // Pre-populate with some orders for the Demo Client (CLI001)
         try {
             // Order 1: Delivered
-            Ordine o1 = new Ordine("CLI001");
-            o1.setNumeroOrdine(sequence++);
+            Ordine o1 = new Ordine(DEMO_CLIENT_ID);
+            o1.setNumeroOrdine(sequence.getAndIncrement());
             o1.aggiungiProdotto(new org.example.model.food.PaninoDonerKebab());
             o1.setStato(StatoOrdine.CONSEGNATO);
             o1.setDataConferma(java.time.LocalDateTime.now().minusDays(2));
             MOCK_ORDINI.add(o1);
 
             // Order 2: In Preparation
-            Ordine o2 = new Ordine("CLI001");
-            o2.setNumeroOrdine(sequence++);
+            Ordine o2 = new Ordine(DEMO_CLIENT_ID);
+            o2.setNumeroOrdine(sequence.getAndIncrement());
             o2.aggiungiProdotto(new org.example.model.food.PiadinaDonerKebab());
             o2.aggiungiProdotto(new org.example.model.food.KebabAlPiatto());
             o2.setStato(StatoOrdine.IN_PREPARAZIONE);
@@ -35,8 +37,8 @@ public class OrdineDAODemo implements OrdineDAOInterface {
             MOCK_ORDINI.add(o2);
 
             // Order 3: Delivered (Older)
-            Ordine o3 = new Ordine("CLI001");
-            o3.setNumeroOrdine(sequence++);
+            Ordine o3 = new Ordine(DEMO_CLIENT_ID);
+            o3.setNumeroOrdine(sequence.getAndIncrement());
             o3.aggiungiProdotto(new org.example.model.food.PaninoDonerKebab());
             o3.setStato(StatoOrdine.CONSEGNATO);
             o3.setDataConferma(java.time.LocalDateTime.now().minusDays(10));
@@ -51,7 +53,7 @@ public class OrdineDAODemo implements OrdineDAOInterface {
 
     @Override
     public void insert(Ordine ordine) {
-        ordine.setNumeroOrdine(sequence++);
+        ordine.setNumeroOrdine(sequence.getAndIncrement());
         MOCK_ORDINI.add(ordine);
     }
 
@@ -94,6 +96,6 @@ public class OrdineDAODemo implements OrdineDAOInterface {
 
     @Override
     public Long getNextNumeroOrdine() {
-        return sequence;
+        return sequence.get();
     }
 }

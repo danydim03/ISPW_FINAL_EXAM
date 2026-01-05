@@ -20,6 +20,8 @@ import java.util.logging.Logger;
 public class CreaOrdineCLIController extends BaseCLIGraphicController {
 
     private static final Logger logger = Logger.getLogger(CreaOrdineCLIController.class.getName());
+    private static final String UNEXPECTED_ERROR_PREFIX = "Errore imprevisto: ";
+    private static final String TABLE_ROW_SEPARATOR = "  ├─────────────────────────────────────────────────┤";
 
     private CreaOrdineFacade facade;
     private List<FoodBean> prodottiBase;
@@ -55,7 +57,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             waitForEnter();
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore imprevisto nell'avvio creazione ordine", e);
-            showError("Errore imprevisto: " + e.getMessage());
+            showError(UNEXPECTED_ERROR_PREFIX + e.getMessage());
             waitForEnter();
         }
     }
@@ -71,7 +73,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             addOns = new ArrayList<>();
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore imprevisto nel caricamento prodotti", e);
-            showError("Errore imprevisto: " + e.getMessage());
+            showError(UNEXPECTED_ERROR_PREFIX + e.getMessage());
             prodottiBase = new ArrayList<>();
             addOns = new ArrayList<>();
         }
@@ -178,7 +180,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             showError("Errore: " + e.getMessage());
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore imprevisto nell'aggiunta prodotto", e);
-            showError("Errore imprevisto: " + e.getMessage());
+            showError(UNEXPECTED_ERROR_PREFIX + e.getMessage());
         }
 
         waitForEnter();
@@ -249,7 +251,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             showError("Errore nell'applicazione del voucher: " + e.getMessage());
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore imprevisto nell'applicazione del voucher", e);
-            showError("Errore imprevisto: " + e.getMessage());
+            showError(UNEXPECTED_ERROR_PREFIX + e.getMessage());
         }
 
         waitForEnter();
@@ -270,7 +272,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             System.out.println("  Ordine #" + riepilogo.getNumeroOrdine() + "\n");
             System.out.println("  ┌─────────────────────────────────────────────────┐");
             System.out.println("  │ PRODOTTO                          PREZZO       │");
-            System.out.println("  ├─────────────────────────────────────────────────┤");
+            System.out.println(TABLE_ROW_SEPARATOR);
 
             for (RiepilogoOrdineBean.RigaOrdineBean riga : riepilogo.getRigheOrdine()) {
                 System.out.printf("  │ %-35s %8s │%n",
@@ -278,7 +280,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
                         riga.getPrezzoFormattato());
             }
 
-            System.out.println("  ├─────────────────────────────────────────────────┤");
+            System.out.println(TABLE_ROW_SEPARATOR);
             System.out.printf("  │ Subtotale                         %8s │%n", riepilogo.getSubtotaleFormattato());
 
             if (riepilogo.isVoucherApplicato()) {
@@ -287,7 +289,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
                         riepilogo.getScontoFormattato());
             }
 
-            System.out.println("  ├─────────────────────────────────────────────────┤");
+            System.out.println(TABLE_ROW_SEPARATOR);
             System.out.printf("  │ TOTALE                            %8s │%n", riepilogo.getTotaleFormattato());
             System.out.println("  └─────────────────────────────────────────────────┘");
             System.out.println("\n  ⏱️  Tempo di preparazione stimato: " + riepilogo.getDurataFormattata());
@@ -295,7 +297,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
         } catch (Exception e) {
             // getRiepilogoOrdine non lancia eccezioni checked
             logger.log(Level.SEVERE, "Errore imprevisto nel recupero del riepilogo", e);
-            showError("Errore imprevisto: " + e.getMessage());
+            showError(UNEXPECTED_ERROR_PREFIX + e.getMessage());
         }
 
         waitForEnter();
@@ -339,7 +341,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             showError("Errore nella conferma: " + e.getMessage());
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore imprevisto nella conferma ordine", e);
-            showError("Errore imprevisto: " + e.getMessage());
+            showError(UNEXPECTED_ERROR_PREFIX + e.getMessage());
         }
 
         waitForEnter();
@@ -357,7 +359,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             } catch (Exception e) {
                 // annullaOrdine non lancia eccezioni checked
                 logger.log(Level.SEVERE, "Errore imprevisto nell'annullamento ordine", e);
-                showError("Errore imprevisto: " + e.getMessage());
+                showError(UNEXPECTED_ERROR_PREFIX + e.getMessage());
             }
         }
     }

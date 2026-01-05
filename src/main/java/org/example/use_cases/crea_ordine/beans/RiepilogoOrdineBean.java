@@ -11,6 +11,7 @@ import java.util.List;
 public class RiepilogoOrdineBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final String CURRENCY_FORMAT = "€%.2f";
 
     private Long numeroOrdine;
     private List<RigaOrdineBean> righeOrdine;
@@ -68,7 +69,7 @@ public class RiepilogoOrdineBean implements Serializable {
         }
 
         public String getPrezzoFormattato() {
-            return String.format("€%.2f", prezzo);
+            return String.format(CURRENCY_FORMAT, prezzo);
         }
     }
 
@@ -153,7 +154,7 @@ public class RiepilogoOrdineBean implements Serializable {
 
     // Metodi di formattazione per la view
     public String getSubtotaleFormattato() {
-        return String.format("€%.2f", subtotale);
+        return String.format(CURRENCY_FORMAT, subtotale);
     }
 
     public String getScontoFormattato() {
@@ -161,7 +162,7 @@ public class RiepilogoOrdineBean implements Serializable {
     }
 
     public String getTotaleFormattato() {
-        return String.format("€%.2f", totale);
+        return String.format(CURRENCY_FORMAT, totale);
     }
 
     public String getDurataFormattata() {

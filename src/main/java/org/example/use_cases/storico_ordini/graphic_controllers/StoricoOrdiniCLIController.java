@@ -84,7 +84,7 @@ public class StoricoOrdiniCLIController extends BaseCLIGraphicController {
         return switch (stato.toUpperCase()) {
             case "IN_CREAZIONE" -> "📝 In creazione";
             case "CONFERMATO" -> "✅ Confermato";
-            case "IN_PREPARAZIONE" -> "👨‍🍳 Preparazione";
+            case "IN_PREPARAZIONE" -> "🍳 Preparazione";
             case "PRONTO" -> "🔔 Pronto";
             case "IN_CONSEGNA" -> "🚚 In consegna";
             case "CONSEGNATO" -> "📦 Consegnato";

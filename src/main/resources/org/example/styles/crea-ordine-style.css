@@ -5,7 +5,7 @@
 
 /* ==================== GENERALE ==================== */
 
-. background {
+.background {
     -fx-background-color: linear-gradient(to bottom right, #1a1a2e, #16213e);
 }
 
@@ -79,7 +79,7 @@
 
 /* ==================== CHECKBOX ADD-ON ==================== */
 
-. addon-checkbox {
+.addon-checkbox {
     -fx-font-size: 13px;
     -fx-text-fill: #2c3e50;
     -fx-padding: 8 12;
@@ -97,7 +97,7 @@
     -fx-text-fill: #e65100;
 }
 
-.addon-checkbox . box {
+.addon-checkbox .box {
     -fx-background-color: #ffffff;
     -fx-border-color: #bdc3c7;
     -fx-border-radius: 4;
@@ -154,7 +154,7 @@
     -fx-text-fill: #7f8c8d;
 }
 
-. remove-button {
+.remove-button {
     -fx-background-color: #e74c3c;
     -fx-text-fill: #ffffff;
     -fx-font-size: 14px;
@@ -173,7 +173,7 @@
     -fx-opacity: 0.5;
 }
 
-. remove-button-small {
+.remove-button-small {
     -fx-background-color: transparent;
     -fx-text-fill: #e74c3c;
     -fx-font-size: 12px;
@@ -194,7 +194,7 @@
 
 /* ==================== CONFIRM / CANCEL BUTTONS ==================== */
 
-. confirm-button {
+.confirm-button {
     -fx-background-color: linear-gradient(to right, #27ae60, #2ecc71);
     -fx-text-fill: #ffffff;
     -fx-font-size: 15px;
@@ -236,10 +236,9 @@
 
 .table-scroll {
     -fx-background-color: transparent;
-    -fx-background: transparent;
 }
 
-.table-scroll > .viewport {
+.table-scroll>.viewport {
     -fx-background-color: transparent;
 }
 
@@ -257,7 +256,7 @@
     -fx-border-color: transparent transparent #dee2e6 transparent;
 }
 
-.order-table .column-header . label {
+.order-table .column-header .label {
     -fx-font-weight: bold;
     -fx-text-fill: #2c3e50;
     -fx-font-size: 13px;
@@ -293,7 +292,7 @@
     -fx-padding: 10 0 0 0;
 }
 
-. total-label {
+.total-label {
     -fx-font-size: 14px;
     -fx-text-fill: #7f8c8d;
 }
@@ -328,7 +327,7 @@
     -fx-text-fill: #ff6b35;
 }
 
-. time-label {
+.time-label {
     -fx-font-size: 13px;
     -fx-text-fill: #95a5a6;
 }
@@ -349,7 +348,7 @@
 
 /* ==================== ANIMATIONS ==================== */
 
-. card {
+.card {
     -fx-transition: all 0.3s ease;
 }
 

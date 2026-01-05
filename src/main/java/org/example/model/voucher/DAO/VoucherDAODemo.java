@@ -6,12 +6,13 @@ import org.example.model.voucher.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class VoucherDAODemo implements VoucherDAOInterface {
 
     private static final List<Voucher> MOCK_VOUCHERS = new ArrayList<>();
-    private static long sequence = 1;
+    private static final AtomicLong sequence = new AtomicLong(1);
 
     static {
         // Add some dummy vouchers
@@ -21,7 +22,7 @@ public class VoucherDAODemo implements VoucherDAOInterface {
 
         // Assign IDs
         for (Voucher v : MOCK_VOUCHERS) {
-            v.setId(sequence++);
+            v.setId(sequence.getAndIncrement());
         }
     }
 
@@ -50,7 +51,7 @@ public class VoucherDAODemo implements VoucherDAOInterface {
 
     @Override
     public void insert(Voucher voucher) {
-        voucher.setId(sequence++);
+        voucher.setId(sequence.getAndIncrement());
         MOCK_VOUCHERS.add(voucher);
     }
 

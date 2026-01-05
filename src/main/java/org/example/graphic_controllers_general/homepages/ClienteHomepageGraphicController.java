@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 public class ClienteHomepageGraphicController {
 
     private static final Logger logger = Logger.getLogger(ClienteHomepageGraphicController.class.getName());
+    private static final String ERROR_TITLE = "Errore";
 
     @FXML
     void handleNuovoOrdine(ActionEvent event) {
@@ -32,7 +33,7 @@ public class ClienteHomepageGraphicController {
             ClienteHomepageController.getInstance().apriMappa();
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Impossibile aprire la mappa", e);
-            mostraErrore("Errore", "Impossibile aprire la mappa: " + e.getMessage());
+            mostraErrore(ERROR_TITLE, "Impossibile aprire la mappa: " + e.getMessage());
         }
     }
 
@@ -62,7 +63,7 @@ public class ClienteHomepageGraphicController {
             java.awt.Desktop.getDesktop().browse(new java.net.URI("https://www.yahabibi.it"));
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Impossibile aprire il sito web", e);
-            mostraErrore("Errore", "Impossibile aprire il sito web: " + e.getMessage());
+            mostraErrore(ERROR_TITLE, "Impossibile aprire il sito web: " + e.getMessage());
         }
     }
 
@@ -76,7 +77,7 @@ public class ClienteHomepageGraphicController {
 
     private void mostraErrore(String titolo, String messaggio) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Errore");
+        alert.setTitle(ERROR_TITLE);
         alert.setHeaderText(titolo);
         alert.setContentText(messaggio);
         alert.showAndWait();
