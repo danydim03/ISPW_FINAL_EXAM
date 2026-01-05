@@ -75,7 +75,6 @@ public abstract class BaseCLIGraphicController {
     /**
      * Reads a password (hides input if possible, otherwise just reads)
      */
-
     protected String readPassword(String prompt) {
         System.out.print("  " + prompt + ": ");
         java.io.Console console = System.console();
@@ -101,7 +100,7 @@ public abstract class BaseCLIGraphicController {
             } else {
                 return "";
             }
-        } catch (Throwable t) {
+        } catch (Exception e) {
             // Ultimo fallback: lettura normale con avviso
             showWarning("Console non disponibile, inserimento password non nascosto.");
             return scanner.nextLine().trim();
@@ -156,13 +155,13 @@ public abstract class BaseCLIGraphicController {
     /**
      * Prints a formatted table row
      */
-    protected void printTableRow(String... columns) {
-        StringBuilder row = new StringBuilder("  │");
-        for (String col : columns) {
-            row.append(String.format(" %-15s│", truncate(col, 15)));
-        }
-        System.out.println(row);
-    }
+//    protected void printTableRow(String... columns) {
+//        StringBuilder row = new StringBuilder("  │");
+//        for (String col : columns) {
+//            row.append(String.format(" %-15s│", truncate(col, 15)));
+//        }
+//        System.out.println(row);
+//    }
 
     /**
      * Truncates a string to max length with ellipsis

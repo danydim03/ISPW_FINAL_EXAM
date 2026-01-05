@@ -3,7 +3,7 @@ package org.example;
 import org.example.enums.ExceptionMessagesEnum;
 import org.example.enums.UserErrorMessagesEnum;
 import org.example.exceptions.*;
-import org.example.Facades.UserFacade;
+import org.example.facades.UserFacade;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
