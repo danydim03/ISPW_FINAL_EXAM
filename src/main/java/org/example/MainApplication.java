@@ -20,6 +20,7 @@ public class MainApplication extends Application {
 
     // Costante per evitare duplicazione della riga della cornice
     private static final String BOX_EMPTY_ROW = "  ║                                                               ║";
+
     @Override
     public void start(Stage stage) throws IOException {
         Pane basePane = loadLoginPane();
@@ -42,9 +43,7 @@ public class MainApplication extends Application {
             if (frontEndType != null)
                 switch (frontEndType) {
                     case JAVAFX -> launch(args);
-                    case CLI -> {
-                        launchCLI();
-                    }
+                    case CLI -> launchCLI();
                     default -> throw new PropertyException(ExceptionMessagesEnum.UNEXPECTED_PROPERTY_NAME.message);
                 }
             else
@@ -68,7 +67,6 @@ public class MainApplication extends Application {
         // Start the CLI navigation controller
         org.example.cli.CLINavigationController.getInstance().start();
     }
-
 
     private Pane loadLoginPane() {
         try {
