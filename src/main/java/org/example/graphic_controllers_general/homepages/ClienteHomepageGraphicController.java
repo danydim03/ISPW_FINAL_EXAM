@@ -53,7 +53,6 @@ public class ClienteHomepageGraphicController {
     @FXML
     void handleProfilo(ActionEvent event) {
         mostraPlaceholder("Profilo Utente", "Gestione dati anagrafici e password.");
-        // TODO: PageNavigationController.getInstance().navigateTo("Profilo");
     }
 
     @FXML
