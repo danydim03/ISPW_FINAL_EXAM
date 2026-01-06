@@ -13,25 +13,28 @@ public class AmministratoreLazyFactory {
     private static AmministratoreLazyFactory instance;
     private final List<Amministratore> amministratori;
 
-    private AmministratoreLazyFactory(){
+    private AmministratoreLazyFactory() {
         amministratori = new ArrayList<>();
     }
 
-    public static synchronized AmministratoreLazyFactory getInstance(){
-        if (instance == null){
+    public static synchronized AmministratoreLazyFactory getInstance() {
+        if (instance == null) {
             instance = new AmministratoreLazyFactory();
         }
         return instance;
     }
 
-    public Amministratore getAmministratoreByUser(User user) throws DAOException, UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    public Amministratore getAmministratoreByUser(User user)
+            throws DAOException, UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
+            MissingAuthorizationException, WrongListQueryIdentifierValue {
         for (Amministratore a : amministratori) {
             if (a.getUser().equals(user)) {
                 return a;
             }
         }
         try {
-            Amministratore daoAdmin = DAOFactoryAbstract.getInstance().getAmministratoreDAO().getAmministratoreByUser(user);
+            Amministratore daoAdmin = DAOFactoryAbstract.getInstance().getAmministratoreDAO()
+                    .getAmministratoreByUser(user);
             amministratori.add(daoAdmin);
             return daoAdmin;
         } catch (PropertyException | ResourceNotFoundException e) {
@@ -39,7 +42,7 @@ public class AmministratoreLazyFactory {
         }
     }
 
-    public Amministratore newAmministratore(User user, String ID) throws DAOException, MissingAuthorizationException {
+    public Amministratore newAmministratore(User user) throws DAOException, MissingAuthorizationException {
         // Usa il costruttore che accetta solo User (usa valori di default)
         Amministratore admin = new Amministratore(user);
         user.setRole(admin);
