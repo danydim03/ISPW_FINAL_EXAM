@@ -10,7 +10,8 @@ public class ClienteHomepageController {
     private static final String GOOGLE_MAPS_URL = "https://www.google.com/maps/d/u/0/embed?mid=1rOu3jHBshR_ZiVIPd46f6ncQaHpjRvQ&ehbc=2E312F";
     private static final Logger logger = Logger.getLogger(ClienteHomepageController.class.getName());
 
-    private ClienteHomepageController() {}
+    private ClienteHomepageController() {
+    }
 
     public static synchronized ClienteHomepageController getInstance() {
         if (instance == null) {
@@ -25,7 +26,8 @@ public class ClienteHomepageController {
                 Desktop.getDesktop().browse(new URI(GOOGLE_MAPS_URL));
             } else {
                 logger.log(Level.WARNING, "Desktop browsing non supportato su questo sistema");
-                // Fallback: tentativo con Runtime.exec (per sistemi dove Desktop non è supportato)
+                // Fallback: tentativo con Runtime.exec (per sistemi dove Desktop non è
+                // supportato)
                 String os = System.getProperty("os.name").toLowerCase();
                 Runtime runtime = Runtime.getRuntime();
 
@@ -38,7 +40,7 @@ public class ClienteHomepageController {
                 }
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Errore durante l'apertura della mappa: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, e, () -> "Errore durante l'apertura della mappa: " + e.getMessage());
         }
     }
 }
