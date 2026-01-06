@@ -16,6 +16,7 @@
         <!-- SonarCloud Configuration -->
         <sonar.organization>danydim03</sonar.organization>
         <!-- Exclude java:S106 (replace System.out with logger) from analysis -->
+        <!-- sto escludendo la issue perché nella mia 'applicazione desktop l'uso di System.out è accettabile -->
         <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
         <sonar.issue.ignore.multicriteria.e1.ruleKey>java:S106</sonar.issue.ignore.multicriteria.e1.ruleKey>
         <sonar.issue.ignore.multicriteria.e1.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e1.resourceKey>
