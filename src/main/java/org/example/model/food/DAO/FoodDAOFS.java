@@ -173,8 +173,6 @@ public class FoodDAOFS implements FoodDAOInterface {
      */
     private Food buildFoodFromRow(String[] row) {
         Long id = Long.parseLong(row[0]);
-        String descrizione = row[1];
-        String tipo = row[2];
         String classeJava = row.length > 5 ? row[5] : "";
 
         // Try to create specific class based on className
@@ -183,14 +181,8 @@ public class FoodDAOFS implements FoodDAOInterface {
             return food;
         }
 
-        // Fallback: create generic Food based on type
-        if ("BASE".equalsIgnoreCase(tipo)) {
-            return new PaninoDonerKebab(id);
-        } else {
-            // For add-ons, we can't create them without a base food
-            // Return info-only instance
-            return new PaninoDonerKebab(id);
-        }
+        // Fallback: create generic PaninoDonerKebab as default
+        return new PaninoDonerKebab(id);
     }
 
     private Food createFoodByClassName(String className, Long id) {
