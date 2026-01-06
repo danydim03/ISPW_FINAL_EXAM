@@ -109,17 +109,16 @@ public class FoodDAODB extends DAODBAbstract<Food> implements FoodDAOInterface {
 
         Long foodId = rs.getLong(ID);
         String descrizione = rs.getString(DESCRIZIONE);
-        String tipo = rs.getString(TIPO);
         String classe = rs.getString(CLASSE);
 
         // Factory method per creare l'istanza corretta in base alla classe salvata
-        return createFoodInstance(foodId, descrizione, tipo, classe);
+        return createFoodInstance(foodId, descrizione, classe);
     }
 
     /**
      * Factory method per creare l'istanza corretta di Food
      */
-    private Food createFoodInstance(Long id, String descrizione, String tipo, String classe) {
+    private Food createFoodInstance(Long id, String descrizione, String classe) {
         Food food;
 
         switch (classe) {
