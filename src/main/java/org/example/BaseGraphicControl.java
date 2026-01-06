@@ -32,7 +32,13 @@ public class BaseGraphicControl implements Initializable {
     @FXML
     private VBox pendingEventList;
 
+    /**
+     * Default constructor - initialization is handled by JavaFX's initialize()
+     * method.
+     * All field injection and setup occurs there, not in the constructor.
+     */
     public BaseGraphicControl() {
+        // Empty: JavaFX controller initialization happens in initialize()
     }
 
     @Override
