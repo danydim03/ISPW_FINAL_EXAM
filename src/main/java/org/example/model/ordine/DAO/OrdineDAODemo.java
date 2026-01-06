@@ -7,7 +7,6 @@ import org.example.model.ordine.Ordine;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 public class OrdineDAODemo implements OrdineDAOInterface {
 
@@ -83,14 +82,14 @@ public class OrdineDAODemo implements OrdineDAOInterface {
     public List<Ordine> getOrdiniByCliente(String clienteId) {
         return MOCK_ORDINI.stream()
                 .filter(o -> o.getClienteId().equals(clienteId)) // Fixed: use getClienteId()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public List<Ordine> getOrdiniByStato(StatoOrdine stato) {
         return MOCK_ORDINI.stream()
                 .filter(o -> o.getStato() == stato)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
