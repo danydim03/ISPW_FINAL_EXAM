@@ -5,7 +5,6 @@ import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 import org.example.enums.ExceptionMessagesEnum;
 import org.example.exceptions.DAOException;
-import org.example.exceptions.ResourceNotFoundException;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -62,7 +61,7 @@ public class CSVFileManager {
             try {
                 Files.createDirectories(dir);
             } catch (IOException e) {
-                throw new RuntimeException("Cannot create CSV directory: " + csvDirectory, e);
+                throw new IllegalStateException("Cannot create CSV directory: " + csvDirectory, e);
             }
         }
     }
