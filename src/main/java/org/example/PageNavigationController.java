@@ -17,9 +17,21 @@ import java.util.logging.Logger;
 public final class PageNavigationController {
 
     private static final String FILE_EXTENSION = ".fxml";
-    private static final String RESOURCE_BASE_PATH = "/org/example/";
+    private static final String DEFAULT_RESOURCE_BASE_PATH = "/org/example/";
+    private static final String RESOURCE_BASE_PATH;
     private static PageNavigationController instance;
     private static final Logger logger = Logger.getLogger(PageNavigationController.class.getName());
+
+    static {
+        String path = DEFAULT_RESOURCE_BASE_PATH;
+        try {
+            path = PropertiesHandler.getInstance().getProperty("resource_base_path");
+        } catch (Exception e) {
+            logger.log(Level.WARNING,
+                    () -> "Impossibile caricare resource_base_path, uso default: " + DEFAULT_RESOURCE_BASE_PATH);
+        }
+        RESOURCE_BASE_PATH = path;
+    }
 
     private BaseGraphicControl baseGraphicController;
     private UserData userData;
@@ -153,7 +165,8 @@ public final class PageNavigationController {
             Parent view = loader.load();
             setContent(view);
         } catch (IOException e) {
-            logger.severe("Errore caricando la pagina: " + pageName + " -> " + e.getMessage());
+            final String pageForLog = pageName;
+            logger.log(Level.SEVERE, () -> "Errore caricando la pagina: " + pageForLog + " -> " + e.getMessage());
             showAlert(Alert.AlertType.ERROR, "Errore di navigazione", "Impossibile aprire la pagina: " + pageName);
         }
     }
@@ -201,7 +214,8 @@ public final class PageNavigationController {
                             .requireNonNull(PageNavigationController.class.getResource(RESOURCE_BASE_PATH + viewName))),
                     initials);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Errore caricamento home: " + viewName, e);
+            final String viewForLog = viewName;
+            logger.log(Level.SEVERE, e, () -> "Errore caricamento home: " + viewForLog);
             showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message,
                     UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
         }
