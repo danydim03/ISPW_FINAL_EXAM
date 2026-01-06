@@ -3,7 +3,6 @@ package org.example;
 import org.example.enums.ExceptionMessagesEnum;
 import org.example.enums.UserErrorMessagesEnum;
 import org.example.exceptions.*;
-import org.example.facades.UserFacade;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,7 +25,6 @@ public class BaseGraphicControl implements Initializable {
     private StackPane content;
     @FXML
     private Button backButton;
-    private final UserFacade facade;
     @FXML
     private Button accountButton;
     @FXML
@@ -35,7 +33,6 @@ public class BaseGraphicControl implements Initializable {
     private VBox pendingEventList;
 
     public BaseGraphicControl() {
-        this.facade = new UserFacade();
     }
 
     @Override
