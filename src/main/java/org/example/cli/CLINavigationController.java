@@ -85,19 +85,4 @@ public class CLINavigationController {
         }
         currentLoginBean = null;
     }
-
-    /**
-     * Stops the CLI application
-     */
-//    public void stop() {
-//        running = false;
-//    }
-//
-//    public LoginBean getCurrentLoginBean() {
-//        return currentLoginBean;
-//    }
-
-//    public void setCurrentLoginBean(LoginBean loginBean) {
-//        this.currentLoginBean = loginBean;
-//    }
 }

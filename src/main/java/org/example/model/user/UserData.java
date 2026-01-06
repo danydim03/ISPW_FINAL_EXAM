@@ -1,23 +1,20 @@
 package org.example.model.user;
 
-
 public class UserData {
 
     private String userName;
     private String userSurname;
     private String userEmail;
     private String userCodiceFiscale;
-    //private String userMatricola;
     private Integer userRole;
     private String sessionTokenKey;
 
-
-    public UserData(String userName, String userSurname, String userEmail, String userCodiceFiscale, Integer userRole, String sessionTokenKey) {
+    public UserData(String userName, String userSurname, String userEmail, String userCodiceFiscale, Integer userRole,
+            String sessionTokenKey) {
         this.userName = userName;
         this.userSurname = userSurname;
         this.userEmail = userEmail;
         this.userCodiceFiscale = userCodiceFiscale;
-        // this.userMatricola = userMatricola;
         this.userRole = userRole;
         this.sessionTokenKey = sessionTokenKey;
     }
@@ -53,14 +50,6 @@ public class UserData {
     public void setUserCodiceFiscale(String userCodiceFiscale) {
         this.userCodiceFiscale = userCodiceFiscale;
     }
-
-//   // public String getUserMatricola() {
-//        return userMatricola;
-//    }
-//
-//    public void setUserMatricola(String userMatricola) {
-//        this.userMatricola = userMatricola;
-//    }
 
     public Integer getUserRole() {
         return userRole;
