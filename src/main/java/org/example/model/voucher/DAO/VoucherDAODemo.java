@@ -7,7 +7,6 @@ import org.example.model.voucher.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 public class VoucherDAODemo implements VoucherDAOInterface {
 
@@ -46,7 +45,7 @@ public class VoucherDAODemo implements VoucherDAOInterface {
     public List<Voucher> getAllVoucherAttivi() {
         return MOCK_VOUCHERS.stream()
                 .filter(Voucher::isAttivo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
