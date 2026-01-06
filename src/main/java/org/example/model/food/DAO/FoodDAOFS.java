@@ -7,7 +7,6 @@ import org.example.model.food.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * DAO per Food basato su File System (CSV).
@@ -92,7 +91,7 @@ public class FoodDAOFS implements FoodDAOInterface {
             return allFood.stream()
                     .filter(row -> row.length > 2 && "BASE".equalsIgnoreCase(row[2]))
                     .map(this::buildFoodFromRow)
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (DAOException e) {
             throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
@@ -105,7 +104,7 @@ public class FoodDAOFS implements FoodDAOInterface {
             return allFood.stream()
                     .filter(row -> row.length > 2 && ADDON_TYPE.equalsIgnoreCase(row[2]))
                     .map(this::buildFoodFromRow)
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (DAOException e) {
             throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
