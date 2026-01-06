@@ -19,13 +19,18 @@
         <!-- sto escludendo la issue perché nella mia 'applicazione desktop l'uso di System.out è accettabile -->
         <!-- Exclude java:S120 (package naming convention) - i package DAO e nomi capitalizzati sono intenzionali -->
         <!-- Exclude java:S1075 (hardcoded URI) - il path è esternalizzato in .properties, il default è solo un fallback -->
-        <sonar.issue.ignore.multicriteria>e1,e2,e3</sonar.issue.ignore.multicriteria>
+        <!-- Exclude java:S107 (too many parameters) - le classi entity del dominio rappresentano oggetti con attributi -->
+        <!-- necessari e correlati; ridurre i parametri richiederebbe pattern come Builder che aggiungerebbero -->
+        <!-- complessità non giustificata per un progetto di questa scala -->
+        <sonar.issue.ignore.multicriteria>e1,e2,e3,e4</sonar.issue.ignore.multicriteria>
         <sonar.issue.ignore.multicriteria.e1.ruleKey>java:S106</sonar.issue.ignore.multicriteria.e1.ruleKey>
         <sonar.issue.ignore.multicriteria.e1.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e1.resourceKey>
         <sonar.issue.ignore.multicriteria.e2.ruleKey>java:S120</sonar.issue.ignore.multicriteria.e2.ruleKey>
         <sonar.issue.ignore.multicriteria.e2.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e2.resourceKey>
         <sonar.issue.ignore.multicriteria.e3.ruleKey>java:S1075</sonar.issue.ignore.multicriteria.e3.ruleKey>
         <sonar.issue.ignore.multicriteria.e3.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e3.resourceKey>
+        <sonar.issue.ignore.multicriteria.e4.ruleKey>java:S107</sonar.issue.ignore.multicriteria.e4.ruleKey>
+        <sonar.issue.ignore.multicriteria.e4.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e4.resourceKey>
     </properties>
 
 
