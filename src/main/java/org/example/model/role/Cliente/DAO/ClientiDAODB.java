@@ -12,6 +12,7 @@ import java.util.List;
 public class ClientiDAODB extends DAODBAbstract<Cliente> implements ClienteDAOInterface {
     private static final String CLIENTE = "CLIENTE";
     private static final String CODICE = "ID";
+    private static final String PUNTEGGIO = "punteggio";
 
     protected static ClienteDAOInterface instance;
 
@@ -26,22 +27,20 @@ public class ClientiDAODB extends DAODBAbstract<Cliente> implements ClienteDAOIn
     }
 
     /**
-     * Returns the Student object correlated a given User
+     * Returns the Cliente object correlated to a given User
      *
-     * @param user the User whose Student's data have to be retrieved
-     * @return a Student object
+     * @param user the User whose Cliente's data have to be retrieved
+     * @return a Cliente object
      * @throws DAOException          thrown if errors occur while retrieving data
      *                               from persistence layer
-     * @throws UserNotFoundException thrown if the given User has not a Student role
+     * @throws UserNotFoundException thrown if the given User has not a Cliente role
      */
     @Override
     public Cliente getClienteByUser(User user) throws DAOException, UserNotFoundException, PropertyException,
             ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
             MissingAuthorizationException, WrongListQueryIdentifierValue {
-        System.out.println("DEBUG: Cerco Cliente con ID = '" + user.getCodiceFiscale() + "'");
         return getQuery(
-                CLIENTE, // da cambiare
-
+                CLIENTE,
                 List.of(CODICE),
                 List.of(user.getId()),
                 List.of(user));
@@ -50,10 +49,11 @@ public class ClientiDAODB extends DAODBAbstract<Cliente> implements ClienteDAOIn
     @Override
     public void insert(Cliente cliente)
             throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
-        // insertQuery(
-        // CLIENTE,
-        // List.of(student.getCodiceFiscale(),student.getMatricola())
-        // ); da cambiare
+        insertQuery(
+                CLIENTE,
+                List.of(
+                        cliente.getUser().getCodiceFiscale(),
+                        cliente.getPunteggio()));
     }
 
     @Override
@@ -61,35 +61,36 @@ public class ClientiDAODB extends DAODBAbstract<Cliente> implements ClienteDAOIn
         deleteQuery(
                 CLIENTE,
                 List.of(CODICE),
-                List.of(cliente.getCodiceFiscale()));
+                List.of(cliente.getUser().getCodiceFiscale()));
     }
 
     @Override
     public void update(Cliente cliente)
             throws PropertyException, ResourceNotFoundException, DAOException, MissingAuthorizationException {
-        // updateQuery(
-        // CLIENTE,
-        // List.of("matricola"),
-        // List.of(student.getMatricola()), DA CAMBIARE
-        // List.of(CODICE_FISCALE),
-        // List.of(student.getCodiceFiscale())
-        // );
+        updateQuery(
+                CLIENTE,
+                List.of(PUNTEGGIO),
+                List.of(cliente.getPunteggio()),
+                List.of(CODICE),
+                List.of(cliente.getUser().getCodiceFiscale()));
     }
 
+    @Override
     protected Cliente queryObjectBuilder(ResultSet rs, List<Object> objects) throws SQLException, DAOException,
             PropertyException, ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException,
             MissingAuthorizationException, WrongListQueryIdentifierValue, ObjectNotFoundException {
-        Cliente Cliente = new Cliente((User) objects.get(0), rs.getString("ID"));
-        // student.setDegreeCourseEnrollments(DegreeCourseEnrollmentLazyFactory.getInstance().getDegreeCourseEnrollmentsByStudent(student));
-        // student.setTitles(TitleLazyFactory.getInstance().getTitlesByStudent(student));
-        // student.setSubjectCourseEnrollments(SubjectCourseEnrollmentLazyFactory.getInstance().getSubjectCourseEnrollmentsByStudent(student));
-        return Cliente;
+        Cliente cliente = new Cliente((User) objects.get(0), rs.getString(CODICE));
+        // Carica il punteggio dal database se presente
+        try {
+            cliente.setPunteggio(rs.getInt(PUNTEGGIO));
+        } catch (SQLException e) {
+            // Il campo punteggio potrebbe non esistere, usa default 0
+        }
+        return cliente;
     }
 
-    //
-    // @Override
+    @Override
     protected String setGetListQueryIdentifiersValue(Cliente cliente, int valueNumber) throws DAOException {
         return null;
     }
-
 }
