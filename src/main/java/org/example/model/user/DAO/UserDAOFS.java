@@ -175,14 +175,11 @@ public class UserDAOFS implements UserDAOInterface {
 
     /**
      * Creates a Cliente inline when DAO is not available.
-     * Uses reflection or factory approach similar to Demo mode.
+     * Uses the same approach as Demo mode.
      */
     private Cliente createClienteInline(User user) {
-        // ClienteDAODemo approach: return new Cliente(user, "CLI-" +
-        // user.getCodiceFiscale())
-        // Cliente constructor is protected, so we need to use ClienteDAOFS
-        // If that fails, we'll return null and let higher layer handle it
-        return null;
+        // Creates Cliente with ID based on user's codice fiscale
+        return new Cliente(user, "CLI-" + user.getCodiceFiscale());
     }
 
     /**
