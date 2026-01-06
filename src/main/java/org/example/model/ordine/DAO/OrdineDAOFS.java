@@ -199,8 +199,9 @@ public class OrdineDAOFS implements OrdineDAOInterface {
                 ordine.setVoucher(voucher);
             } catch (Exception e) {
                 // Log per debugging - il voucher potrebbe non essere valido/trovato
-                logger.log(Level.FINE,
-                        "Voucher not found or invalid for ordine " + numeroOrdine + ": " + e.getMessage(), e);
+                final Long ordNum = numeroOrdine;
+                logger.log(Level.FINE, e,
+                        () -> "Voucher not found or invalid for ordine " + ordNum + ": " + e.getMessage());
             }
         }
 
