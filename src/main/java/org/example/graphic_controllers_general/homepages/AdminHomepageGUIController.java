@@ -23,7 +23,6 @@ public class AdminHomepageGUIController {
     void handleCreaVoucher(ActionEvent event) {
         logger.log(Level.INFO, "Click su Crea Voucher");
         mostraPlaceholder("Crea Voucher", "Funzionalità per creare nuovi voucher in arrivo.");
-        // TODO: PageNavigationController.getInstance().navigateTo("CreaVoucher");
     }
 
     @FXML
