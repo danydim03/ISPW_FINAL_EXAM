@@ -12,7 +12,6 @@ import org.example.exceptions.ObjectNotFoundException;
 import org.example.exceptions.MissingAuthorizationException;
 import org.example.exceptions.WrongListQueryIdentifierValue;
 import org.example.instances_management_abstracts.DAODBAbstract;
-import org.example.model.role.Amministratore.DAO.AmministratoreDAODB;
 import org.example.model.role.Amministratore.AmministratoreLazyFactory;
 import org.example.model.role.Cliente.ClienteLazyFactory;
 import org.example.model.role.Kebabbaro.KebabbaroLazyFactory;
