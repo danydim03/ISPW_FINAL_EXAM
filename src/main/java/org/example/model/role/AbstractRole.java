@@ -6,14 +6,12 @@ import org.example.exceptions.MissingAuthorizationException;
 import org.example.model.role.Amministratore.Amministratore;
 import org.example.model.role.Cliente.Cliente;
 import org.example.model.role.Kebabbaro.Kebabbaro;
-//import it.uniroma2.dicii.ispw.gradely.model.role.secretary.Secretary;
-//import it.uniroma2.dicii.ispw.gradely.model.role.student.Student;
 import org.example.model.user.User;
 
 public abstract class AbstractRole {
     protected User user;
 
-    protected AbstractRole(User user){
+    protected AbstractRole(User user) {
         this.user = user;
     }
 
@@ -25,7 +23,7 @@ public abstract class AbstractRole {
         this.user = user;
     }
 
-    public String getCodiceFiscale(){
+    public String getCodiceFiscale() {
         return user.getCodiceFiscale();
     }
 
@@ -45,13 +43,11 @@ public abstract class AbstractRole {
         try {
             getClienteRole();
             return UserRoleEnum.CLIENTE;
-        } catch (MissingAuthorizationException e)
-        {
+        } catch (MissingAuthorizationException e) {
             try {
                 getKebabbaroRole();
                 return UserRoleEnum.KEBABBARO;
             } catch (MissingAuthorizationException ex) {
-                //getAmministratoreRole();
                 return UserRoleEnum.AMMINISTRATORE;
             }
         }
