@@ -355,11 +355,6 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             // Se l'utente conferma, chiama il facade per confermare l'ordine
             // Mostra messaggi di conferma o errore in base al risultato
             RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine();
-            // String messaggioConferma = costruisciMessaggioConferma(riepilogo);
-
-            // if (!mostraConferma("Conferma Ordine", messaggioConferma)) {
-            // return;
-            // }
 
             boolean success = facade.confermaOrdine();
             if (success) {
@@ -467,25 +462,6 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             panelSconto.setVisible(false);
             panelSconto.setManaged(false);
         }
-    }
-
-    private String costruisciMessaggioConferma(RiepilogoOrdineBean riepilogo) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Riepilogo Ordine #").append(riepilogo.getNumeroOrdine()).append("\n\n");
-        sb.append("Prodotti:\n");
-        for (RigaOrdineBean r : riepilogo.getRigheOrdine()) {
-            sb.append("• ").append(r.getDescrizione())
-                    .append(" - ").append(r.getPrezzoFormattato()).append("\n");
-        }
-        sb.append("\nSubtotale: ").append(riepilogo.getSubtotaleFormattato()).append("\n");
-        if (riepilogo.isVoucherApplicato()) {
-            sb.append("Sconto (").append(riepilogo.getCodiceVoucher()).append("): ")
-                    .append(riepilogo.getScontoFormattato()).append("\n");
-        }
-        sb.append("TOTALE: ").append(riepilogo.getTotaleFormattato()).append("\n\n");
-        sb.append("Tempo di preparazione: ").append(riepilogo.getDurataFormattata()).append("\n\n");
-        sb.append("Vuoi confermare l'ordine?");
-        return sb.toString();
     }
 
     private void mostraErrore(String titolo, String messaggio) {
