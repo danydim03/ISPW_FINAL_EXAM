@@ -31,6 +31,8 @@
         <sonar.issue.ignore.multicriteria.e3.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e3.resourceKey>
         <sonar.issue.ignore.multicriteria.e4.ruleKey>java:S107</sonar.issue.ignore.multicriteria.e4.ruleKey>
         <sonar.issue.ignore.multicriteria.e4.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e4.resourceKey>
+        <!-- Exclude CSS files from analysis - JavaFX CSS uses -fx-* properties which SonarCloud doesn't recognize -->
+        <sonar.exclusions>**/*.css</sonar.exclusions>
     </properties>
 
 

@@ -362,7 +362,6 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                         "Il tuo ordine #" + riepilogo.getNumeroOrdine() + " è stato confermato!\n\n" +
                                 "Totale: " + riepilogo.getTotaleFormattato() + "\n" +
                                 "Tempo di preparazione stimato: " + riepilogo.getDurataFormattata());
-                // ritorno alla home page();
                 org.example.PageNavigationController.getInstance().returnToMainPage();
             } else {
                 mostraErrore(ERROR_TITLE, "Si è verificato un errore durante la conferma dell'ordine.");

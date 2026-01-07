@@ -347,14 +347,5 @@
 }
 
 /* ==================== ANIMATIONS ==================== */
-
-.card {
-    -fx-transition: all 0.3s ease;
-}
-
-.action-button-primary,
-.confirm-button,
-.cancel-button,
-.action-button {
-    -fx-transition: all 0.2s ease;
-}
+/* Note: JavaFX CSS does not support CSS transitions. 
+   For animations, use JavaFX Animation API in Java code. */
