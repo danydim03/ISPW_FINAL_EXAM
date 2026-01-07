@@ -123,12 +123,7 @@ public class VisualizzaOrdiniCLIController extends BaseCLIGraphicController {
             String confirm = scanner.nextLine().trim().toLowerCase();
 
             if (confirm.equals("s") || confirm.equals("si") || confirm.equals("sì")) {
-                try {
-                    facade.impostaInConsegna(selectedOrder);
-                    showSuccess("Ordine #" + selectedOrder.getNumeroOrdine() + " impostato 'In Consegna'!");
-                } catch (Exception e) {
-                    showError("Impossibile aggiornare lo stato: " + e.getMessage());
-                }
+                executeImpostaInConsegna(selectedOrder);
             } else {
                 showInfo("Operazione annullata.");
             }
@@ -138,5 +133,14 @@ public class VisualizzaOrdiniCLIController extends BaseCLIGraphicController {
         }
 
         waitForEnter();
+    }
+
+    private void executeImpostaInConsegna(OrdineBean ordine) {
+        try {
+            facade.impostaInConsegna(ordine);
+            showSuccess("Ordine #" + ordine.getNumeroOrdine() + " impostato 'In Consegna'!");
+        } catch (Exception e) {
+            showError("Impossibile aggiornare lo stato: " + e.getMessage());
+        }
     }
 }
