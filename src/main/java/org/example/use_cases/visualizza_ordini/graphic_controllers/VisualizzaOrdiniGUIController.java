@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import org.example.use_cases.crea_ordine.beans.OrdineBean;
 import org.example.use_cases.visualizza_ordini.VisualizzaOrdiniFacade;
@@ -70,34 +69,30 @@ public class VisualizzaOrdiniGUIController {
     }
 
     private void aggiungiBottoneConsegna() {
-        Callback<TableColumn<OrdineBean, Void>, TableCell<OrdineBean, Void>> cellFactory = new Callback<>() {
-            @Override
-            public TableCell<OrdineBean, Void> call(final TableColumn<OrdineBean, Void> param) {
-                return new TableCell<>() {
-                    private final Button btn = new Button("Consegna");
-
-                    {
-                        btn.setOnAction(event -> {
-                            OrdineBean ordine = getTableView().getItems().get(getIndex());
-                            handleConsegna(ordine);
-                        });
-                        btn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
-                    }
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(btn);
-                        }
-                    }
-                };
-            }
-        };
-
+        Callback<TableColumn<OrdineBean, Void>, TableCell<OrdineBean, Void>> cellFactory = param -> new ConsegnaButtonCell();
         colonnaAzioni.setCellFactory(cellFactory);
+    }
+
+    private class ConsegnaButtonCell extends TableCell<OrdineBean, Void> {
+        private final Button btn = new Button("Consegna");
+
+        ConsegnaButtonCell() {
+            btn.setOnAction(event -> {
+                OrdineBean ordine = getTableView().getItems().get(getIndex());
+                handleConsegna(ordine);
+            });
+            btn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+        }
+
+        @Override
+        public void updateItem(Void item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty) {
+                setGraphic(null);
+            } else {
+                setGraphic(btn);
+            }
+        }
     }
 
     private void caricaOrdini() {
