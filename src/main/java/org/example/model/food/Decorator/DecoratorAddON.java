@@ -2,7 +2,7 @@ package org.example.model.food.Decorator;
 
 import org.example.model.food.Food;
 
-public abstract class DecoratorAddON extends Food {
+protected abstract class DecoratorAddON extends Food {
 
     protected Food foodDecorato;
 
