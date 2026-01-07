@@ -202,24 +202,18 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         try {
             String tokenKey = PageNavigationController.getInstance().getSessionTokenKey();
 
-            // Recupera l'utente dalla sessione per ottenere l'ID corretto
+            // Verifica che la sessione sia valida
             var sessionUser = org.example.session_manager.SessionManager.getInstance()
                     .getSessionUserByTokenKey(tokenKey);
             if (sessionUser == null) {
                 throw new CreaOrdineException("Sessione non valida. Effettua nuovamente il login.");
             }
 
-            // Usa l'ID dell'utente dal database (es. CLI001) come clienteId
-            // La foreign key ORDINE.cliente_id -> USER.ID richiede questo ID, non il
-            // codiceFiscale
-            String clienteId = sessionUser.getId();
-
-            OrdineBean ordine = facade.inizializzaNuovoOrdine(clienteId);
+            OrdineBean ordine = facade.inizializzaNuovoOrdine();
             if (labelNumeroOrdine != null && ordine.getNumeroOrdine() != null) {
                 labelNumeroOrdine.setText(" Numero Ordine: " + ordine.getNumeroOrdine());
             }
             aggiornaRiepilogo();
-            // new comment;
         } catch (DAOException | MissingAuthorizationException e) {
             throw new CreaOrdineException("Impossibile inizializzare l'ordine: " + e.getMessage(), e);
         }

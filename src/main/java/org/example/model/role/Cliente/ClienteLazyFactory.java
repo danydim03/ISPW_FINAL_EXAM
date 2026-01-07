@@ -3,7 +3,6 @@ package org.example.model.role.Cliente;
 import org.example.dao_manager.DAOFactoryAbstract;
 import org.example.enums.ExceptionMessagesEnum;
 import org.example.exceptions.*;
-//import org.example.model.title.Title;
 import org.example.model.user.User;
 
 import java.util.ArrayList;

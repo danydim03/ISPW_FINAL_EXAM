@@ -40,7 +40,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             facade = new CreaOrdineFacade(tokenKey);
 
             // Initialize a new order
-            OrdineBean ordineBean = facade.inizializzaNuovoOrdine(tokenKey);
+            OrdineBean ordineBean = facade.inizializzaNuovoOrdine();
             showSuccess("Nuovo ordine #" + ordineBean.getNumeroOrdine() + " inizializzato!");
 
             // Load available products

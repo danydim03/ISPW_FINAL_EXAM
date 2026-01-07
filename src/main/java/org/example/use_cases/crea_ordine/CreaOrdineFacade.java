@@ -20,10 +20,9 @@ public class CreaOrdineFacade {
         this.controller = new CreaOrdineController();
     }
 
-    public OrdineBean inizializzaNuovoOrdine(String ignoredClienteId)
+    public OrdineBean inizializzaNuovoOrdine()
             throws DAOException, MissingAuthorizationException {
-        // Use actual client ID from session user (database ID), not the passed
-        // parameter
+        // Use actual client ID from session user (database ID)
         String actualClienteId = sessionUser.getId();
         return controller.inizializzaNuovoOrdine(actualClienteId);
     }
