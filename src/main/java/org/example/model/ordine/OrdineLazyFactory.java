@@ -125,7 +125,7 @@ public class OrdineLazyFactory {
      * @param clienteId l'ID del cliente
      * @return il nuovo Ordine creato
      */
-    public Ordine newOrdine(String clienteId) throws DAOException, MissingAuthorizationException {
+    public Ordine newOrdine(String clienteId) throws DAOException {
         try {
             // Genera il numero ordine
             Long numeroOrdine = DAOFactoryAbstract.getInstance().getOrdineDAO().getNextNumeroOrdine();

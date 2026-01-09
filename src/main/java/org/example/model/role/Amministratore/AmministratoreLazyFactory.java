@@ -3,7 +3,6 @@ package org.example.model.role.Amministratore;
 import org.example.dao_manager.DAOFactoryAbstract;
 import org.example.enums.ExceptionMessagesEnum;
 import org.example.exceptions.*;
-import org.example.model.role.Amministratore.Amministratore;
 import org.example.model.user.User;
 
 import java.util.ArrayList;

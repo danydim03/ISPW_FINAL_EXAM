@@ -4,9 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.example.exceptions.ValidationException;
+
 /**
  * Bean per il trasporto dei dati di un Ordine tra Boundary e Control.
  * Contiene i prodotti selezionati e il voucher applicato.
+ * 
+ * Include validazione sintattica nei setter (Fail Fast principle).
  */
 public class OrdineBean implements Serializable {
 
@@ -27,10 +31,11 @@ public class OrdineBean implements Serializable {
     public OrdineBean(Long numeroOrdine, String clienteId) {
         this();
         this.numeroOrdine = numeroOrdine;
-        this.clienteId = clienteId;
+        setClienteId(clienteId);
     }
 
-    // Getters e Setters
+    // Getters e Setters con validazione sintattica
+
     public Long getNumeroOrdine() {
         return numeroOrdine;
     }
@@ -75,7 +80,16 @@ public class OrdineBean implements Serializable {
         return clienteId;
     }
 
+    /**
+     * Imposta l'ID del cliente.
+     * 
+     * @param clienteId l'ID del cliente (non può essere null o vuoto)
+     * @throws ValidationException se l'ID è null o vuoto
+     */
     public void setClienteId(String clienteId) {
+        if (clienteId == null || clienteId.trim().isEmpty()) {
+            throw new ValidationException("L'ID cliente non può essere vuoto");
+        }
         this.clienteId = clienteId;
     }
 
@@ -91,7 +105,16 @@ public class OrdineBean implements Serializable {
         return totale;
     }
 
+    /**
+     * Imposta il totale dell'ordine.
+     * 
+     * @param totale il totale (non può essere negativo)
+     * @throws ValidationException se il totale è negativo
+     */
     public void setTotale(double totale) {
+        if (totale < 0) {
+            throw new ValidationException("Il totale dell'ordine non può essere negativo: " + totale);
+        }
         this.totale = totale;
     }
 

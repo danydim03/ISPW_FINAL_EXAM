@@ -2,14 +2,20 @@ package org.example.use_cases.crea_ordine.beans;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Set;
+
+import org.example.exceptions.ValidationException;
 
 /**
  * Bean per il trasporto dei dati di un Voucher tra Boundary e Control.
  * Segue il pattern BCE.
+ * 
+ * Include validazione sintattica nei setter (Fail Fast principle).
  */
 public class VoucherBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final Set<String> TIPI_VALIDI = Set.of("PERCENTUALE", "FISSO", "NESSUNO");
 
     private Long id;
     private String codice;
@@ -24,22 +30,23 @@ public class VoucherBean implements Serializable {
     }
 
     public VoucherBean(String codice) {
-        this.codice = codice;
+        setCodice(codice);
     }
 
     public VoucherBean(Long id, String codice, String descrizione, String tipoVoucher,
             double valore, double minimoOrdine, LocalDate dataScadenza, boolean valido) {
         this.id = id;
-        this.codice = codice;
+        setCodice(codice);
         this.descrizione = descrizione;
-        this.tipoVoucher = tipoVoucher;
-        this.valore = valore;
-        this.minimoOrdine = minimoOrdine;
+        setTipoVoucher(tipoVoucher);
+        setValore(valore);
+        setMinimoOrdine(minimoOrdine);
         this.dataScadenza = dataScadenza;
         this.valido = valido;
     }
 
-    // Getters e Setters
+    // Getters e Setters con validazione sintattica
+
     public Long getId() {
         return id;
     }
@@ -52,7 +59,13 @@ public class VoucherBean implements Serializable {
         return codice;
     }
 
+    /**
+     * Imposta il codice del voucher.
+     * 
+     * @param codice il codice del voucher
+     */
     public void setCodice(String codice) {
+        // Il codice può essere null/vuoto solo per tipo NESSUNO
         this.codice = codice;
     }
 
@@ -68,15 +81,34 @@ public class VoucherBean implements Serializable {
         return tipoVoucher;
     }
 
+    /**
+     * Imposta il tipo di voucher.
+     * 
+     * @param tipoVoucher il tipo (deve essere "PERCENTUALE", "FISSO" o "NESSUNO")
+     * @throws ValidationException se il tipo non è valido
+     */
     public void setTipoVoucher(String tipoVoucher) {
-        this.tipoVoucher = tipoVoucher;
+        if (tipoVoucher != null && !TIPI_VALIDI.contains(tipoVoucher.toUpperCase())) {
+            throw new ValidationException(
+                    "Tipo voucher non valido: " + tipoVoucher + ". Valori ammessi: PERCENTUALE, FISSO, NESSUNO");
+        }
+        this.tipoVoucher = tipoVoucher != null ? tipoVoucher.toUpperCase() : null;
     }
 
     public double getValore() {
         return valore;
     }
 
+    /**
+     * Imposta il valore dello sconto.
+     * 
+     * @param valore il valore (non può essere negativo)
+     * @throws ValidationException se il valore è negativo
+     */
     public void setValore(double valore) {
+        if (valore < 0) {
+            throw new ValidationException("Il valore dello sconto non può essere negativo: " + valore);
+        }
         this.valore = valore;
     }
 
@@ -84,7 +116,16 @@ public class VoucherBean implements Serializable {
         return minimoOrdine;
     }
 
+    /**
+     * Imposta il minimo ordine richiesto.
+     * 
+     * @param minimoOrdine il minimo ordine (non può essere negativo)
+     * @throws ValidationException se il minimo è negativo
+     */
     public void setMinimoOrdine(double minimoOrdine) {
+        if (minimoOrdine < 0) {
+            throw new ValidationException("Il minimo ordine non può essere negativo: " + minimoOrdine);
+        }
         this.minimoOrdine = minimoOrdine;
     }
 
