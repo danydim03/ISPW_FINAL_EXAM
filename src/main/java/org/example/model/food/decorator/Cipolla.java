@@ -1,28 +1,28 @@
-package org.example.model.food.Decorator;
+package org.example.model.food.decorator;
 
 import org.example.model.food.Food;
 
-public class SalsaYogurt extends DecoratorAddON {
+public class Cipolla extends DecoratorAddON {
 
-    public SalsaYogurt(Food food) {
+    public Cipolla(Food food) {
         super(food);
     }
 
     @Override
     public String getDescrizione() {
         if (foodDecorato == null) {
-            return "Salsa Yogurt";
+            return "Cipolla";
         }
-        return foodDecorato.getDescrizione() + ", Salsa Yogurt";
+        return foodDecorato.getDescrizione() + ", Cipolla";
     }
 
     @Override
     public double getCostoPlus() {
-        return 0.80;
+        return 0.50;
     }
 
     @Override
     public int getDurataPlus() {
-        return 0;
+        return 1;
     }
 }

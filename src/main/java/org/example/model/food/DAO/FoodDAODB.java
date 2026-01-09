@@ -3,7 +3,7 @@ package org.example.model.food.DAO;
 import org.example.exceptions.*;
 import org.example.instances_management_abstracts.DAODBAbstract;
 import org.example.model.food.*;
-import org.example.model.food.Decorator.*;
+import org.example.model.food.decorator.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

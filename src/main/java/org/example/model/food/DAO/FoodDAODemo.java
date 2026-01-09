@@ -4,7 +4,6 @@ import org.example.exceptions.DAOException;
 import org.example.exceptions.ObjectNotFoundException;
 import org.example.model.food.*;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +22,10 @@ public class FoodDAODemo implements FoodDAOInterface {
     public List<Food> getAllAddOn() throws DAOException {
         List<Food> addons = new ArrayList<>();
         // Using null as inner food for info-only objects
-        addons.add(new org.example.model.food.Decorator.Cipolla(null));
-        addons.add(new org.example.model.food.Decorator.Patatine(null));
-        addons.add(new org.example.model.food.Decorator.SalsaYogurt(null));
-        addons.add(new org.example.model.food.Decorator.MixVerdureGrigliate(null));
+        addons.add(new org.example.model.food.decorator.Cipolla(null));
+        addons.add(new org.example.model.food.decorator.Patatine(null));
+        addons.add(new org.example.model.food.decorator.SalsaYogurt(null));
+        addons.add(new org.example.model.food.decorator.MixVerdureGrigliate(null));
         return addons;
     }
 

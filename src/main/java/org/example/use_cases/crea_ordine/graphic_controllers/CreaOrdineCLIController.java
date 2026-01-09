@@ -175,9 +175,6 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             } else {
                 showError("Impossibile aggiungere il prodotto");
             }
-        } catch (HabibiException e) {
-            logger.log(Level.SEVERE, "Errore nell'aggiunta prodotto", e);
-            showError("Errore: " + e.getMessage());
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore imprevisto nell'aggiunta prodotto", e);
             showError(UNEXPECTED_ERROR_PREFIX + e.getMessage());

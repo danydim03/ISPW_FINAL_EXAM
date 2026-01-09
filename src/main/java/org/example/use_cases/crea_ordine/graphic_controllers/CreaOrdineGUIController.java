@@ -214,7 +214,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 labelNumeroOrdine.setText(" Numero Ordine: " + ordine.getNumeroOrdine());
             }
             aggiornaRiepilogo();
-        } catch (DAOException | MissingAuthorizationException e) {
+        } catch (DAOException e) {
             throw new CreaOrdineException("Impossibile inizializzare l'ordine: " + e.getMessage(), e);
         }
     }
@@ -249,40 +249,35 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
     // Mostra messaggi di errore o conferma in base al risultato
     @FXML
     private void onAggiungiProdotto() {
-        try {
-            FoodBean prodottoSelezionato = getProdottoBaseSelezionato();
-            if (prodottoSelezionato == null) {
-                mostraWarning("Selezione richiesta", "Seleziona un prodotto base.");
-                return;
-            }
+        FoodBean prodottoSelezionato = getProdottoBaseSelezionato();
+        if (prodottoSelezionato == null) {
+            mostraWarning("Selezione richiesta", "Seleziona un prodotto base.");
+            return;
+        }
 
-            FoodBean richiesta = new FoodBean();
-            richiesta.setClasse(prodottoSelezionato.getClasse());
-            richiesta.setDescrizione(prodottoSelezionato.getDescrizione());
-            richiesta.setCosto(prodottoSelezionato.getCosto());
-            richiesta.setDurata(prodottoSelezionato.getDurata());
-            richiesta.setTipo(prodottoSelezionato.getTipo());
+        FoodBean richiesta = new FoodBean();
+        richiesta.setClasse(prodottoSelezionato.getClasse());
+        richiesta.setDescrizione(prodottoSelezionato.getDescrizione());
+        richiesta.setCosto(prodottoSelezionato.getCosto());
+        richiesta.setDurata(prodottoSelezionato.getDurata());
+        richiesta.setTipo(prodottoSelezionato.getTipo());
 
-            if (checkCipolla != null && checkCipolla.isSelected())
-                richiesta.aggiungiAddOn(ADDON_CIPOLLA);
-            if (checkSalsaYogurt != null && checkSalsaYogurt.isSelected())
-                richiesta.aggiungiAddOn("SalsaYogurt");
-            if (checkPatatine != null && checkPatatine.isSelected())
-                richiesta.aggiungiAddOn(ADDON_PATATINE);
-            if (checkMixVerdure != null && checkMixVerdure.isSelected())
-                richiesta.aggiungiAddOn("MixVerdureGrigliate");
+        if (checkCipolla != null && checkCipolla.isSelected())
+            richiesta.aggiungiAddOn(ADDON_CIPOLLA);
+        if (checkSalsaYogurt != null && checkSalsaYogurt.isSelected())
+            richiesta.aggiungiAddOn("SalsaYogurt");
+        if (checkPatatine != null && checkPatatine.isSelected())
+            richiesta.aggiungiAddOn(ADDON_PATATINE);
+        if (checkMixVerdure != null && checkMixVerdure.isSelected())
+            richiesta.aggiungiAddOn("MixVerdureGrigliate");
 
-            boolean success = facade.aggiungiProdottoAOrdine(richiesta);
-            if (success) {
-                aggiornaRiepilogo();
-                resetSelezioniAddOn();
-                mostraInfo("Prodotto aggiunto", "Prodotto aggiunto all'ordine con successo!");
-            } else {
-                mostraErrore(ERROR_TITLE, "Impossibile aggiungere il prodotto.");
-            }
-
-        } catch (DAOException e) {
-            mostraErrore(ERROR_TITLE, e.getMessage());
+        boolean success = facade.aggiungiProdottoAOrdine(richiesta);
+        if (success) {
+            aggiornaRiepilogo();
+            resetSelezioniAddOn();
+            mostraInfo("Prodotto aggiunto", "Prodotto aggiunto all'ordine con successo!");
+        } else {
+            mostraErrore(ERROR_TITLE, "Impossibile aggiungere il prodotto.");
         }
     }
 

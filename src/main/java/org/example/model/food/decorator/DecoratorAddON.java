@@ -1,4 +1,4 @@
-package org.example.model.food.Decorator;
+package org.example.model.food.decorator;
 
 import org.example.model.food.Food;
 
