@@ -76,11 +76,11 @@ public class VoucherDAODB extends DAODBAbstract<Voucher> implements VoucherDAOIn
         double valore = 0;
         double minimoOrdine = 0;
 
-        if (voucher instanceof VoucherPercentuale) {
-            valore = ((VoucherPercentuale) voucher).getPercentuale();
-        } else if (voucher instanceof VoucherFisso) {
-            valore = ((VoucherFisso) voucher).getImportoSconto();
-            minimoOrdine = ((VoucherFisso) voucher).getMinimoOrdine();
+        if (voucher instanceof VoucherPercentuale voucherPercentuale) {
+            valore = voucherPercentuale.getPercentuale();
+        } else if (voucher instanceof VoucherFisso voucherFisso) {
+            valore = voucherFisso.getImportoSconto();
+            minimoOrdine = voucherFisso.getMinimoOrdine();
         }
 
         insertQuery(
@@ -109,11 +109,11 @@ public class VoucherDAODB extends DAODBAbstract<Voucher> implements VoucherDAOIn
         double valore = 0;
         double minimoOrdine = 0;
 
-        if (voucher instanceof VoucherPercentuale) {
-            valore = ((VoucherPercentuale) voucher).getPercentuale();
-        } else if (voucher instanceof VoucherFisso) {
-            valore = ((VoucherFisso) voucher).getImportoSconto();
-            minimoOrdine = ((VoucherFisso) voucher).getMinimoOrdine();
+        if (voucher instanceof VoucherPercentuale voucherPercentuale) {
+            valore = voucherPercentuale.getPercentuale();
+        } else if (voucher instanceof VoucherFisso voucherFisso) {
+            valore = voucherFisso.getImportoSconto();
+            minimoOrdine = voucherFisso.getMinimoOrdine();
         }
 
         updateQuery(

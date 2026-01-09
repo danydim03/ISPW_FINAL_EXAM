@@ -1,6 +1,5 @@
 package org.example.model.voucher.DAO;
 
-import org.example.exceptions.DAOException;
 import org.example.exceptions.ObjectNotFoundException;
 import org.example.model.voucher.*;
 

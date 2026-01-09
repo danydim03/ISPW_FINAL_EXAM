@@ -63,13 +63,7 @@ public class VoucherFisso implements Voucher {
 
     @Override
     public boolean isValido() {
-        if (!attivo) {
-            return false;
-        }
-        if (dataScadenza != null && LocalDate.now().isAfter(dataScadenza)) {
-            return false;
-        }
-        return true;
+        return attivo && (dataScadenza == null || !LocalDate.now().isAfter(dataScadenza));
     }
 
     @Override
