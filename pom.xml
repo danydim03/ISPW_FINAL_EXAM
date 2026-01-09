@@ -22,7 +22,7 @@
         <!-- Exclude java:S107 (too many parameters) - le classi entity del dominio rappresentano oggetti con attributi -->
         <!-- necessari e correlati; ridurre i parametri richiederebbe pattern come Builder che aggiungerebbero -->
         <!-- complessità non giustificata per un progetto di questa scala -->
-        <sonar.issue.ignore.multicriteria>e1,e2,e3,e4</sonar.issue.ignore.multicriteria>
+        <sonar.issue.ignore.multicriteria>e1,e2,e3,e4,e5</sonar.issue.ignore.multicriteria>
         <sonar.issue.ignore.multicriteria.e1.ruleKey>java:S106</sonar.issue.ignore.multicriteria.e1.ruleKey>
         <sonar.issue.ignore.multicriteria.e1.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e1.resourceKey>
         <sonar.issue.ignore.multicriteria.e2.ruleKey>java:S120</sonar.issue.ignore.multicriteria.e2.ruleKey>
@@ -31,6 +31,9 @@
         <sonar.issue.ignore.multicriteria.e3.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e3.resourceKey>
         <sonar.issue.ignore.multicriteria.e4.ruleKey>java:S107</sonar.issue.ignore.multicriteria.e4.ruleKey>
         <sonar.issue.ignore.multicriteria.e4.resourceKey>**/*.java</sonar.issue.ignore.multicriteria.e4.resourceKey>
+        <!-- Exclude css:S4659 (unknown pseudo-class selector) - JavaFX CSS uses :focused, :selected, :pressed which are valid -->
+        <sonar.issue.ignore.multicriteria.e5.ruleKey>css:S4659</sonar.issue.ignore.multicriteria.e5.ruleKey>
+        <sonar.issue.ignore.multicriteria.e5.resourceKey>**/*.css</sonar.issue.ignore.multicriteria.e5.resourceKey>
         <!-- Exclude CSS files from analysis - JavaFX CSS uses -fx-* properties which SonarCloud doesn't recognize -->
         <sonar.exclusions>**/*.css</sonar.exclusions>
     </properties>
