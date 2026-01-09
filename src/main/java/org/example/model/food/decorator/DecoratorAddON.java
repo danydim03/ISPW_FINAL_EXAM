@@ -6,7 +6,7 @@ public abstract class DecoratorAddON extends Food {
 
     protected Food foodDecorato;
 
-    public DecoratorAddON(Food food) {
+    protected DecoratorAddON(Food food) {
         this.foodDecorato = food;
         this.tipo = "ADDON";
     }
