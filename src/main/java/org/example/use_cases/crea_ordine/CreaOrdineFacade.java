@@ -21,7 +21,7 @@ public class CreaOrdineFacade {
     }
 
     public OrdineBean inizializzaNuovoOrdine()
-            throws DAOException, MissingAuthorizationException {
+            throws DAOException {
         // Use actual client ID from session user (database ID)
         String actualClienteId = sessionUser.getId();
         return controller.inizializzaNuovoOrdine(actualClienteId);
@@ -39,7 +39,7 @@ public class CreaOrdineFacade {
         return controller.getAddOnDisponibili();
     }
 
-    public boolean aggiungiProdottoAOrdine(FoodBean foodBean) throws DAOException {
+    public boolean aggiungiProdottoAOrdine(FoodBean foodBean) {
         return controller.aggiungiProdottoAOrdine(foodBean);
     }
 

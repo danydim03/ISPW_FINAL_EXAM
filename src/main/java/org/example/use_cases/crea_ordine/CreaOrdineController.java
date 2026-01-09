@@ -84,7 +84,7 @@ public class CreaOrdineController {
      * @param foodBean il prodotto da aggiungere con gli add-on selezionati
      * @return true se l'aggiunta è andata a buon fine
      */
-    public boolean aggiungiProdottoAOrdine(FoodBean foodBean)  {
+    public boolean aggiungiProdottoAOrdine(FoodBean foodBean) {
         if (ordineCorrente == null || foodBean == null) {
             return false;
         }

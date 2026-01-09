@@ -5,48 +5,50 @@ import org.example.model.role.Cliente.Cliente;
 import org.example.model.user.User;
 
 public interface ClienteDAOInterface {
-    /**
-     * Inserts an object into the DB
-     * 
-     * @param Cliente the object to insert
-     * @throws DAOException              thrown if errors occur while retrieving
-     *                                   data from persistence layer
-     * @throws PropertyException         thrown if errors occur while loading
-     *                                   properties from .properties file
-     * @throws ResourceNotFoundException thrown if the properties resource file
-     *                                   cannot be found
-     */
-    void insert(Cliente Cliente)
-            throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException;
+        /**
+         * Inserts an object into the DB
+         * 
+         * @param cliente the object to insert
+         * @throws DAOException              thrown if errors occur while retrieving
+         *                                   data from persistence layer
+         * @throws PropertyException         thrown if errors occur while loading
+         *                                   properties from .properties file
+         * @throws ResourceNotFoundException thrown if the properties resource file
+         *                                   cannot be found
+         */
+        void insert(Cliente cliente)
+                        throws DAOException, PropertyException, ResourceNotFoundException,
+                        MissingAuthorizationException;
 
-    /**
-     * Deletes an object from the DB
-     * 
-     * @param Cliente the object to delete
-     * @throws DAOException              thrown if errors occur while retrieving
-     *                                   data from persistence layer
-     * @throws PropertyException         thrown if errors occur while loading
-     *                                   properties from .properties file
-     * @throws ResourceNotFoundException thrown if the properties resource file
-     *                                   cannot be found
-     */
-    void delete(Cliente Cliente) throws DAOException, PropertyException, ResourceNotFoundException;
+        /**
+         * Deletes an object from the DB
+         * 
+         * @param cliente the object to delete
+         * @throws DAOException              thrown if errors occur while retrieving
+         *                                   data from persistence layer
+         * @throws PropertyException         thrown if errors occur while loading
+         *                                   properties from .properties file
+         * @throws ResourceNotFoundException thrown if the properties resource file
+         *                                   cannot be found
+         */
+        void delete(Cliente cliente) throws DAOException, PropertyException, ResourceNotFoundException;
 
-    /**
-     * Updates an object present in the DB to its current state
-     * 
-     * @param Cliente the object to be updated
-     * @throws DAOException              thrown if errors occur while retrieving
-     *                                   data from persistence layer
-     * @throws PropertyException         thrown if errors occur while loading
-     *                                   properties from .properties file
-     * @throws ResourceNotFoundException thrown if the properties resource file
-     *                                   cannot be found
-     */
-    void update(Cliente Cliente)
-            throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException;
+        /**
+         * Updates an object present in the DB to its current state
+         * 
+         * @param cliente the object to be updated
+         * @throws DAOException              thrown if errors occur while retrieving
+         *                                   data from persistence layer
+         * @throws PropertyException         thrown if errors occur while loading
+         *                                   properties from .properties file
+         * @throws ResourceNotFoundException thrown if the properties resource file
+         *                                   cannot be found
+         */
+        void update(Cliente cliente)
+                        throws DAOException, PropertyException, ResourceNotFoundException,
+                        MissingAuthorizationException;
 
-    abstract Cliente getClienteByUser(User user) throws DAOException, UserNotFoundException, PropertyException,
-            ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue;
+        abstract Cliente getClienteByUser(User user) throws DAOException, UserNotFoundException, PropertyException,
+                        ResourceNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
+                        MissingAuthorizationException, WrongListQueryIdentifierValue;
 }
