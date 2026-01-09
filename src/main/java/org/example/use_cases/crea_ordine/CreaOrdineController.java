@@ -21,7 +21,7 @@ import java.util.List;
  * - Convertire i Bean in Entity e viceversa
  * - Applicare il pattern Decorator per gli add-on
  * - DELEGARE la gestione voucher a UsaVoucherController (GRASP: Low Coupling)
- * 
+ *
  * Segue il pattern BCE: questo è il CONTROL.
  */
 public class CreaOrdineController {
@@ -40,7 +40,7 @@ public class CreaOrdineController {
      * @param clienteId ID del cliente
      * @return OrdineBean con i dati dell'ordine creato
      */
-    public OrdineBean inizializzaNuovoOrdine(String clienteId) throws DAOException, MissingAuthorizationException {
+    public OrdineBean inizializzaNuovoOrdine(String clienteId) throws DAOException {
         // Crea un nuovo ordine tramite la LazyFactory
         ordineCorrente = OrdineLazyFactory.getInstance().newOrdine(clienteId);
 
@@ -84,7 +84,7 @@ public class CreaOrdineController {
      * @param foodBean il prodotto da aggiungere con gli add-on selezionati
      * @return true se l'aggiunta è andata a buon fine
      */
-    public boolean aggiungiProdottoAOrdine(FoodBean foodBean) throws DAOException {
+    public boolean aggiungiProdottoAOrdine(FoodBean foodBean)  {
         if (ordineCorrente == null || foodBean == null) {
             return false;
         }

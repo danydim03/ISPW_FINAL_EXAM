@@ -1,6 +1,10 @@
 /*
  * Stili CSS per la vista Crea Ordine
  * Coerente con lo stile card-based del progetto
+ * 
+ * NOSONAR: This is JavaFX CSS, not standard CSS.
+ * Pseudo-classes like :focused, :selected, :pressed, :hover are valid JavaFX CSS selectors.
+ * SonarCloud css:S4659 false positives should be ignored for this file.
  */
 
 /* ==================== GENERALE ==================== */

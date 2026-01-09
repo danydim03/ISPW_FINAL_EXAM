@@ -154,11 +154,11 @@ public class UsaVoucherController {
         bean.setDataScadenza(voucher.getDataScadenza());
         bean.setValido(voucher.isValido());
 
-        if (voucher instanceof VoucherPercentuale) {
-            bean.setValore(((VoucherPercentuale) voucher).getPercentuale());
-        } else if (voucher instanceof VoucherFisso) {
-            bean.setValore(((VoucherFisso) voucher).getImportoSconto());
-            bean.setMinimoOrdine(((VoucherFisso) voucher).getMinimoOrdine());
+        if (voucher instanceof VoucherPercentuale voucherPercentuale) {
+            bean.setValore(voucherPercentuale.getPercentuale());
+        } else if (voucher instanceof VoucherFisso voucherFisso) {
+            bean.setValore(voucherFisso.getImportoSconto());
+            bean.setMinimoOrdine(voucherFisso.getMinimoOrdine());
         }
 
         return bean;

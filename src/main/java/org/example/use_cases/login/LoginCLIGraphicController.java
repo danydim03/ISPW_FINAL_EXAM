@@ -38,49 +38,67 @@ public class LoginCLIGraphicController extends BaseCLIGraphicController {
             // Prompt for credentials
             String email = readInput("📧 Email");
 
-            if (email.equalsIgnoreCase("exit") || email.equalsIgnoreCase("esci")) {
+            if (isExitCommand(email)) {
                 exitRequested = true;
-                continue;
+                return;
             }
 
             String password = readPassword("🔐 Password");
 
-            if (password.equalsIgnoreCase("exit") || password.equalsIgnoreCase("esci")) {
+            if (isExitCommand(password)) {
                 exitRequested = true;
-                continue;
+                return;
             }
 
             // Attempt login using the Application Controller
-            try {
-                // Validate email format first
-                loginControl.emailMatches(email);
+            authenticated = attemptLogin(email, password);
+        }
+    }
 
-                // Attempt authentication
-                loginBean = loginControl.login(email, password);
-                authenticated = true;
+    /**
+     * Checks if the input is an exit command
+     */
+    private boolean isExitCommand(String input) {
+        return input.equalsIgnoreCase("exit") || input.equalsIgnoreCase("esci");
+    }
 
-                // Set the current session token for session-based features
-                org.example.session_manager.SessionManager.getInstance()
-                        .setCurrentTokenKey(loginBean.getTokenKey());
+    /**
+     * Attempts login and handles all exceptions
+     * 
+     * @return true if login was successful
+     */
+    private boolean attemptLogin(String email, String password) {
+        try {
+            // Validate email format first
+            loginControl.emailMatches(email);
 
-                showSuccess("Login effettuato con successo!");
-                System.out.println("  Benvenuto, " + loginBean.getUserBean().getName() + " " +
-                        loginBean.getUserBean().getSurname() + "!");
-                System.out.println("  Ruolo: " + loginBean.getUserBean().getRoleEnum().toString());
+            // Attempt authentication
+            loginBean = loginControl.login(email, password);
 
-                waitForEnter();
+            // Set the current session token for session-based features
+            org.example.session_manager.SessionManager.getInstance()
+                    .setCurrentTokenKey(loginBean.getTokenKey());
 
-            } catch (HabibiException e) {
-                logger.log(Level.WARNING, "Errore di login", e);
-                showError(getErrorMessage(e));
-                System.out.println("\n  Riprova oppure digita 'esci' per uscire.");
-                waitForEnter();
-            } catch (Exception e) {
-                logger.log(Level.SEVERE, "Errore imprevisto durante il login", e);
-                showError("Errore imprevisto durante il login");
-                System.out.println("\n  Riprova oppure digita 'esci' per uscire.");
-                waitForEnter();
-            }
+            showSuccess("Login effettuato con successo!");
+            System.out.println("  Benvenuto, " + loginBean.getUserBean().getName() + " " +
+                    loginBean.getUserBean().getSurname() + "!");
+            System.out.println("  Ruolo: " + loginBean.getUserBean().getRoleEnum().toString());
+
+            waitForEnter();
+            return true;
+
+        } catch (HabibiException e) {
+            logger.log(Level.WARNING, "Errore di login", e);
+            showError(getErrorMessage(e));
+            System.out.println("\n  Riprova oppure digita 'esci' per uscire.");
+            waitForEnter();
+            return false;
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Errore imprevisto durante il login", e);
+            showError("Errore imprevisto durante il login");
+            System.out.println("\n  Riprova oppure digita 'esci' per uscire.");
+            waitForEnter();
+            return false;
         }
     }
 
