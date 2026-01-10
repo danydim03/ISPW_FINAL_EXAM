@@ -64,12 +64,12 @@ public interface UserDAOInterface {
 
 #### 1. **Accoppiamento tra Boundary e Entity**
 
-In `CreaOrdineGUIController.java` (linee 201-220):
+In `CreaOrdineGUIController.java` (linee 201-219):
 ```java
 private void iniziaNuovoOrdine() throws CreaOrdineException {
-    // ...
+    // ... (linea 206-207)
     var sessionUser = org.example.session_manager.SessionManager.getInstance()
-            .getSessionUserByTokenKey(tokenKey);  // ❌ Accesso diretto a Entity
+            .getSessionUserByTokenKey(tokenKey);  // ❌ Accesso diretto a SessionManager/Entity
 ```
 
 **Problema**: Il controller grafico accede direttamente al `SessionManager` e all'oggetto `User`, violando la separazione BCE.
@@ -78,12 +78,12 @@ private void iniziaNuovoOrdine() throws CreaOrdineException {
 
 #### 2. **Dati Hardcoded nel Boundary**
 
-In `CreaOrdineGUIController.java` (linee 176-186):
+In `CreaOrdineGUIController.java` (linee 175-186):
 ```java
 private void caricaDatiIniziali() {
     prodottiBaseDisponibili = List.of(
         new FoodBean(null, "Panino Doner Kebab", 5.50, 5, "BASE", "PaninoDonerKebab"),
-        // ... altri dati hardcoded
+        // ... altri dati hardcoded (linee 176-185)
     );
 }
 ```
@@ -129,15 +129,16 @@ Le Factory creano gli oggetti appropriatamente:
 
 ```java
 // OrdineLazyFactory crea gli Ordini
-public Ordine newOrdine(String clienteId) throws DAOException {
-    ordineCorrente = OrdineLazyFactory.getInstance().newOrdine(clienteId);
-}
+// In CreaOrdineController.inizializzaNuovoOrdine():
+ordineCorrente = OrdineLazyFactory.getInstance().newOrdine(clienteId);
 
 // CreaOrdineController crea i Food usando Factory Method
 private Food creaProdottoBase(String classe) {
+    if (classe == null) return null;
     switch (classe) {
         case "PaninoDonerKebab": return new PaninoDonerKebab();
         // ...
+        default: return null;
     }
 }
 ```
@@ -194,6 +195,7 @@ public abstract class DecoratorAddON extends Food {
     
     @Override
     public double getCosto() {
+        if (foodDecorato == null) return getCostoPlus();
         return foodDecorato.getCosto() + getCostoPlus();
     }
 }
@@ -269,17 +271,21 @@ public class LoginControl {
 In `CreaOrdineController.java`:
 ```java
 private Food creaProdottoBase(String classe) {
+    if (classe == null) return null;
     switch (classe) {
         case "PaninoDonerKebab": return new PaninoDonerKebab();
         case "PiadinaDonerKebab": return new PiadinaDonerKebab();
         // ...
+        default: return null;
     }
 }
 
 private Food applicaDecorator(Food food, String addOnClasse) {
+    if (addOnClasse == null || food == null) return food;
     switch (addOnClasse) {
         case "Cipolla": return new Cipolla(food);
         // ...
+        default: return food;
     }
 }
 ```
