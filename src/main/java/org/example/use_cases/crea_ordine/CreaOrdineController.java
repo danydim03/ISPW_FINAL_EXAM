@@ -45,10 +45,8 @@ public class CreaOrdineController {
         ordineCorrente = OrdineLazyFactory.getInstance().newOrdine(clienteId);
 
         // Converti in Bean e restituisci
-        OrdineBean bean = new OrdineBean();
-        bean.setNumeroOrdine(ordineCorrente.getNumeroOrdine());
-        bean.setClienteId(clienteId);
-        return bean;
+        // Converti in Bean e restituisci
+        return org.example.mappers.OrdineMapper.toBean(ordineCorrente);
     }
 
     /**

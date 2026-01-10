@@ -25,15 +25,10 @@ public class StoricoOrdiniFacade {
         List<OrdineBean> beans = new ArrayList<>();
 
         for (Ordine o : ordini) {
-            OrdineBean bean = new OrdineBean();
-            bean.setNumeroOrdine(o.getNumeroOrdine());
-            bean.setClienteId(o.getClienteId());
-            bean.setDataCreazione(o.getDataCreazione());
-            bean.setTotale(o.getTotale());
-            if (o.getStato() != null) {
-                bean.setStato(o.getStato().toString());
+            OrdineBean bean = org.example.mappers.OrdineMapper.toBean(o);
+            if (bean != null) {
+                beans.add(bean);
             }
-            beans.add(bean);
         }
         return beans;
     }

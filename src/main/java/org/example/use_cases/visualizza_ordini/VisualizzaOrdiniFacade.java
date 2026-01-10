@@ -19,12 +19,10 @@ public class VisualizzaOrdiniFacade {
         List<OrdineBean> beans = new ArrayList<>();
 
         for (Ordine o : ordini) {
-            OrdineBean bean = new OrdineBean();
-            bean.setNumeroOrdine(o.getNumeroOrdine());
-            bean.setClienteId(o.getClienteId());
-            bean.setDataCreazione(o.getDataCreazione());
-            bean.setTotale(o.getTotale());
-            beans.add(bean);
+            OrdineBean bean = org.example.mappers.OrdineMapper.toBean(o);
+            if (bean != null) {
+                beans.add(bean);
+            }
         }
         return beans;
     }
