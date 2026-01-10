@@ -102,7 +102,6 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         try {
             setupTabella();
             setupListeners();
-            caricaDatiIniziali();
 
             // Verifica che l'utente sia loggato
             String tokenKey = PageNavigationController.getInstance().getSessionTokenKey();
@@ -112,7 +111,13 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 return;
             }
 
+            // 1. Prima crea Facade (richiesto per caricamento dati)
             facade = new CreaOrdineFacade(tokenKey);
+
+            // 2. Poi carica dati via Facade (richiede Facade inizializzato)
+            caricaDatiIniziali();
+
+            // 3. Inizializza nuovo ordine
             iniziaNuovoOrdine();
 
         } catch (MissingAuthorizationException e) {
@@ -166,49 +171,61 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         }
     }
 
-    // è solo di esempio, i dati reali dovrebbero essere caricati dal database,
-    // tramite il facade.
-    // In questo esempio, i dati sono hardcoded per semplicità.
-    // In un'applicazione reale, questi dati dovrebbero essere recuperati tramite
-    // chiamate al database.
-
+    /**
+     * Carica prodotti base e add-on dal database via Facade.
+     * Sostituisce i dati hardcoded con dati dinamici dal layer di persistenza.
+     */
     private void caricaDatiIniziali() {
-        prodottiBaseDisponibili = List.of(
-                new FoodBean(null, "Panino Doner Kebab", 5.50, 5, "BASE", "PaninoDonerKebab"),
-                new FoodBean(null, "Piadina Doner Kebab", 6.00, 6, "BASE", "PiadinaDonerKebab"),
-                new FoodBean(null, "Kebab al Piatto", 8.00, 8, "BASE", "KebabAlPiatto"));
+        try {
+            prodottiBaseDisponibili = facade.getProdottiBaseDisponibili();
+            addOnDisponibili = facade.getAddOnDisponibili();
 
-        addOnDisponibili = List.of(
-                new FoodBean(null, ADDON_CIPOLLA, 0.50, 1, ADDON_TYPE, ADDON_CIPOLLA),
-                new FoodBean(null, "Salsa Yogurt", 0.80, 0, ADDON_TYPE, "SalsaYogurt"),
-                new FoodBean(null, ADDON_PATATINE, 2.00, 3, ADDON_TYPE, ADDON_PATATINE),
-                new FoodBean(null, "Mix Verdure Grigliate", 1.50, 2, ADDON_TYPE, "MixVerdureGrigliate"));
+            logger.log(Level.INFO, () -> "Caricati " + prodottiBaseDisponibili.size()
+                    + " prodotti base e " + addOnDisponibili.size() + " add-on");
+
+        } catch (DAOException | ObjectNotFoundException | MissingAuthorizationException
+                | WrongListQueryIdentifierValue | UserNotFoundException
+                | UnrecognizedRoleException e) {
+            logger.log(Level.SEVERE, "Errore caricamento dati iniziali", e);
+            mostraErrore(ERROR_TITLE, "Impossibile caricare i prodotti: " + e.getMessage());
+
+            // Fallback: liste vuote per evitare NullPointerException
+            prodottiBaseDisponibili = List.of();
+            addOnDisponibili = List.of();
+        }
     }
 
+    /**
+     * Restituisce il FoodBean corrispondente al prodotto base selezionato.
+     * Usa ricerca dinamica per classe invece di indice hardcoded.
+     */
     private FoodBean getProdottoBaseSelezionato() {
         Toggle selected = baseGroup.getSelectedToggle();
-        if (selected == null)
+        if (selected == null || prodottiBaseDisponibili.isEmpty()) {
             return null;
-        if (selected == radioPanino)
-            return prodottiBaseDisponibili.get(0);
-        if (selected == radioPiadina)
-            return prodottiBaseDisponibili.get(1);
-        if (selected == radioPiatto)
-            return prodottiBaseDisponibili.get(2);
-        return null;
+        }
+
+        String classeRichiesta;
+        if (selected == radioPanino) {
+            classeRichiesta = "PaninoDonerKebab";
+        } else if (selected == radioPiadina) {
+            classeRichiesta = "PiadinaDonerKebab";
+        } else if (selected == radioPiatto) {
+            classeRichiesta = "KebabAlPiatto";
+        } else {
+            return null;
+        }
+
+        return prodottiBaseDisponibili.stream()
+                .filter(f -> classeRichiesta.equals(f.getClasse()))
+                .findFirst()
+                .orElse(null);
     }
 
     private void iniziaNuovoOrdine() throws CreaOrdineException {
         try {
-            String tokenKey = PageNavigationController.getInstance().getSessionTokenKey();
-
-            // Verifica che la sessione sia valida
-            var sessionUser = org.example.session_manager.SessionManager.getInstance()
-                    .getSessionUserByTokenKey(tokenKey);
-            if (sessionUser == null) {
-                throw new CreaOrdineException("Sessione non valida. Effettua nuovamente il login.");
-            }
-
+            // La validazione della sessione è già gestita dal Facade nel costruttore
+            // (rispetta BCE: Boundary non accede direttamente a infrastruttura)
             OrdineBean ordine = facade.inizializzaNuovoOrdine();
             if (labelNumeroOrdine != null && ordine.getNumeroOrdine() != null) {
                 labelNumeroOrdine.setText(" Numero Ordine: " + ordine.getNumeroOrdine());

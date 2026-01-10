@@ -19,9 +19,14 @@ import java.util.logging.Logger;
 
 import org.example.exceptions.HabibiException;
 
+import java.time.format.DateTimeFormatter;
+
 public class StoricoOrdiniGUIController implements Initializable {
 
     private static final Logger logger = Logger.getLogger(StoricoOrdiniGUIController.class.getName());
+
+    /** Formatter per visualizzare data e ora in modo leggibile */
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy  HH:mm");
 
     @FXML
     private TableView<OrdineBean> tableViewOrdini;
@@ -52,6 +57,19 @@ public class StoricoOrdiniGUIController implements Initializable {
         colData.setCellValueFactory(new PropertyValueFactory<>("dataCreazione"));
         colStato.setCellValueFactory(new PropertyValueFactory<>("stato"));
         colTotale.setCellValueFactory(new PropertyValueFactory<>("totale"));
+
+        // Formatter personalizzato per la colonna data
+        colData.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
+            @Override
+            protected void updateItem(LocalDateTime item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.format(DATE_TIME_FORMATTER));
+                }
+            }
+        });
 
         tableViewOrdini.setItems(ordiniList);
     }
