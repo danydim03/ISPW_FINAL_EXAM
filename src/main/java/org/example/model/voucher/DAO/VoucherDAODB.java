@@ -83,8 +83,11 @@ public class VoucherDAODB extends DAODBAbstract<Voucher> implements VoucherDAOIn
             minimoOrdine = voucherFisso.getMinimoOrdine();
         }
 
-        insertQuery(
+        // Usa insertQueryWithColumns per specificare esplicitamente le colonne
+        // (escludendo l'ID che è auto-incrementante)
+        insertQueryWithColumns(
                 VOUCHER,
+                List.of(CODICE, DESCRIZIONE, DATA_SCADENZA, ATTIVO, TIPO_VOUCHER, VALORE, MINIMO_ORDINE),
                 List.of(
                         voucher.getCodice(),
                         voucher.getDescrizione(),
@@ -93,6 +96,54 @@ public class VoucherDAODB extends DAODBAbstract<Voucher> implements VoucherDAOIn
                         voucher.getTipoVoucher(),
                         valore,
                         minimoOrdine));
+    }
+
+    /**
+     * Insert personalizzato che specifica le colonne esplicitamente.
+     * Necessario perché la tabella ha ID auto-incrementante.
+     * 
+     * @param table   nome tabella
+     * @param columns nomi delle colonne (senza ID)
+     * @param values  valori corrispondenti
+     */
+    private void insertQueryWithColumns(String table, List<String> columns, List<Object> values)
+            throws DAOException, PropertyException, ResourceNotFoundException {
+        if (columns.size() != values.size()) {
+            throw new DAOException("Column count doesn't match value count");
+        }
+
+        // Costruisci la lista di colonne: "col1, col2, col3"
+        String columnsList = String.join(", ", columns);
+
+        // Costruisci i placeholder: "?, ?, ?"
+        StringBuilder questionMarks = new StringBuilder();
+        questionMarks.append("?,".repeat(values.size()));
+        questionMarks.deleteCharAt(questionMarks.length() - 1);
+
+        // Query: INSERT INTO table (col1, col2, col3) VALUES (?, ?, ?)
+        String query = String.format("INSERT INTO %s (%s) VALUES (%s)", table, columnsList, questionMarks);
+
+        // Esegui la query
+        executeInsertQuery(values, query);
+    }
+
+    /**
+     * Metodo helper per eseguire query INSERT con parametri.
+     */
+    private void executeInsertQuery(List<Object> values, String query)
+            throws DAOException, PropertyException, ResourceNotFoundException {
+        java.sql.Connection connection;
+        try {
+            connection = org.example.dao_manager.DBConnection.getInstance().getConnection();
+        } catch (java.sql.SQLException e) {
+            throw new DAOException(org.example.enums.ExceptionMessagesEnum.DAO.message, e);
+        }
+        try (java.sql.PreparedStatement stmt = connection.prepareStatement(query)) {
+            setQueryQuestionMarksValue(stmt, values, 1);
+            stmt.executeUpdate();
+        } catch (java.sql.SQLException e) {
+            throw new DAOException(org.example.enums.ExceptionMessagesEnum.DAO.message, e);
+        }
     }
 
     @Override

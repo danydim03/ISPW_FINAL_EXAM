@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane minHeight="500.0" minWidth="650.0"
+            prefHeight="600.0" prefWidth="800.0"
+            stylesheets="@styles/crea-ordine-style.css"
+            styleClass="background"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.use_cases.crea_voucher.graphic_controllers.CreaVoucherGUIController">
+
+    <!-- Intestazione -->
+    <VBox AnchorPane.topAnchor="20" AnchorPane.leftAnchor="30" AnchorPane.rightAnchor="30">
+        <Label text="🎟️ Crea Nuovo Voucher" styleClass="page-title"/>
+        <Text text="Aggiungi un nuovo voucher al sistema" styleClass="page-subtitle"/>
+    </VBox>
+
+    <!-- Card Form Container -->
+    <VBox AnchorPane.topAnchor="100" AnchorPane.bottomAnchor="20"
+          AnchorPane.leftAnchor="80" AnchorPane.rightAnchor="80"
+          styleClass="card" spacing="20" alignment="TOP_CENTER">
+        <padding>
+            <Insets top="30" right="40" bottom="30" left="40"/>
+        </padding>
+
+        <!-- Tipo Voucher Section -->
+        <VBox spacing="10">
+            <Label text="Tipo di Sconto" styleClass="card-title"/>
+            <HBox spacing="30" alignment="CENTER_LEFT">
+                <RadioButton fx:id="radioPercentuale" text="📊 Sconto Percentuale" 
+                             styleClass="base-radio" selected="true"/>
+                <RadioButton fx:id="radioFisso" text="💰 Sconto Fisso" 
+                             styleClass="base-radio"/>
+            </HBox>
+        </VBox>
+
+        <Separator/>
+
+        <!-- Codice Voucher Section -->
+        <VBox spacing="8">
+            <Label text="Codice Voucher *" styleClass="card-title"/>
+            <TextField fx:id="textFieldCodice" 
+                       promptText="Es. SCONTO10, WELCOME2024" 
+                       maxWidth="400"/>
+            <Text text="Solo lettere maiuscole e numeri" 
+                  styleClass="card-description" 
+                  wrappingWidth="400"/>
+        </VBox>
+
+        <!-- Valore Sconto Section -->
+        <VBox spacing="8">
+            <Label fx:id="labelValore" text="Valore Sconto (%) *" styleClass="card-title"/>
+            <TextField fx:id="textFieldValore" 
+                       promptText="Es. 10" 
+                       maxWidth="200"/>
+            <Text fx:id="textHintValore" 
+                  text="Percentuale tra 0 e 100" 
+                  styleClass="card-description"/>
+        </VBox>
+
+        <!-- Minimo Ordine Section (solo per voucher fissi) -->
+        <VBox fx:id="vboxMinimoOrdine" spacing="8" visible="false" managed="false">
+            <Label text="Minimo Ordine (€)" styleClass="card-title"/>
+            <TextField fx:id="textFieldMinimoOrdine" 
+                       promptText="Es. 15.00" 
+                       maxWidth="200"
+                       text="0"/>
+            <Text text="Ordine minimo richiesto per applicare il voucher" 
+                  styleClass="card-description" 
+                  wrappingWidth="400"/>
+        </VBox>
+
+        <!-- Data Scadenza Section -->
+        <VBox spacing="8">
+            <Label text="Data di Scadenza (opzionale)" styleClass="card-title"/>
+            <DatePicker fx:id="datePickerScadenza" 
+                        promptText="Seleziona data" 
+                        maxWidth="250"/>
+            <Text text="Lascia vuoto per voucher senza scadenza" 
+                  styleClass="card-description"/>
+        </VBox>
+
+        <Separator/>
+
+        <!-- Message Labels -->
+        <VBox spacing="5" alignment="CENTER">
+            <Label fx:id="labelErrore" 
+                   text="" 
+                   styleClass="label-sconto" 
+                   wrapText="true" 
+                   maxWidth="500"
+                   visible="false" 
+                   managed="false"/>
+            <Label fx:id="labelSuccesso" 
+                   text="" 
+                   styleClass="label-voucher-info" 
+                   wrapText="true" 
+                   maxWidth="500"
+                   visible="false" 
+                   managed="false"/>
+        </VBox>
+
+        <!-- Buttons -->
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="btnAnnulla" 
+                    text="Annulla" 
+                    onAction="#onAnnulla" 
+                    styleClass="danger-outline-button" 
+                    prefWidth="150"/>
+            <Button fx:id="btnCreaVoucher" 
+                    text="Crea Voucher" 
+                    onAction="#onCreaVoucher" 
+                    styleClass="success-button" 
+                    prefWidth="150"/>
+        </HBox>
+
+        <Region VBox.vgrow="ALWAYS"/>
+    </VBox>
+</AnchorPane>
