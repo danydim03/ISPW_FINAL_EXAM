@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-01-11T14:30:00.000Z" agent="Habibi ISPW System" version="24.0.0" type="device">
+  <diagram name="VOPC - Crea Ordine (Completo)" id="vopc-crea-ordine-complete">
+    <mxGraphModel dx="2000" dy="1400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1800" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- ==================== TITLE ==================== -->
+        <mxCell id="title" value="&lt;b&gt;VOPC - VIEW OF PARTICIPATING CLASSES&lt;/b&gt;&#10;Use Case: CREA ORDINE&#10;&#10;Habibi Shawarma - Sistema di Ordinazione&#10;(BCE + MVC Architecture)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="900" y="20" width="400" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- ==================== LEGEND ==================== -->
+        <mxCell id="legend-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="300" height="140" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-title" value="&lt;b&gt;LEGENDA&lt;/b&gt;" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="300" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-boundary" value="" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="50" y="50" width="20" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-boundary-text" value="&lt;&lt;Boundary&gt;&gt; View Layer (GUI/CLI)" style="text;strokeColor=none;fillColor=none;align=left;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="50" width="250" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-control" value="" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="50" y="75" width="20" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-control-text" value="&lt;&lt;Control&gt;&gt; Application Controller" style="text;strokeColor=none;fillColor=none;align=left;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="75" width="250" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-bean" value="" style="rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="50" y="100" width="20" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-bean-text" value="&lt;&lt;Bean&gt;&gt; Data Transfer Objects (DTO)" style="text;strokeColor=none;fillColor=none;align=left;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="100" width="250" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-entity" value="" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="50" y="125" width="20" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-entity-text" value="&lt;&lt;Entity&gt;&gt; Domain Model" style="text;strokeColor=none;fillColor=none;align=left;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="125" width="250" height="20" as="geometry"/>
+        </mxCell>
+        
+        <!-- ==================== ACTOR ==================== -->
+        <mxCell id="actor-cliente" value="&lt;&lt;Actor&gt;&gt;&#10;Cliente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#ffffff;strokeColor=#333333;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="80" y="280" width="60" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- ==================== BOUNDARY LAYER ==================== -->
+        <mxCell id="boundary-package" value="&lt;&lt;Boundary&gt;&gt; View Layer" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=1;collapsible=0;recursiveResize=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="200" y="180" width="350" height="400" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="gui-controller" value="&lt;&lt;Boundary&gt;&gt;&#10;CreaOrdineGUIController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="220" y="230" width="310" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="gui-attr" value="- facade: CreaOrdineFacade&#10;- prodottiBaseDisponibili: List&lt;FoodBean&gt;&#10;- addOnDisponibili: List&lt;FoodBean&gt;&#10;- righeOrdineObservable: ObservableList" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="gui-controller">
+          <mxGeometry y="50" width="310" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="gui-sep" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="gui-controller">
+          <mxGeometry y="100" width="310" height="10" as="geometry"/>
+        </mxCell>
+        <mxCell id="gui-methods" value="+ initialize(), onAggiungiProdotto()&#10;+ onApplicaVoucher(), onConfermaOrdine()&#10;- aggiornaRiepilogo(), caricaDatiIniziali()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="gui-controller">
+          <mxGeometry y="110" width="310" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="cli-controller" value="&lt;&lt;Boundary&gt;&gt;&#10;CreaOrdineCLIController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="220" y="400" width="310" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="cli-attr" value="- facade: CreaOrdineFacade&#10;- prodottiBase: List&lt;FoodBean&gt;&#10;- addOns: List&lt;FoodBean&gt;&#10;- orderCompleted: boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="cli-controller">
+          <mxGeometry y="50" width="310" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="cli-sep" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="cli-controller">
+          <mxGeometry y="100" width="310" height="10" as="geometry"/>
+        </mxCell>
+        <mxCell id="cli-methods" value="+ start(), handleAggiungiProdotto()&#10;+ handleApplicaVoucher(), handleConfermaOrdine()&#10;- selectAddOns(), showCurrentOrderSummary()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="cli-controller">
+          <mxGeometry y="110" width="310" height="40" as="geometry"/>
+        </mxCell>
+        
+        <!-- ==================== CONTROL LAYER ==================== -->
+        <mxCell id="control-package" value="&lt;&lt;Control&gt;&gt; Application Logic" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=1;collapsible=0;recursiveResize=0;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="600" y="180" width="380" height="500" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="facade" value="&lt;&lt;Control/Facade&gt;&gt;&#10;CreaOrdineFacade" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="620" y="230" width="340" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="facade-attr" value="- controller: CreaOrdineController&#10;- sessionUser: User" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="facade">
+          <mxGeometry y="50" width="340" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="facade-sep" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="facade">
+          <mxGeometry y="80" width="340" height="10" as="geometry"/>
+        </mxCell>
+        <mxCell id="facade-methods" value="+ inizializzaNuovoOrdine(): OrdineBean&#10;+ getProdottiBaseDisponibili(): List&lt;FoodBean&gt;&#10;+ aggiungiProdottoAOrdine(FoodBean): boolean&#10;+ applicaVoucher(String): VoucherBean&#10;+ getRiepilogoOrdine(): RiepilogoOrdineBean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="facade">
+          <mxGeometry y="90" width="340" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="controller" value="&lt;&lt;Control&gt;&gt;&#10;CreaOrdineController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="620" y="400" width="340" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="controller-attr" value="- ordineCorrente: Ordine&#10;- voucherController: UsaVoucherController" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="controller">
+          <mxGeometry y="50" width="340" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="controller-sep" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="controller">
+          <mxGeometry y="80" width="340" height="10" as="geometry"/>
+        </mxCell>
+        <mxCell id="controller-methods" value="+ aggiungiProdottoAOrdine(FoodBean): boolean&#10;+ applicaVoucher(String): VoucherBean&#10;+ getRiepilogoOrdine(): RiepilogoOrdineBean&#10;- creaProdottoBase(String): Food [Factory Method]&#10;- applicaDecorator(Food, String): Food [Decorator]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="controller">
+          <mxGeometry y="90" width="340" height="70" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="voucher-controller" value="&lt;&lt;Control&gt;&gt;&#10;UsaVoucherController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="620" y="580" width="340" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="voucher-controller-sep" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="voucher-controller">
+          <mxGeometry y="50" width="340" height="10" as="geometry"/>
+        </mxCell>
+        <mxCell id="voucher-controller-methods" value="+ applicaVoucherAOrdine(Ordine, String): VoucherBean&#10;+ rimuoviVoucherDaOrdine(Ordine): void&#10;+ hasVoucherApplicato(Ordine): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="voucher-controller">
+          <mxGeometry y="60" width="340" height="30" as="geometry"/>
+        </mxCell>
+        
+        <!-- ==================== BEANS LAYER ==================== -->
+        <mxCell id="beans-package" value="&lt;&lt;Bean&gt;&gt; Data Transfer Objects" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=1;collapsible=0;recursiveResize=0;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="180" width="520" height="500" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="ordine-bean" value="&lt;&lt;Bean&gt;&gt;&#10;OrdineBean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="230" width="220" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="ordine-bean-attr" value="- numeroOrdine: Long&#10;- clienteId: String&#10;- dataCreazione: LocalDateTime&#10;- totale: double, stato: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="ordine-bean">
+          <mxGeometry y="40" width="220" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="food-bean" value="&lt;&lt;Bean&gt;&gt;&#10;FoodBean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="230" width="230" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="food-bean-attr" value="- id: Long, descrizione: String&#10;- costo: double, durata: int&#10;- tipo: String {&quot;BASE&quot;, &quot;ADDON&quot;}&#10;- classe: String&#10;- addOnSelezionati: List&lt;String&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="food-bean">
+          <mxGeometry y="40" width="230" height="70" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="voucher-bean" value="&lt;&lt;Bean&gt;&gt;&#10;VoucherBean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="340" width="220" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="voucher-bean-attr" value="- codice: String, descrizione: String&#10;- tipoVoucher: String&#10;- valore: double, minimoOrdine: double&#10;- dataScadenza: LocalDate&#10;- valido: boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="voucher-bean">
+          <mxGeometry y="40" width="220" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="riepilogo-bean" value="&lt;&lt;Bean&gt;&gt;&#10;RiepilogoOrdineBean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="360" width="230" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="riepilogo-bean-attr" value="- numeroOrdine: Long&#10;- righeOrdine: List&lt;RigaOrdineBean&gt;&#10;- subtotale, sconto, totale: double&#10;- durataTotale: int&#10;- voucherApplicato: boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="riepilogo-bean">
+          <mxGeometry y="40" width="230" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="riepilogo-bean-sep" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="riepilogo-bean">
+          <mxGeometry y="100" width="230" height="10" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="riga-bean" value="&lt;&lt;Bean&gt;&gt;&#10;RigaOrdineBean" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="500" width="230" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="riga-bean-attr" value="- descrizione: String&#10;- prezzo: double&#10;- durata: int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="riga-bean">
+          <mxGeometry y="40" width="230" height="40" as="geometry"/>
+        </mxCell>
+        
+        <!-- ==================== ENTITY LAYER ==================== -->
+        <mxCell id="entity-package" value="&lt;&lt;Entity&gt;&gt; Domain Model" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=1;collapsible=0;recursiveResize=0;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="200" y="720" width="1340" height="600" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="ordine" value="&lt;&lt;Entity&gt;&gt;&#10;Ordine" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="220" y="780" width="240" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="ordine-attr" value="- numeroOrdine: Long&#10;- clienteId: String&#10;- prodotti: List&lt;Food&gt;&#10;- voucher: Voucher&#10;- stato: StatoOrdine&#10;- dataCreazione: LocalDateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="ordine">
+          <mxGeometry y="40" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="ordine-sep" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="ordine">
+          <mxGeometry y="110" width="240" height="10" as="geometry"/>
+        </mxCell>
+        <mxCell id="ordine-methods" value="+ aggiungiProdotto(Food), rimuoviProdotto()&#10;+ getSubtotale(): double&#10;+ getSconto(): double&#10;+ getTotale(): double&#10;+ conferma(), annulla()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="ordine">
+          <mxGeometry y="120" width="240" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="food" value="&lt;&lt;Entity/Abstract&gt;&gt;&#10;Food" style="swimlane;fontStyle=3;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="520" y="780" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="food-attr" value="# id: Long&#10;# descrizione: String&#10;# tipo: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=2;fontSize=10;" vertex="1" parent="food">
+          <mxGeometry y="40" width="200" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="food-sep" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="food">
+          <mxGeometry y="80" width="200" height="10" as="geometry"/>
+        </mxCell>
+        <mxCell id="food-methods" value="+ {abstract} getCosto(): double&#10;+ {abstract} getDurata(): int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=2;fontSize=10;" vertex="1" parent="food">
+          <mxGeometry y="90" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="panino" value="PaninoDonerKebab" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="480" y="940" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="panino-attr" value="costo: 5.50&#10;durata: 5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=9;" vertex="1" parent="panino">
+          <mxGeometry y="26" width="120" height="24" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="piadina" value="PiadinaDonerKebab" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="610" y="940" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="piadina-attr" value="costo: 5.00&#10;durata: 4" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=9;" vertex="1" parent="piadina">
+          <mxGeometry y="26" width="120" height="24" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="piatto" value="KebabAlPiatto" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="740" y="940" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="piatto-attr" value="costo: 8.00&#10;durata: 8" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=9;" vertex="1" parent="piatto">
+          <mxGeometry y="26" width="120" height="24" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="decorator" value="&lt;&lt;Abstract/Decorator&gt;&gt;&#10;DecoratorAddON" style="swimlane;fontStyle=3;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="780" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="decorator-attr" value="# foodDecorato: Food" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=2;fontSize=10;" vertex="1" parent="decorator">
+          <mxGeometry y="40" width="200" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="decorator-sep" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="decorator">
+          <mxGeometry y="60" width="200" height="10" as="geometry"/>
+        </mxCell>
+        <mxCell id="decorator-methods" value="+ {abstract} getCostoPlus(): double&#10;+ {abstract} getDurataPlus(): int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=2;fontSize=10;" vertex="1" parent="decorator">
+          <mxGeometry y="70" width="200" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="cipolla" value="Cipolla&#10;+0.50€, +1min" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="890" y="940" width="80" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="salsa" value="SalsaYogurt&#10;+0.80€, +0min" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="980" y="940" width="90" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="patatine" value="Patatine&#10;+2.00€, +3min" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="940" width="80" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="verdure" value="MixVerdure&#10;+1.50€, +2min" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="940" width="80" height="40" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="voucher" value="&lt;&lt;Interface/Strategy&gt;&gt;&#10;Voucher" style="swimlane;fontStyle=3;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="780" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="voucher-sep" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="voucher">
+          <mxGeometry y="40" width="200" height="10" as="geometry"/>
+        </mxCell>
+        <mxCell id="voucher-methods" value="+ calcolaSconto(double): double&#10;+ getCodice(): String&#10;+ isValido(): boolean&#10;+ getTipoVoucher(): String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=2;fontSize=10;" vertex="1" parent="voucher">
+          <mxGeometry y="50" width="200" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="voucher-perc" value="VoucherPercentuale&#10;&#10;- percentuale: double" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="940" width="130" height="70" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="voucher-fisso" value="VoucherFisso&#10;&#10;- importo: double&#10;- minimoOrdine: double" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="1020" width="130" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="nessun-voucher" value="NessunVoucher&#10;&#10;[Null Object Pattern]&#10;calcolaSconto() → 0" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=70;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;strokeDasharray=3;fontSize=10;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="1430" y="940" width="130" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="user" value="&lt;&lt;Entity&gt;&gt;&#10;User" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="220" y="1000" width="180" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="user-attr" value="- id: String&#10;- name: String&#10;- email: String&#10;- role: AbstractRole" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="user">
+          <mxGeometry y="40" width="180" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- ==================== RELATIONSHIPS ==================== -->
+        <!-- Actor to Views -->
+        <mxCell id="rel-actor-gui" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="actor-cliente" target="gui-controller">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-actor-cli" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="actor-cliente" target="cli-controller">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Views to Facade -->
+        <mxCell id="rel-gui-facade" value="uses" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;fontSize=10;" edge="1" parent="1" source="gui-controller" target="facade">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-cli-facade" value="uses" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;fontSize=10;" edge="1" parent="1" source="cli-controller" target="facade">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Facade to Controllers -->
+        <mxCell id="rel-facade-controller" value="delegates" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;fontSize=10;" edge="1" parent="1" source="facade" target="controller">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Controller to VoucherController -->
+        <mxCell id="rel-controller-voucher" value="delegates" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;fontSize=10;" edge="1" parent="1" source="controller" target="voucher-controller">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Controllers to Entities -->
+        <mxCell id="rel-controller-ordine" value="manages" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;fontSize=10;" edge="1" parent="1" source="controller" target="ordine">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-voucher-ctrl-voucher" value="validates" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;fontSize=10;dashed=1;" edge="1" parent="1" source="voucher-controller" target="voucher">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Facade to User -->
+        <mxCell id="rel-facade-user" value="accesses" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;fontSize=10;dashed=1;" edge="1" parent="1" source="facade" target="user">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="280"/>
+              <mxPoint x="560" y="700"/>
+              <mxPoint x="310" y="700"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Controllers to Beans (dependency) -->
+        <mxCell id="rel-ctrl-ordine-bean" value="&lt;&lt;creates&gt;&gt;" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;dashed=1;fontSize=9;" edge="1" parent="1" source="controller" target="ordine-bean">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-ctrl-food-bean" value="&lt;&lt;creates&gt;&gt;" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;dashed=1;fontSize=9;" edge="1" parent="1" source="controller" target="food-bean">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-ctrl-riepilogo-bean" value="&lt;&lt;creates&gt;&gt;" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;dashed=1;fontSize=9;" edge="1" parent="1" source="controller" target="riepilogo-bean">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-voucher-ctrl-voucher-bean" value="&lt;&lt;creates&gt;&gt;" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;dashed=1;fontSize=9;" edge="1" parent="1" source="voucher-controller" target="voucher-bean">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Riepilogo contains Riga -->
+        <mxCell id="rel-riepilogo-riga" style="endArrow=diamondThin;endFill=1;endSize=16;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="riga-bean" target="riepilogo-bean">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Ordine composition with Food -->
+        <mxCell id="rel-ordine-food" value="*" style="endArrow=diamondThin;endFill=1;endSize=16;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="food" target="ordine">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Ordine aggregation with Voucher -->
+        <mxCell id="rel-ordine-voucher" value="1" style="endArrow=diamondThin;endFill=0;endSize=16;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="voucher" target="ordine">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Food inheritance -->
+        <mxCell id="rel-panino-food" style="endArrow=block;endFill=0;endSize=16;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="panino" target="food">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-piadina-food" style="endArrow=block;endFill=0;endSize=16;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="piadina" target="food">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-piatto-food" style="endArrow=block;endFill=0;endSize=16;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="piatto" target="food">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-decorator-food" style="endArrow=block;endFill=0;endSize=16;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="decorator" target="food">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Decorator inheritance -->
+        <mxCell id="rel-cipolla-dec" style="endArrow=block;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="cipolla" target="decorator">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-salsa-dec" style="endArrow=block;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="salsa" target="decorator">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-patatine-dec" style="endArrow=block;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="patatine" target="decorator">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-verdure-dec" style="endArrow=block;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;" edge="1" parent="1" source="verdure" target="decorator">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Decorator decorates Food -->
+        <mxCell id="rel-decorator-food-ref" value="decorates" style="endArrow=open;endFill=0;endSize=12;html=1;rounded=0;strokeWidth=2;dashed=1;fontSize=9;" edge="1" parent="1" source="decorator" target="food">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="830"/>
+              <mxPoint x="740" y="830"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Voucher inheritance -->
+        <mxCell id="rel-voucher-perc-voucher" style="endArrow=block;endFill=0;endSize=16;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="voucher-perc" target="voucher">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-voucher-fisso-voucher" style="endArrow=block;endFill=0;endSize=16;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="voucher-fisso" target="voucher">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel-nessun-voucher" style="endArrow=block;endFill=0;endSize=16;html=1;rounded=0;strokeWidth=2;dashed=1;" edge="1" parent="1" source="nessun-voucher" target="voucher">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- ==================== PATTERN NOTES ==================== -->
+        <mxCell id="note-facade" value="&lt;b&gt;Facade Pattern&lt;/b&gt;&#10;&#10;• Semplifica l'accesso al sottosistema&#10;• Nasconde complessità del controller&#10;• GRASP: Protected Variations" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffc0;strokeColor=#999966;align=left;fontSize=10;verticalAlign=top;spacingTop=10;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="180" width="200" height="100" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="note-decorator" value="&lt;b&gt;Decorator Pattern (GoF)&lt;/b&gt;&#10;&#10;• Food base + Add-on dinamici&#10;• Costo/durata calcolati ricorsivamente&#10;• Open/Closed Principle (OCP)&#10;• Composizione &gt; Ereditarietà" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffc0;strokeColor=#999966;align=left;fontSize=10;verticalAlign=top;spacingTop=10;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="300" width="200" height="110" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="note-strategy" value="&lt;b&gt;Strategy + Null Object&lt;/b&gt;&#10;&#10;• Voucher: algoritmi intercambiabili&#10;• NessunVoucher: evita null checks&#10;• GRASP: Polymorphism&#10;• calcolaSconto() delegato" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffc0;strokeColor=#999966;align=left;fontSize=10;verticalAlign=top;spacingTop=10;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="430" width="200" height="110" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="note-grasp" value="&lt;b&gt;GRASP Principles&lt;/b&gt;&#10;&#10;• Controller: CreaOrdineController&#10;• Creator: Factory Method nel controller&#10;• Information Expert: Ordine calcola totali&#10;• Low Coupling: Facade isola view&#10;• High Cohesion: Controller separati" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffc0;strokeColor=#999966;align=left;fontSize=10;verticalAlign=top;spacingTop=10;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="560" width="200" height="130" as="geometry"/>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
