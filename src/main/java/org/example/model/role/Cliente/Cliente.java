@@ -12,12 +12,12 @@ public class Cliente extends AbstractRole {
     private List<Long> ordiniEffettuati;
     private int punteggio;
 
-    public Cliente(User user, String ID) {
+    public Cliente(User user, String codiceFiscale) {
 
         super(user); // puntatore all'oggetto User
         // il cliente viene puntato correttamente tramite puntatori e non tramite
         // l'utilizzo di chiavi esterne come nel modello relazionale.
-        this.id = ID;
+        this.id = codiceFiscale;
         this.voucherUtilizzati = new ArrayList<>();
         this.ordiniEffettuati = new ArrayList<>();
         this.punteggio = 0;

@@ -1,4 +1,4 @@
-package org.example.use_cases.crea_ordine.mock;
+package org.example.use_cases.crea_ordine.Beans_Inizializzati;
 
 import org.example.use_cases.crea_ordine.beans.FoodBean;
 

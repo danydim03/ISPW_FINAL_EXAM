@@ -147,9 +147,8 @@ class CreaVoucherControllerTest {
         bean.setCodice("TESTPAST");
 
         // Act & Assert
-        assertThrows(ValidationException.class, () -> {
-            bean.setDataScadenza(LocalDate.now().minusDays(1)); // Deve fallire (passato)
-        });
+        LocalDate dataNelPassato = LocalDate.now().minusDays(1);
+        assertThrows(ValidationException.class, () -> bean.setDataScadenza(dataNelPassato)); // Deve fallire (passato)
     }
 
     /**
