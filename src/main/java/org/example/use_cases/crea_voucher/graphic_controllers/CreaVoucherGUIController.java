@@ -31,8 +31,6 @@ import java.util.logging.Logger;
 public class CreaVoucherGUIController implements Initializable {
 
     private static final Logger logger = Logger.getLogger(CreaVoucherGUIController.class.getName());
-    private static final String ERROR_TITLE = "Errore";
-    private static final String SUCCESS_TITLE = "Successo";
 
     // FXML Components - Tipo Voucher
     @FXML
@@ -128,7 +126,7 @@ public class CreaVoucherGUIController implements Initializable {
             this.facade = new CreaVoucherFacade(tokenKey);
         } catch (MissingAuthorizationException e) {
             logger.log(Level.SEVERE, "Errore di autorizzazione durante inizializzazione facade", e);
-            mostraErrore(ERROR_TITLE, "Accesso negato. Solo gli amministratori possono creare voucher.");
+            mostraErrore("Accesso negato. Solo gli amministratori possono creare voucher.");
             disabilitaForm();
         }
     }
@@ -178,7 +176,6 @@ public class CreaVoucherGUIController implements Initializable {
 
             // 3. Mostra messaggio di successo
             mostraSuccesso(
-                    SUCCESS_TITLE,
                     "Voucher creato con successo!\nCodice: " + voucherCreato.getCodice());
 
             // 4. Reset del form dopo 2 secondi
@@ -187,12 +184,12 @@ public class CreaVoucherGUIController implements Initializable {
         } catch (ValidationException e) {
             // Errore di validazione (business rules o sintassi)
             logger.log(Level.WARNING, "Validazione fallita", e);
-            mostraErrore(ERROR_TITLE, e.getMessage());
+            mostraErrore(e.getMessage());
 
         } catch (DAOException | PropertyException | ResourceNotFoundException | MissingAuthorizationException e) {
             // Errore di sistema
             logger.log(Level.SEVERE, "Errore durante la creazione del voucher", e);
-            mostraErrore(ERROR_TITLE, "Errore durante la creazione del voucher. Riprova.");
+            mostraErrore("Errore durante la creazione del voucher. Riprova.");
         }
     }
 
@@ -303,7 +300,7 @@ public class CreaVoucherGUIController implements Initializable {
     /**
      * Mostra un messaggio di errore nell'UI.
      */
-    private void mostraErrore(String titolo, String messaggio) {
+    private void mostraErrore(String messaggio) {
         labelErrore.setText("❌ " + messaggio);
         labelErrore.setVisible(true);
         labelErrore.setManaged(true);
@@ -313,7 +310,7 @@ public class CreaVoucherGUIController implements Initializable {
     /**
      * Mostra un messaggio di successo nell'UI.
      */
-    private void mostraSuccesso(String titolo, String messaggio) {
+    private void mostraSuccesso(String messaggio) {
         labelSuccesso.setText("✅ " + messaggio);
         labelSuccesso.setVisible(true);
         labelSuccesso.setManaged(true);
