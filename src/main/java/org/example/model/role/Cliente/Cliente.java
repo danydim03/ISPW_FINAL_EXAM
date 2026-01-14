@@ -29,6 +29,7 @@ public class Cliente extends AbstractRole {
         return this;
     }
 
+    @Override
     public String getCodiceFiscale() {
         return id;
     }

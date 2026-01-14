@@ -1,22 +1,12 @@
 package org.example;
 
-import org.example.enums.ExceptionMessagesEnum;
-import org.example.enums.UserErrorMessagesEnum;
-import org.example.exceptions.*;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class BaseGraphicControl implements Initializable {
@@ -27,10 +17,6 @@ public class BaseGraphicControl implements Initializable {
     private Button backButton;
     @FXML
     private Button accountButton;
-    @FXML
-    private Button notificationButton;
-    @FXML
-    private VBox pendingEventList;
 
     /**
      * Default constructor - initialization is handled by JavaFX's initialize()
@@ -67,20 +53,12 @@ public class BaseGraphicControl implements Initializable {
             backButton.setVisible(true);
     }
 
-    void returnToMainPage() {
-        while (content.getChildren().size() > 1)
-            goBack();
-    }
-
     void openMainPage(Node node, String name) {
         content.getChildren().clear();
         content.getChildren().add(node);
         if (accountButton != null) {
             accountButton.setText(name);
             accountButton.setVisible(true);
-        }
-        if (notificationButton != null) {
-            notificationButton.setVisible(true);
         }
     }
 }
