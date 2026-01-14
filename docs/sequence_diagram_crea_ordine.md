@@ -1,5 +1,19 @@
 # Sequence Diagram - Use Case "Crea Ordine"
 
+## 📌 Come Visualizzare il Diagramma
+
+Il diagramma utilizza la sintassi **Mermaid**. Ecco come puoi visualizzarlo:
+
+| Metodo | Descrizione |
+|--------|-------------|
+| **GitHub** | Apri questo file direttamente su GitHub - supporta Mermaid nativamente |
+| **VS Code** | Installa l'estensione "Mermaid Preview" o "Markdown Preview Mermaid Support" |
+| **Online** | Copia il codice Mermaid su [mermaid.live](https://mermaid.live) |
+| **PlantUML** | Usa il file `sequence_diagram_crea_ordine.puml` con PlantUML |
+| **HTML** | Apri `sequence_diagram_crea_ordine.html` nel browser |
+
+---
+
 ## Diagramma di Sequenza Completo
 
 Questo diagramma illustra il flusso dettagliato dello Use Case "Crea Ordine" con tutti i partecipanti, le interazioni e i pattern architetturali (BCE, Facade, Factory, Decorator, Strategy, Lazy Initialization).

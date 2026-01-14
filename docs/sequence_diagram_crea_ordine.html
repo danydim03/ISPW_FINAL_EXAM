@@ -520,30 +520,83 @@ sequenceDiagram
         <p>Pattern Utilizzati: BCE, Facade, Factory, Decorator, Strategy, Lazy Initialization</p>
     </footer>
     
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    <script>
+        // Fallback mechanism for loading Mermaid from multiple CDNs
+        const cdnUrls = [
+            'https://unpkg.com/mermaid@10/dist/mermaid.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js',
+            'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js'
+        ];
         
-        mermaid.initialize({
-            startOnLoad: true,
-            theme: 'default',
-            securityLevel: 'loose',
-            sequence: {
-                diagramMarginX: 50,
-                diagramMarginY: 10,
-                actorMargin: 80,
-                width: 180,
-                height: 65,
-                boxMargin: 10,
-                boxTextMargin: 5,
-                noteMargin: 10,
-                messageMargin: 35,
-                mirrorActors: true,
-                bottomMarginAdj: 1,
-                useMaxWidth: false,
-                rightAngles: false,
-                showSequenceNumbers: true
+        let loaded = false;
+        
+        function loadMermaid(urls, index = 0) {
+            if (index >= urls.length || loaded) {
+                if (!loaded) {
+                    console.error('Impossibile caricare Mermaid da nessun CDN');
+                    showFallbackMessage();
+                }
+                return;
             }
-        });
+            
+            const script = document.createElement('script');
+            script.src = urls[index];
+            script.onload = function() {
+                loaded = true;
+                initializeMermaid();
+            };
+            script.onerror = function() {
+                console.warn('Fallback CDN ' + index + ' failed, trying next...');
+                loadMermaid(urls, index + 1);
+            };
+            document.head.appendChild(script);
+        }
+        
+        function initializeMermaid() {
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({
+                    startOnLoad: true,
+                    theme: 'default',
+                    securityLevel: 'loose',
+                    sequence: {
+                        diagramMarginX: 50,
+                        diagramMarginY: 10,
+                        actorMargin: 80,
+                        width: 180,
+                        height: 65,
+                        boxMargin: 10,
+                        boxTextMargin: 5,
+                        noteMargin: 10,
+                        messageMargin: 35,
+                        mirrorActors: true,
+                        bottomMarginAdj: 1,
+                        useMaxWidth: false,
+                        rightAngles: false,
+                        showSequenceNumbers: true
+                    }
+                });
+                mermaid.run();
+            }
+        }
+        
+        function showFallbackMessage() {
+            const diagram = document.getElementById('mermaidDiagram');
+            if (diagram) {
+                diagram.innerHTML = '<div style="padding:20px; background:#fff3cd; border:1px solid #ffc107; border-radius:8px; margin:20px;">' +
+                    '<h3 style="color:#856404;">⚠️ Impossibile caricare il renderer del diagramma</h3>' +
+                    '<p>Il diagramma non può essere visualizzato perché la libreria Mermaid non è disponibile.</p>' +
+                    '<p><strong>Alternative per visualizzare il diagramma:</strong></p>' +
+                    '<ol>' +
+                    '<li>Apri il file <code>sequence_diagram_crea_ordine.md</code> su GitHub (supporto nativo Mermaid)</li>' +
+                    '<li>Copia il codice Mermaid su <a href="https://mermaid.live" target="_blank">mermaid.live</a></li>' +
+                    '<li>Usa VS Code con l\'estensione Mermaid Preview</li>' +
+                    '</ol>' +
+                    '</div>';
+            }
+        }
+        
+        // Start loading
+        loadMermaid(cdnUrls);
     </script>
     
     <script>
