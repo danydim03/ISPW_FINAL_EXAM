@@ -1,0 +1,611 @@
+\documentclass[12pt,a4paper]{article}
+
+% ==================== PACKAGES ====================
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{shapes.multipart, positioning, arrows.meta, fit}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+
+% ==================== GEOMETRY ====================
+\geometry{margin=2.5cm}
+
+% ==================== LISTINGS STYLE ====================
+\definecolor{codegreen}{rgb}{0.0,0.5,0.0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.97}
+\definecolor{javablue}{rgb}{0.0,0.0,0.6}
+
+\lstdefinestyle{javastyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen}\itshape,
+    keywordstyle=\color{javablue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.3pt,
+    language=Java,
+    morekeywords={String, List, User, Session, Token, synchronized, FrontEndTypeEnum}
+}
+\lstset{style=javastyle}
+
+% ==================== HEADER/FOOTER ====================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textit{Analisi SessionManager}}
+\fancyhead[R]{\textit{Habibi Shawarma}}
+\fancyfoot[C]{\thepage}
+
+% ==================== DOCUMENT ====================
+\begin{document}
+
+% ==================== TITLE PAGE ====================
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge\bfseries Analisi Architetturale del\\[0.3cm] Session Manager\par}
+    \vspace{1cm}
+    {\Large Pattern Singleton e Gestione delle Sessioni\\in Applicazioni Enterprise Java\par}
+    \vspace{2cm}
+    {\large Progetto: \textbf{Habibi Shawarma}\par}
+    \vspace{0.5cm}
+    {\large Corso: Ingegneria del Software e Progettazione Web\par}
+    \vspace{2cm}
+    \rule{\textwidth}{0.4pt}
+    \vspace{0.5cm}
+    {\large\today\par}
+    \vfill
+\end{titlepage}
+
+% ==================== TABLE OF CONTENTS ====================
+\tableofcontents
+\newpage
+
+% ==================== SECTION 1 ====================
+\section{Introduzione}
+
+Il \textbf{Session Manager} è un componente architetturale fondamentale nelle applicazioni multi-utente che necessitano di tracciare lo stato di autenticazione degli utenti nel tempo. Questo documento fornisce un'analisi accademica approfondita dell'implementazione del SessionManager nel progetto \textit{Habibi Shawarma}, esaminando i pattern utilizzati, i principi GRASP applicati e le interazioni con le altre classi del sistema.
+
+\subsection{Contesto del Problema}
+
+In un'applicazione client-server, dopo che un utente effettua il login, il sistema deve:
+\begin{enumerate}
+    \item \textbf{Ricordare} chi è l'utente autenticato
+    \item \textbf{Associare} un identificativo univoco alla sessione (token)
+    \item \textbf{Permettere} l'accesso alle risorse protette
+    \item \textbf{Terminare} la sessione quando l'utente effettua il logout
+\end{enumerate}
+
+Il SessionManager risolve questi problemi centralizzando la gestione delle sessioni attive in un unico punto di accesso.
+
+% ==================== SECTION 2 ====================
+\section{Architettura del Session Manager}
+
+\subsection{Struttura delle Classi}
+
+L'implementazione del SessionManager si compone di tre classi principali:
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    class/.style={rectangle split, rectangle split parts=3, draw, minimum width=5cm, font=\small},
+    arrow/.style={-{Stealth[length=3mm]}, thick}
+]
+
+% SessionManager
+\node[class] (sm) at (0,0) {
+    \textbf{SessionManager}
+    \nodepart{second}
+    \texttt{- instance: SessionManager}\\
+    \texttt{- activeSessions: List<Session>}\\
+    \texttt{- currentTokenKey: String}
+    \nodepart{third}
+    \texttt{+ getInstance(): SessionManager}\\
+    \texttt{+ getSessionUserByTokenKey(...)}\\
+    \texttt{+ getSessionTokenKeyByUser(...)}\\
+    \texttt{+ logout()}
+};
+
+% Session
+\node[class] (session) at (7,0) {
+    \textbf{Session}
+    \nodepart{second}
+    \texttt{- user: User}\\
+    \texttt{- token: Token}\\
+    \texttt{- frontEndType: FrontEndTypeEnum}
+    \nodepart{third}
+    \texttt{+ getUser(): User}\\
+    \texttt{+ getToken(): Token}\\
+    \texttt{+ getFrontEndType(): ...}
+};
+
+% Token
+\node[class] (token) at (7,-4.5) {
+    \textbf{Token}
+    \nodepart{second}
+    \texttt{- key: String}
+    \nodepart{third}
+    \texttt{+ Token()}\\
+    \texttt{+ getKey(): String}
+};
+
+% Relationships
+\draw[arrow] (sm.east) -- node[above, font=\scriptsize] {1..*} (session.west);
+\draw[arrow] (session.south) -- node[right, font=\scriptsize] {1} (token.north);
+
+\end{tikzpicture}
+\caption{Diagramma delle classi del Session Manager}
+\end{figure}
+
+\subsection{Classe SessionManager}
+
+La classe \texttt{SessionManager} è il cuore del sistema di gestione delle sessioni:
+
+\begin{lstlisting}[caption={Implementazione del Singleton SessionManager}]
+public class SessionManager {
+    private static SessionManager instance;
+    private final List<Session> activeSessions;
+    private String currentTokenKey;
+
+    private SessionManager() {
+        activeSessions = new ArrayList<>();
+    }
+
+    public static synchronized SessionManager getInstance() {
+        if (instance == null) {
+            instance = new SessionManager();
+        }
+        return instance;
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Attributi Principali}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Attributo} & \textbf{Tipo} & \textbf{Descrizione} \\
+\midrule
+\texttt{instance} & \texttt{SessionManager} & Istanza singleton (statica) \\
+\texttt{activeSessions} & \texttt{List<Session>} & Lista delle sessioni attive \\
+\texttt{currentTokenKey} & \texttt{String} & Token della sessione corrente \\
+\bottomrule
+\end{tabular}
+\caption{Attributi di SessionManager}
+\end{table}
+
+\subsubsection{Metodi Fondamentali}
+
+\paragraph{Creazione/Recupero della Sessione}
+\begin{lstlisting}[caption={Metodo getSessionTokenKeyByUser}]
+public String getSessionTokenKeyByUser(User user) 
+        throws ResourceNotFoundException, PropertyException {
+    Session s = getSession(user);
+    if (s == null) {
+        FrontEndTypeEnum frontEndType = FrontEndTypeEnum
+            .getFrontEndTypeByValue(PropertiesHandler
+                .getInstance().getProperty("front_end_type"));
+        s = new Session(user, frontEndType);
+        activeSessions.add(s);
+    }
+    return s.getToken().getKey();
+}
+\end{lstlisting}
+
+Questo metodo implementa una strategia \textbf{lazy initialization} per le sessioni:
+\begin{itemize}
+    \item Se esiste già una sessione per l'utente, ne restituisce il token
+    \item Altrimenti, crea una nuova sessione con il tipo di frontend appropriato
+\end{itemize}
+
+\paragraph{Recupero Utente da Token}
+\begin{lstlisting}[caption={Metodo getSessionUserByTokenKey}]
+public User getSessionUserByTokenKey(String tokenKey) {
+    Session s = getSession(tokenKey);
+    if (s == null) {
+        return null;
+    }
+    return s.getUser();
+}
+\end{lstlisting}
+
+\paragraph{Gestione Logout}
+\begin{lstlisting}[caption={Metodi di logout}]
+public void logout() {
+    if (currentTokenKey != null) {
+        Session s = getSession(currentTokenKey);
+        if (s != null) {
+            activeSessions.remove(s);
+        }
+        currentTokenKey = null;
+    }
+}
+
+public void logout(User user) {
+    Session s = getSession(user);
+    if (s != null) {
+        if (s.getToken().getKey().equals(currentTokenKey)) {
+            currentTokenKey = null;
+        }
+        activeSessions.remove(s);
+    }
+}
+\end{lstlisting}
+
+\subsection{Classe Session}
+
+La classe \texttt{Session} rappresenta una singola sessione utente attiva:
+
+\begin{lstlisting}[caption={Classe Session}]
+public class Session {
+    private User user;
+    private Token token;
+    private FrontEndTypeEnum frontEndType;
+
+    Session(User user, FrontEndTypeEnum frontEndType) {
+        this.user = user;
+        this.token = new Token();
+        this.frontEndType = frontEndType;
+    }
+}
+\end{lstlisting}
+
+\textbf{Caratteristiche chiave:}
+\begin{itemize}
+    \item Costruttore \texttt{package-private}: solo il SessionManager può creare sessioni
+    \item Associazione con \texttt{User}: ogni sessione è legata a un utente specifico
+    \item Associazione con \texttt{Token}: identificativo univoco della sessione
+    \item \texttt{FrontEndTypeEnum}: tipo di interfaccia utente (GUI, CLI)
+\end{itemize}
+
+\subsection{Classe Token}
+
+\begin{lstlisting}[caption={Classe Token}]
+public class Token {
+    private String key;
+
+    public Token() {
+        this.key = LocalDate.now().toString();
+    }
+
+    public String getKey() {
+        return key;
+    }
+}
+\end{lstlisting}
+
+\textbf{Nota:} L'implementazione attuale genera il token basandosi sulla data corrente. In un ambiente di produzione, si raccomanda l'uso di \texttt{UUID.randomUUID().toString()} per garantire unicità.
+
+% ==================== SECTION 3 ====================
+\section{Pattern di Progettazione Applicati}
+
+\subsection{Singleton (GoF - Creazionale)}
+
+Il SessionManager implementa il pattern \textbf{Singleton} per garantire:
+
+\begin{enumerate}
+    \item \textbf{Unica istanza}: esiste una sola istanza del gestore sessioni
+    \item \textbf{Punto di accesso globale}: \texttt{getInstance()} fornisce l'accesso
+    \item \textbf{Stato condiviso}: tutte le classi vedono le stesse sessioni attive
+\end{enumerate}
+
+\subsubsection{Variante Thread-Safe}
+
+L'implementazione utilizza la keyword \texttt{synchronized} per garantire la thread-safety:
+
+\begin{lstlisting}[caption={Singleton thread-safe}]
+public static synchronized SessionManager getInstance() {
+    if (instance == null) {
+        instance = new SessionManager();
+    }
+    return instance;
+}
+\end{lstlisting}
+
+\textbf{Analisi critica:}
+\begin{itemize}
+    \item \textbf{Pro}: Semplice e corretto
+    \item \textbf{Contro}: Overhead di sincronizzazione ad ogni chiamata
+    \item \textbf{Alternativa}: Double-Checked Locking o Initialization-on-demand holder idiom
+\end{itemize}
+
+\subsection{Registry (Enterprise Pattern)}
+
+Il SessionManager funge anche da \textbf{Registry} per le sessioni:
+
+\begin{itemize}
+    \item Mantiene una collezione di sessioni attive
+    \item Permette lookup per User o Token
+    \item Centralizza la gestione del ciclo di vita delle sessioni
+\end{itemize}
+
+% ==================== SECTION 4 ====================
+\section{Principi GRASP Applicati}
+
+\subsection{Information Expert}
+
+Il SessionManager è l'\textbf{esperto} delle informazioni relative alle sessioni:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Domanda} & \textbf{Risposta} \\
+\midrule
+Chi conosce le sessioni attive? & SessionManager \\
+Chi può associare User a Token? & SessionManager \\
+Chi gestisce il logout? & SessionManager \\
+\bottomrule
+\end{tabular}
+\caption{Applicazione di Information Expert}
+\end{table}
+
+\subsection{Controller}
+
+Il SessionManager agisce come \textbf{Controller} per le operazioni di sessione:
+\begin{itemize}
+    \item Riceve le richieste di creazione/terminazione sessione
+    \item Coordina la creazione di Session e Token
+    \item Non contiene logica di business, solo gestione delle sessioni
+\end{itemize}
+
+\subsection{Low Coupling}
+
+Il SessionManager promuove il \textbf{basso accoppiamento}:
+\begin{itemize}
+    \item Le altre classi dipendono solo dall'interfaccia pubblica
+    \item La struttura interna (List<Session>) è nascosta
+    \item I client interagiscono tramite token (String), non oggetti Session
+\end{itemize}
+
+\subsection{High Cohesion}
+
+La classe presenta \textbf{alta coesione}:
+\begin{itemize}
+    \item Tutte le responsabilità sono relative alla gestione sessioni
+    \item Nessuna logica di business o persistenza
+    \item Metodi strettamente correlati tra loro
+\end{itemize}
+
+\subsection{Protected Variations}
+
+Il design protegge dalle variazioni:
+\begin{itemize}
+    \item La classe Session ha visibilità package-private
+    \item Il Token è creato internamente, non passato dall'esterno
+    \item L'implementazione del token può cambiare senza impatti esterni
+\end{itemize}
+
+% ==================== SECTION 5 ====================
+\section{Utilizzo nelle Altre Classi}
+
+Il SessionManager viene utilizzato in diversi punti dell'applicazione:
+
+\subsection{LoginControl (Use Case: Login)}
+
+\begin{lstlisting}[caption={Utilizzo in LoginControl}]
+public LoginBean login(String email, String password) 
+        throws ... {
+    User user = UserLazyFactory.getInstance().getUserByEmail(email);
+    user.checkPassword(password);
+    
+    return new LoginBean(
+        SessionManager.getInstance().getSessionTokenKeyByUser(user),
+        new UserBean(...)
+    );
+}
+\end{lstlisting}
+
+\textbf{Flusso:}
+\begin{enumerate}
+    \item L'utente viene autenticato
+    \item Viene creata/recuperata la sessione tramite SessionManager
+    \item Il token viene restituito nel LoginBean
+\end{enumerate}
+
+\subsection{CreaOrdineFacade (Use Case: Crea Ordine)}
+
+\begin{lstlisting}[caption={Utilizzo in CreaOrdineFacade}]
+public CreaOrdineFacade(String tokenKey) 
+        throws MissingAuthorizationException {
+    this.sessionUser = SessionManager.getInstance()
+        .getSessionUserByTokenKey(tokenKey);
+    
+    if (sessionUser == null || 
+        sessionUser.getRole().getClienteRole() == null) {
+        throw new MissingAuthorizationException(
+            "Accesso negato: token non autorizzato");
+    }
+    this.controller = new CreaOrdineController();
+}
+\end{lstlisting}
+
+\textbf{Pattern applicato:} Il Facade verifica l'autorizzazione recuperando l'utente dalla sessione.
+
+\subsection{StoricoOrdiniFacade (Use Case: Storico Ordini)}
+
+\begin{lstlisting}[caption={Utilizzo in StoricoOrdiniFacade}]
+public List<OrdineBean> getStoricoOrdini() throws ... {
+    User user = SessionManager.getInstance().getSessionUser();
+    if (user == null) {
+        throw new MissingAuthorizationException(
+            "Nessun utente loggato");
+    }
+    // ... recupero ordini
+}
+\end{lstlisting}
+
+\textbf{Nota:} Questo Facade usa \texttt{getSessionUser()} invece di richiedere il tokenKey come parametro.
+
+\subsection{CreaVoucherFacade (Use Case: Crea Voucher)}
+
+\begin{lstlisting}[caption={Utilizzo in CreaVoucherFacade}]
+public CreaVoucherFacade(String tokenKey) 
+        throws MissingAuthorizationException {
+    this.sessionUser = SessionManager.getInstance()
+        .getSessionUserByTokenKey(tokenKey);
+
+    if (sessionUser == null) {
+        throw new MissingAuthorizationException(
+            "Sessione non valida o scaduta");
+    }
+
+    if (sessionUser.getRole().getAmministratoreRole() == null) {
+        throw new MissingAuthorizationException(
+            "Solo gli amministratori possono creare voucher");
+    }
+}
+\end{lstlisting}
+
+\textbf{Controllo ruoli:} Verifica che l'utente sia un Amministratore.
+
+\subsection{CLINavigationController}
+
+\begin{lstlisting}[caption={Utilizzo in CLINavigationController}]
+private void navigateToHomepage() {
+    // ... navigazione basata su ruolo ...
+    
+    // Dopo il ritorno dalla homepage (logout)
+    try {
+        SessionManager.getInstance().logout();
+    } catch (Exception e) {
+        // Ignora errori di cleanup
+    }
+    currentLoginBean = null;
+}
+\end{lstlisting}
+
+\textbf{Responsabilità:} Pulisce la sessione quando l'utente esce dalla homepage.
+
+\subsection{PageNavigationController (GUI)}
+
+\begin{lstlisting}[caption={Utilizzo in PageNavigationController}]
+// Dopo il login, imposta il token corrente
+SessionManager.getInstance().setCurrentTokenKey(tokenKey);
+\end{lstlisting}
+
+\textbf{Funzione:} Memorizza quale sessione è ``attiva'' nell'interfaccia corrente.
+
+% ==================== SECTION 6 ====================
+\section{Diagramma di Sequenza: Flusso di Login}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    actor/.style={rectangle, draw, minimum height=1cm, minimum width=2cm},
+    note/.style={rectangle, draw=gray, dashed, fill=yellow!10, font=\scriptsize}
+]
+
+% Actors
+\node[actor] (gui) at (0,0) {GUI};
+\node[actor] (lc) at (3,0) {LoginControl};
+\node[actor] (sm) at (6,0) {SessionManager};
+\node[actor] (session) at (9,0) {Session};
+
+% Lifelines
+\draw[dashed] (gui.south) -- (0,-7);
+\draw[dashed] (lc.south) -- (3,-7);
+\draw[dashed] (sm.south) -- (6,-7);
+\draw[dashed] (session.south) -- (9,-7);
+
+% Messages
+\draw[->, thick] (0,-1) -- node[above, font=\scriptsize] {login(email, pwd)} (3,-1);
+\draw[->, thick] (3,-2) -- node[above, font=\scriptsize] {getSessionTokenKeyByUser(user)} (6,-2);
+\draw[->, thick] (6,-3) -- node[above, font=\scriptsize] {new Session(user)} (9,-3);
+\draw[<-, thick] (6,-4) -- node[above, font=\scriptsize] {session} (9,-4);
+\draw[->, thick] (6,-4.5) -- node[below, font=\scriptsize] {activeSessions.add(s)} (6,-5);
+\draw[<-, thick] (3,-5.5) -- node[above, font=\scriptsize] {tokenKey} (6,-5.5);
+\draw[<-, thick] (0,-6.5) -- node[above, font=\scriptsize] {LoginBean(tokenKey, userBean)} (3,-6.5);
+
+\end{tikzpicture}
+\caption{Sequenza di creazione sessione durante il login}
+\end{figure}
+
+% ==================== SECTION 7 ====================
+\section{Considerazioni Critiche e Miglioramenti}
+
+\subsection{Punti di Forza}
+
+\begin{itemize}
+    \item[$\checkmark$] \textbf{Centralizzazione}: unico punto di gestione sessioni
+    \item[$\checkmark$] \textbf{Semplicità}: API chiara e intuitiva
+    \item[$\checkmark$] \textbf{Thread-safety}: accesso sincronizzato
+    \item[$\checkmark$] \textbf{Incapsulamento}: Session e Token nascosti
+\end{itemize}
+
+\subsection{Aree di Miglioramento}
+
+\begin{enumerate}
+    \item \textbf{Generazione Token}: 
+    \begin{itemize}
+        \item Attuale: \texttt{LocalDate.now().toString()}
+        \item Raccomandato: \texttt{UUID.randomUUID().toString()}
+    \end{itemize}
+    
+    \item \textbf{Scadenza Sessioni}:
+    \begin{itemize}
+        \item Manca un meccanismo di timeout
+        \item Suggerimento: aggiungere \texttt{lastAccessTime} a Session
+    \end{itemize}
+    
+    \item \textbf{Persistenza Sessioni}:
+    \begin{itemize}
+        \item Le sessioni sono solo in memoria
+        \item Per scalabilità: considerare Redis o database
+    \end{itemize}
+    
+    \item \textbf{Singleton Improvement}:
+    \begin{lstlisting}[caption={Alternativa con holder idiom}]
+private static class Holder {
+    static final SessionManager INSTANCE = new SessionManager();
+}
+
+public static SessionManager getInstance() {
+    return Holder.INSTANCE;
+}
+    \end{lstlisting}
+\end{enumerate}
+
+% ==================== SECTION 8 ====================
+\section{Conclusioni}
+
+Il SessionManager implementato nel progetto Habibi Shawarma rappresenta una soluzione efficace per la gestione delle sessioni utente. L'applicazione del pattern Singleton garantisce un punto di accesso globale, mentre la separazione in Session e Token promuove la modularità.
+
+L'architettura rispetta i principi GRASP di Information Expert, Controller, Low Coupling e High Cohesion, risultando in un design manutenibile e estensibile.
+
+Le classi che utilizzano il SessionManager (Facade dei vari Use Case, Navigation Controllers) beneficiano di un'interfaccia pulita per:
+\begin{itemize}
+    \item Verificare l'autenticazione
+    \item Recuperare l'utente corrente
+    \item Controllare i ruoli e le autorizzazioni
+    \item Gestire il logout
+\end{itemize}
+
+\vspace{1cm}
+\begin{center}
+\rule{0.5\textwidth}{0.4pt}
+\end{center}
+
+\end{document}

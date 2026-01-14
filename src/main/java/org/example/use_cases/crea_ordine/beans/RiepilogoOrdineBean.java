@@ -52,20 +52,9 @@ public class RiepilogoOrdineBean implements Serializable {
             this.descrizione = descrizione;
         }
 
-        public double getPrezzo() {
-            return prezzo;
-        }
-
-        public void setPrezzo(double prezzo) {
-            this.prezzo = prezzo;
-        }
 
         public int getDurata() {
             return durata;
-        }
-
-        public void setDurata(int durata) {
-            this.durata = durata;
         }
 
         public String getPrezzoFormattato() {
@@ -86,18 +75,10 @@ public class RiepilogoOrdineBean implements Serializable {
         return new ArrayList<>(righeOrdine);
     }
 
-    public void setRigheOrdine(List<RigaOrdineBean> righeOrdine) {
-        this.righeOrdine = righeOrdine != null ? new ArrayList<>(righeOrdine) : new ArrayList<>();
-    }
-
     public void aggiungiRiga(RigaOrdineBean riga) {
         if (riga != null) {
             this.righeOrdine.add(riga);
         }
-    }
-
-    public double getSubtotale() {
-        return subtotale;
     }
 
     public void setSubtotale(double subtotale) {
@@ -119,10 +100,7 @@ public class RiepilogoOrdineBean implements Serializable {
     public void setTotale(double totale) {
         this.totale = totale;
     }
-
-    public int getDurataTotale() {
-        return durataTotale;
-    }
+    
 
     public void setDurataTotale(int durataTotale) {
         this.durataTotale = durataTotale;

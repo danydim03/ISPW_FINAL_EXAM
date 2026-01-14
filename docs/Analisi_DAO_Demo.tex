@@ -1,0 +1,1056 @@
+\documentclass[12pt,a4paper]{article}
+
+% ========================================
+% PACCHETTI
+% ========================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tikz}
+\usepackage{float}
+\usetikzlibrary{shapes.geometric, arrows, positioning, calc}
+
+% ========================================
+% CONFIGURAZIONE PAGINA
+% ========================================
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=3cm,
+    bottom=3cm
+}
+
+% ========================================
+% STILE CODICE SORGENTE
+% ========================================
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{keywordcolor}{rgb}{0.0,0.0,0.7}
+\definecolor{stringcolor}{rgb}{0.6,0.15,0.0}
+
+\lstdefinestyle{javastyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen}\itshape,
+    keywordstyle=\color{keywordcolor}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{stringcolor},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    language=Java,
+    frame=single,
+    rulecolor=\color{black},
+    morekeywords={String, List, ArrayList, LocalDate, AtomicLong, Stream, Optional, synchronized}
+}
+
+\lstset{style=javastyle}
+
+% ========================================
+% INTESTAZIONE E PIE' DI PAGINA
+% ========================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textsc{Analisi Architetturale DAO Demo}}
+\fancyhead[R]{\textsc{ISPW - A.A. 2025/2026}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ========================================
+% COMANDI PERSONALIZZATI
+% ========================================
+\newcommand{\classname}[1]{\texttt{#1}}
+\newcommand{\methodname}[1]{\texttt{#1()}}
+\newcommand{\pattern}[1]{\textit{#1}}
+\newcommand{\principle}[1]{\textbf{#1}}
+
+% ========================================
+% CONFIGURAZIONE HYPERREF
+% ========================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Analisi Architetturale DAO Demo - Habibi Shawarma},
+    pdfauthor={Daniele Di Meo},
+    pdfsubject={Ingegneria del Software e Progettazione Web},
+    pdfkeywords={DAO, Abstract Factory, Design Pattern, Java, In-Memory, Mock}
+}
+
+% ========================================
+% TITOLO
+% ========================================
+\title{
+    \vspace{-2cm}
+    {\Large Università degli Studi di Roma ``Tor Vergata''\\
+    Corso di Laurea in Ingegneria Informatica\\[0.5cm]}
+    \rule{\linewidth}{0.5mm}\\[0.4cm]
+    {\huge \bfseries Analisi Architetturale del Pattern\\DAO Demo nell'Applicazione\\``Habibi Shawarma''}\\[0.3cm]
+    \rule{\linewidth}{0.5mm}\\[0.5cm]
+    {\large Ingegneria del Software e Progettazione Web (ISPW)\\Anno Accademico 2025/2026}
+}
+
+\author{
+    \textbf{Candidato:} Daniele Di Meo\\
+    \texttt{daniele.dimeo@students.uniroma2.eu}
+}
+
+\date{\today}
+
+% ========================================
+% INIZIO DOCUMENTO
+% ========================================
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ========================================
+% SEZIONE 1: INTRODUZIONE
+% ========================================
+\section{Introduzione}
+
+\subsection{Contesto e Motivazioni}
+
+L'applicazione ``Habibi Shawarma'' è un sistema software progettato per la gestione di un esercizio commerciale specializzato nella vendita di kebab e prodotti alimentari affini. Tale sistema richiede una gestione efficiente dei dati persistenti, inclusi utenti, ordini, voucher, prodotti alimentari e ruoli operativi (Cliente, Kebabbaro, Amministratore).
+
+Un requisito fondamentale dell'architettura software è la \textbf{flessibilità nella selezione del meccanismo di persistenza}. L'applicazione deve poter operare secondo tre modalità distinte:
+
+\begin{enumerate}[label=\alph*)]
+    \item \textbf{Modalità Demo (DEMO)}: Persistenza in memoria volatile con dati pre-popolati, ideale per dimostrazioni, testing e sviluppo rapido.
+    \item \textbf{Modalità File System (FS)}: Persistenza su file CSV, adatta per installazioni leggere senza DBMS.
+    \item \textbf{Modalità Database (DB)}: Persistenza su database relazionale H2, per ambienti di produzione.
+\end{enumerate}
+
+Il presente documento si concentra esclusivamente sull'\textbf{analisi approfondita della modalità Demo}, esaminando in dettaglio l'implementazione delle classi \classname{*DAODemo}, il loro funzionamento interno, i pattern architetturali adottati e le implicazioni tecniche delle scelte progettuali.
+
+\subsection{Obiettivi del Documento}
+
+Gli obiettivi di questa analisi accademica sono:
+
+\begin{itemize}
+    \item Fornire una descrizione completa e rigorosa dell'architettura DAO Demo;
+    \item Analizzare il pattern \pattern{Abstract Factory} come implementato nella gerarchia \classname{DAOFactoryAbstract};
+    \item Esaminare le strategie di gestione della memoria (storage in-memory) e l'uso di blocchi \texttt{static};
+    \item Valutare l'aderenza ai principi GRASP e ai pattern GoF;
+    \item Documentare il flusso di esecuzione dalla configurazione all'accesso ai dati.
+\end{itemize}
+
+\subsection{Struttura del Documento}
+
+Il documento è organizzato nelle seguenti sezioni:
+
+\begin{itemize}
+    \item \textbf{Sezione 2}: Panoramica dell'architettura DAO e del pattern Abstract Factory;
+    \item \textbf{Sezione 3}: Meccanismo di configurazione e selezione della modalità di persistenza;
+    \item \textbf{Sezione 4}: Analisi dettagliata di ogni classe \classname{*DAODemo};
+    \item \textbf{Sezione 5}: Strategie di popolamento dati mock e gestione dello stato;
+    \item \textbf{Sezione 6}: Valutazione secondo i principi GRASP;
+    \item \textbf{Sezione 7}: Conclusioni e considerazioni finali.
+\end{itemize}
+
+% ========================================
+% SEZIONE 2: ARCHITETTURA DAO E ABSTRACT FACTORY
+% ========================================
+\section{Architettura DAO e Pattern Abstract Factory}
+
+\subsection{Il Pattern DAO (Data Access Object)}
+
+Il pattern \pattern{Data Access Object} (DAO), catalogato come pattern architetturale di tipo \textit{Data Source Architectural Pattern} da Martin Fowler, fornisce un'interfaccia astratta per l'accesso a una sorgente dati, separando la logica di business dalla logica di persistenza.
+
+\subsubsection{Caratteristiche Fondamentali del Pattern DAO}
+
+\begin{enumerate}
+    \item \textbf{Separation of Concerns}: Il DAO isola completamente i dettagli implementativi della persistenza dal resto dell'applicazione.
+    \item \textbf{Interface-based Design}: Ogni entità dispone di un'interfaccia DAO che definisce le operazioni CRUD (Create, Read, Update, Delete).
+    \item \textbf{Implementation Hiding}: Le classi concrete che implementano l'interfaccia nascondono i dettagli specifici del meccanismo di storage.
+    \item \textbf{Single Point of Change}: Modifiche al layer di persistenza richiedono interventi localizzati nelle sole classi DAO.
+\end{enumerate}
+
+\subsection{Il Pattern Abstract Factory}
+
+Il pattern \pattern{Abstract Factory}, definito nella \textit{Gang of Four} (GoF), fornisce un'interfaccia per creare famiglie di oggetti correlati senza specificare le loro classi concrete.
+
+\subsubsection{Struttura del Pattern nell'Applicazione}
+
+L'implementazione segue fedelmente la struttura canonical del pattern:
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    class/.style={rectangle, draw=black, fill=yellow!20, minimum width=3.5cm, minimum height=1cm, text centered, font=\footnotesize\ttfamily},
+    interface/.style={rectangle, draw=black, fill=green!20, minimum width=3.5cm, minimum height=1cm, text centered, font=\footnotesize\ttfamily},
+    arrow/.style={->, >=stealth, thick},
+    implements/.style={->, >=open triangle 60, dashed}
+]
+
+% Abstract Factory
+\node[class] (factory) at (0,4) {DAOFactoryAbstract};
+
+% Concrete Factories
+\node[class] (demo) at (-4.5,2) {DAOFactoryDemo};
+\node[class] (db) at (0,2) {DAOFactoryDB};
+\node[class] (fs) at (4.5,2) {DAOFactoryFS};
+
+% Interfaces
+\node[interface] (userInt) at (-4.5,-0.5) {UserDAOInterface};
+\node[interface] (ordineInt) at (0,-0.5) {OrdineDAOInterface};
+\node[interface] (voucherInt) at (4.5,-0.5) {VoucherDAOInterface};
+
+% Concrete Products Demo
+\node[class] (userDemo) at (-4.5,-2.5) {UserDAODemo};
+\node[class] (ordineDemo) at (0,-2.5) {OrdineDAODemo};
+\node[class] (voucherDemo) at (4.5,-2.5) {VoucherDAODemo};
+
+% Inheritance arrows
+\draw[arrow] (demo) -- (factory);
+\draw[arrow] (db) -- (factory);
+\draw[arrow] (fs) -- (factory);
+
+% Implements arrows
+\draw[implements] (userDemo) -- (userInt);
+\draw[implements] (ordineDemo) -- (ordineInt);
+\draw[implements] (voucherDemo) -- (voucherInt);
+
+% Creates arrows
+\draw[arrow, dashed, blue] (demo) -- node[left, font=\tiny] {creates} (userDemo);
+\draw[arrow, dashed, blue] (demo) -- node[above, font=\tiny] {creates} (ordineDemo);
+\draw[arrow, dashed, blue] (demo) -- node[right, font=\tiny] {creates} (voucherDemo);
+
+\end{tikzpicture}
+\caption{Diagramma UML semplificato del Pattern Abstract Factory applicato ai DAO}
+\label{fig:abstract-factory}
+\end{figure}
+
+\subsection{La Classe DAOFactoryAbstract}
+
+La classe \classname{DAOFactoryAbstract} rappresenta l'\textbf{Abstract Factory} del pattern. Essa definisce il contratto (interfaccia) per la creazione di tutti i DAO dell'applicazione.
+
+\begin{lstlisting}[caption={Implementazione di DAOFactoryAbstract.java}, label={lst:factory-abstract}]
+public abstract class DAOFactoryAbstract {
+
+    private static DAOFactoryAbstract me = null;
+
+    protected DAOFactoryAbstract() {
+    }
+
+    public static synchronized DAOFactoryAbstract getInstance() 
+            throws ResourceNotFoundException, PropertyException {
+        if (me == null) {
+            PersistenceTypeEnum persistenceType = PersistenceTypeEnum
+                .getPersistenceTypeByValue(
+                    PropertiesHandler.getInstance()
+                        .getProperty("persistence_type"));
+            if (persistenceType != null)
+                switch (persistenceType) {
+                    case DB -> me = new DAOFactoryDB();
+                    case DEMO -> me = new DAOFactoryDemo();
+                    case FS -> me = new DAOFactoryFS();
+                    default -> throw new PropertyException(
+                        ExceptionMessagesEnum.UNEXPECTED_PROPERTY_NAME.message);
+                }
+            else
+                throw new ResourceNotFoundException(
+                    ExceptionMessagesEnum.RESOURCE_NOT_FOUND.message);
+        }
+        return me;
+    }
+
+    public abstract KebabbaroDAOInterface getKebabbaroDAO();
+    public abstract AmministratoreDAOInterface getAmministratoreDAO();
+    public abstract ClienteDAOInterface getClienteDAO();
+    public abstract OrdineDAOInterface getOrdineDAO();
+    public abstract VoucherDAOInterface getVoucherDAO();
+    public abstract UserDAOInterface getUserDAO();
+    public abstract FoodDAOInterface getFoodDAO();
+}
+\end{lstlisting}
+
+\subsubsection{Analisi della Struttura}
+
+\paragraph{Pattern Singleton Lazy Thread-Safe.}
+La classe implementa il pattern \pattern{Singleton} con le seguenti caratteristiche:
+
+\begin{itemize}
+    \item \textbf{Lazy Initialization}: L'istanza è creata solo alla prima invocazione di \methodname{getInstance};
+    \item \textbf{Thread-Safety}: Il modificatore \texttt{synchronized} garantisce che un solo thread alla volta possa eseguire il metodo factory;
+    \item \textbf{Private Instance}: L'attributo \texttt{me} è \texttt{private static} per prevenire accesso diretto.
+\end{itemize}
+
+\paragraph{Factory Method Pattern Integrato.}
+Il metodo \methodname{getInstance} incorpora il pattern \pattern{Factory Method}, decidendo a runtime quale Concrete Factory istanziare basandosi sulla configurazione.
+
+\paragraph{Metodi Astratti.}
+I sette metodi astratti (\methodname{getUserDAO}, \methodname{getOrdineDAO}, etc.) definiscono il contratto che ogni Concrete Factory deve implementare, restituendo l'interfaccia appropriata per ogni tipo di DAO.
+
+% ========================================
+% SEZIONE 3: MECCANISMO DI CONFIGURAZIONE
+% ========================================
+\section{Meccanismo di Configurazione e Selezione}
+
+\subsection{Il File .properties}
+
+L'applicazione utilizza un file \texttt{.properties} posizionato nel classpath per definire parametri di configurazione a runtime. La selezione della modalità di persistenza avviene tramite la proprietà \texttt{persistence\_type}.
+
+\begin{lstlisting}[language={}, caption={Esempio di contenuto del file .properties}]
+# Configurazione Persistenza
+# Valori ammessi: DEMO, DB, FS
+persistence_type=DEMO
+\end{lstlisting}
+
+\subsection{La Classe PropertiesHandler}
+
+La classe \classname{PropertiesHandler} implementa il pattern \pattern{Singleton} per fornire accesso centralizzato alle proprietà di configurazione.
+
+\begin{lstlisting}[caption={Implementazione di PropertiesHandler.java}]
+public class PropertiesHandler {
+
+    private static PropertiesHandler instance = null;
+    private Properties properties;
+
+    private PropertiesHandler() throws ResourceNotFoundException {
+        try {
+            properties = new Properties();
+            properties.load(Thread.currentThread()
+                .getContextClassLoader()
+                .getResourceAsStream(".properties"));
+        } catch (IOException | NullPointerException e) {
+            throw new ResourceNotFoundException(
+                ExceptionMessagesEnum.RESOURCE_NOT_FOUND.message, e);
+        }
+    }
+
+    public static PropertiesHandler getInstance() 
+            throws ResourceNotFoundException {
+        if (instance == null)
+            instance = new PropertiesHandler();
+        return instance;
+    }
+
+    public String getProperty(String propertyName) throws PropertyException {
+        String propertyValue = properties.getProperty(propertyName);
+        if (propertyValue != null)
+            return propertyValue;
+        throw new PropertyException(
+            ExceptionMessagesEnum.UNEXPECTED_PROPERTY_NAME.message);
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Caratteristiche Tecniche}
+
+\begin{enumerate}
+    \item \textbf{ResourceLoading via ClassLoader}: Utilizzo del \texttt{ContextClassLoader} per caricare il file dalle risorse, compatibile con JAR packaging.
+    \item \textbf{Exception Chaining}: La cattura delle eccezioni \texttt{IOException} e \texttt{NullPointerException} viene propagata con causa originale (\textit{exception chaining}).
+    \item \textbf{Fail-Fast Validation}: Se la proprietà non esiste, viene lanciata immediatamente una \classname{PropertyException}.
+\end{enumerate}
+
+\subsection{L'Enumerazione PersistenceTypeEnum}
+
+L'enumerazione \classname{PersistenceTypeEnum} mappa i valori stringa ammessi per la configurazione ai corrispondenti costanti enumerate.
+
+\begin{lstlisting}[caption={Implementazione di PersistenceTypeEnum.java}]
+public enum PersistenceTypeEnum {
+    DB("DB"),
+    FS("FS"),
+    DEMO("DEMO");
+
+    public final String value;
+
+    PersistenceTypeEnum(String value) {
+        this.value = value;
+    }
+
+    public static PersistenceTypeEnum getPersistenceTypeByValue(String value) {
+        for (PersistenceTypeEnum persistenceTypes : values())
+            if (persistenceTypes.value.equals(value))
+                return persistenceTypes;
+        return null;
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Analisi del Metodo di Ricerca}
+
+Il metodo \methodname{getPersistenceTypeByValue} implementa una ricerca lineare O(n) sull'array di valori enum. Data la cardinalità fissa e ridotta (3 elementi), questa complessità è accettabile. Il metodo restituisce \texttt{null} se nessun valore corrisponde, delegando la gestione dell'errore al chiamante.
+
+% ========================================
+% SEZIONE 4: DAO DEMO - ANALISI DETTAGLIATA
+% ========================================
+\section{Analisi Dettagliata delle Classi DAO Demo}
+
+\subsection{La Concrete Factory: DAOFactoryDemo}
+
+La classe \classname{DAOFactoryDemo} estende \classname{DAOFactoryAbstract} e implementa la creazione di tutti i DAO in modalità Demo.
+
+\begin{lstlisting}[caption={Implementazione di DAOFactoryDemo.java}]
+public class DAOFactoryDemo extends DAOFactoryAbstract {
+
+    @Override
+    public KebabbaroDAOInterface getKebabbaroDAO() {
+        return new KebabbaroDAODemo();
+    }
+
+    @Override
+    public AmministratoreDAOInterface getAmministratoreDAO() {
+        return new AmministratoreDAODemo();
+    }
+
+    @Override
+    public ClienteDAOInterface getClienteDAO() {
+        return new ClienteDAODemo();
+    }
+
+    @Override
+    public OrdineDAOInterface getOrdineDAO() {
+        return new OrdineDAODemo();
+    }
+
+    @Override
+    public VoucherDAOInterface getVoucherDAO() {
+        return new VoucherDAODemo();
+    }
+
+    @Override
+    public UserDAOInterface getUserDAO() {
+        return new UserDAODemo();
+    }
+
+    @Override
+    public FoodDAOInterface getFoodDAO() {
+        return new FoodDAODemo();
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Caratteristiche della Concrete Factory}
+
+\begin{enumerate}
+    \item \textbf{Polimorfismo}: Ogni metodo restituisce l'interfaccia, nascondendo l'implementazione concreta al client;
+    \item \textbf{New Instance per Call}: Ogni invocazione crea una nuova istanza del DAO. Tuttavia, i dati condivisi sono gestiti tramite attributi \texttt{static} (vedi Sezione~\ref{sec:static-storage});
+    \item \textbf{Cohesion}: La classe ha un'unica responsabilità: l'istanziazione dei DAO Demo.
+\end{enumerate}
+
+\subsection{UserDAODemo: Gestione Utenti}
+
+La classe \classname{UserDAODemo} gestisce la persistenza in memoria degli oggetti \classname{User}.
+
+\begin{lstlisting}[caption={Implementazione di UserDAODemo.java}]
+public class UserDAODemo implements UserDAOInterface {
+
+    private static final List<User> MOCK_USERS = new ArrayList<>();
+
+    static {
+        try {
+            // Client User
+            User client = new User("Daniele", "DiMeo", "Daniele", 
+                "cliente@gmail.com", "cliente", LocalDate.now());
+            client.setId("CLI001");
+            client.setRole(new ClienteDAODemo().getClienteByUser(client));
+            MOCK_USERS.add(client);
+
+            // Admin User
+            User admin = new User("Admin", "System", "Admin", 
+                "admin@gmail.com", "admin", LocalDate.now());
+            admin.setId("ADM001");
+            admin.setRole(new AmministratoreDAODemo()
+                .getAmministratoreByUser(admin));
+            MOCK_USERS.add(admin);
+
+            // Kebabbaro User
+            User kebabbaro = new User("Kebab", "Man", "Kebabbaro", 
+                "kebabbaro@gmail.com", "kebabbaro", LocalDate.now());
+            kebabbaro.setId("KEB001");
+            kebabbaro.setRole(new KebabbaroDAODemo()
+                .getKebabbaroByUser(kebabbaro));
+            MOCK_USERS.add(kebabbaro);
+
+            System.out.println("[DEMO MODE] Loaded " 
+                + MOCK_USERS.size() + " mock users into memory.");
+            MOCK_USERS.forEach(u -> System.out.println(
+                " - User: " + u.getEmail()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public User getUserByEmail(String email) throws UserNotFoundException {
+        return MOCK_USERS.stream()
+                .filter(u -> u.getEmail().equalsIgnoreCase(email))
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException(
+                    ExceptionMessagesEnum.USER_NOT_FOUND.message));
+    }
+
+    @Override
+    public User getUserByCodiceFiscale(String codiceFiscale) 
+            throws UserNotFoundException {
+        return MOCK_USERS.stream()
+                .filter(u -> u.getCodiceFiscale()
+                    .equalsIgnoreCase(codiceFiscale))
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException(
+                    ExceptionMessagesEnum.USER_NOT_FOUND.message));
+    }
+
+    @Override
+    public void insert(User user) {
+        MOCK_USERS.add(user);
+    }
+
+    @Override
+    public void delete(User user) {
+        MOCK_USERS.remove(user);
+    }
+
+    @Override
+    public void update(User user) {
+        // In-memory list updates automatically since objects are references
+        // No action needed for demo mode
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Analisi del Blocco Static Initializer}
+\label{sec:static-storage}
+
+Il \textbf{blocco static initializer} (linee 4-28) viene eseguito una sola volta, al momento del caricamento della classe da parte del ClassLoader della JVM. Questo meccanismo garantisce che:
+
+\begin{enumerate}
+    \item I dati mock siano inizializzati \textbf{prima} di qualsiasi accesso alla classe;
+    \item L'inizializzazione avvenga in modo \textbf{thread-safe} (il ClassLoader sincronizza il caricamento delle classi);
+    \item La lista \texttt{MOCK\_USERS} sia popolata con utenti di test per tutti i tre ruoli previsti.
+\end{enumerate}
+
+\paragraph{Creazione delle Relazioni User-Role.}
+Il blocco static esegue la composizione User-Role creando prima l'oggetto \classname{User}, quindi invocando i rispettivi DAO Role per ottenere l'oggetto ruolo corrispondente tramite \methodname{getClienteByUser}, \methodname{getAmministratoreByUser}, \methodname{getKebabbaroByUser}.
+
+\subsubsection{Strategia di Ricerca con Stream API}
+
+I metodi di ricerca (\methodname{getUserByEmail}, \methodname{getUserByCodiceFiscale}) utilizzano la Java Stream API con il pattern funzionale:
+
+\begin{enumerate}
+    \item \texttt{stream()} - Crea uno stream dalla collezione;
+    \item \texttt{filter(predicate)} - Filtra gli elementi che soddisfano il predicato;
+    \item \texttt{findFirst()} - Restituisce un \texttt{Optional<User>};
+    \item \texttt{orElseThrow()} - Lancia l'eccezione se l'Optional è vuoto.
+\end{enumerate}
+
+Questa implementazione ha complessità O(n) nel caso peggiore, essendo una scansione lineare. Per un dataset demo di dimensioni ridotte, tale complessità è accettabile.
+
+\subsubsection{Semantica dell'Update In-Memory}
+
+Il metodo \methodname{update} è intenzionalmente vuoto. Poiché Java utilizza la semantica \textit{pass-by-reference-value}, le modifiche effettuate sull'oggetto \classname{User} nel layer di business si riflettono automaticamente nell'oggetto memorizzato nella lista \texttt{MOCK\_USERS}, senza necessità di operazioni esplicite.
+
+\subsection{OrdineDAODemo: Gestione Ordini}
+
+La classe \classname{OrdineDAODemo} gestisce un dataset pre-popolato di ordini con supporto completo per operazioni CRUD.
+
+\begin{lstlisting}[caption={Implementazione di OrdineDAODemo.java}]
+public class OrdineDAODemo implements OrdineDAOInterface {
+
+    private static final List<Ordine> MOCK_ORDINI = new ArrayList<>();
+    private static final String DEMO_CLIENT_ID = "CLI001";
+    private static final AtomicLong sequence = new AtomicLong(1);
+
+    static {
+        try {
+            // Order 1: Delivered
+            Ordine o1 = new Ordine(DEMO_CLIENT_ID);
+            o1.setNumeroOrdine(sequence.getAndIncrement());
+            o1.aggiungiProdotto(new PaninoDonerKebab());
+            o1.setStato(StatoOrdine.CONSEGNATO);
+            o1.setDataConferma(LocalDateTime.now().minusDays(2));
+            MOCK_ORDINI.add(o1);
+
+            // Order 2: In Preparation
+            Ordine o2 = new Ordine(DEMO_CLIENT_ID);
+            o2.setNumeroOrdine(sequence.getAndIncrement());
+            o2.aggiungiProdotto(new PiadinaDonerKebab());
+            o2.aggiungiProdotto(new KebabAlPiatto());
+            o2.setStato(StatoOrdine.IN_PREPARAZIONE);
+            o2.setDataConferma(LocalDateTime.now().minusMinutes(30));
+            MOCK_ORDINI.add(o2);
+
+            // Order 3: Delivered (Older)
+            Ordine o3 = new Ordine(DEMO_CLIENT_ID);
+            o3.setNumeroOrdine(sequence.getAndIncrement());
+            o3.aggiungiProdotto(new PaninoDonerKebab());
+            o3.setStato(StatoOrdine.CONSEGNATO);
+            o3.setDataConferma(LocalDateTime.now().minusDays(10));
+            MOCK_ORDINI.add(o3);
+
+            System.out.println("[DEMO MODE] Loaded " 
+                + MOCK_ORDINI.size() + " mock orders.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void insert(Ordine ordine) {
+        ordine.setNumeroOrdine(sequence.getAndIncrement());
+        MOCK_ORDINI.add(ordine);
+    }
+
+    @Override
+    public void delete(Ordine ordine) {
+        MOCK_ORDINI.removeIf(o -> o.getNumeroOrdine()
+            .equals(ordine.getNumeroOrdine()));
+    }
+
+    @Override
+    public void update(Ordine ordine) {
+        for (int i = 0; i < MOCK_ORDINI.size(); i++) {
+            if (MOCK_ORDINI.get(i).getNumeroOrdine()
+                    .equals(ordine.getNumeroOrdine())) {
+                MOCK_ORDINI.set(i, ordine);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public Ordine getOrdineByNumero(Long numeroOrdine) 
+            throws ObjectNotFoundException {
+        return MOCK_ORDINI.stream()
+                .filter(o -> o.getNumeroOrdine().equals(numeroOrdine))
+                .findFirst()
+                .orElseThrow(() -> new ObjectNotFoundException(
+                    "Ordine non trovato"));
+    }
+
+    @Override
+    public List<Ordine> getOrdiniByCliente(String clienteId) {
+        return MOCK_ORDINI.stream()
+                .filter(o -> o.getClienteId().equals(clienteId))
+                .toList();
+    }
+
+    @Override
+    public List<Ordine> getOrdiniByStato(StatoOrdine stato) {
+        return MOCK_ORDINI.stream()
+                .filter(o -> o.getStato() == stato)
+                .toList();
+    }
+
+    @Override
+    public Long getNextNumeroOrdine() {
+        return sequence.get();
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Generazione Automatica degli ID con AtomicLong}
+
+La classe utilizza \classname{AtomicLong} per la generazione thread-safe degli ID ordine. Il metodo \texttt{getAndIncrement()} è atomico, garantendo che anche in scenari multi-thread non vi siano collisioni o duplicati.
+
+\subsubsection{Implementazione Esplicita dell'Update}
+
+A differenza di \classname{UserDAODemo}, il metodo \methodname{update} qui implementa una sostituzione esplicita dell'oggetto nella lista. Questa scelta progettuale permette di gestire scenari in cui l'oggetto passato potrebbe essere una nuova istanza (clonata o deserializzata) piuttosto che lo stesso riferimento.
+
+\subsection{VoucherDAODemo: Gestione Voucher}
+
+\begin{lstlisting}[caption={Implementazione di VoucherDAODemo.java}]
+public class VoucherDAODemo implements VoucherDAOInterface {
+
+    private static final List<Voucher> MOCK_VOUCHERS = new ArrayList<>();
+    private static final AtomicLong sequence = new AtomicLong(1);
+
+    static {
+        MOCK_VOUCHERS.add(new VoucherPercentuale("SCONTO10", 10.0));
+        MOCK_VOUCHERS.add(new VoucherFisso("BONUS5", 5.00, 10.00));
+
+        for (Voucher v : MOCK_VOUCHERS) {
+            v.setId(sequence.getAndIncrement());
+        }
+    }
+
+    @Override
+    public Voucher getVoucherByCodice(String codice) 
+            throws ObjectNotFoundException {
+        return MOCK_VOUCHERS.stream()
+                .filter(v -> v.getCodice().equalsIgnoreCase(codice))
+                .findFirst()
+                .orElseThrow(() -> new ObjectNotFoundException(
+                    "Voucher non trovato"));
+    }
+
+    @Override
+    public Voucher getVoucherById(Long id) throws ObjectNotFoundException {
+        return MOCK_VOUCHERS.stream()
+                .filter(v -> v.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ObjectNotFoundException(
+                    "Voucher non trovato"));
+    }
+
+    @Override
+    public List<Voucher> getAllVoucherAttivi() {
+        return MOCK_VOUCHERS.stream()
+                .filter(Voucher::isAttivo)
+                .toList();
+    }
+
+    @Override
+    public void insert(Voucher voucher) {
+        voucher.setId(sequence.getAndIncrement());
+        MOCK_VOUCHERS.add(voucher);
+    }
+
+    @Override
+    public void delete(Voucher voucher) {
+        MOCK_VOUCHERS.removeIf(v -> v.getId().equals(voucher.getId()));
+    }
+
+    @Override
+    public void update(Voucher voucher) {
+        for (int i = 0; i < MOCK_VOUCHERS.size(); i++) {
+            if (MOCK_VOUCHERS.get(i).getId().equals(voucher.getId())) {
+                MOCK_VOUCHERS.set(i, voucher);
+                return;
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Polimorfismo nei Voucher}
+
+Il blocco static crea istanze di sottoclassi concrete (\classname{VoucherPercentuale}, \classname{VoucherFisso}) che vengono memorizzate nella lista tipizzata come \classname{Voucher}. Questo dimostra l'applicazione del principio di \textit{Liskov Substitution} (LSP).
+
+\subsection{FoodDAODemo: Catalogo Prodotti}
+
+\begin{lstlisting}[caption={Implementazione di FoodDAODemo.java}]
+public class FoodDAODemo implements FoodDAOInterface {
+
+    @Override
+    public List<Food> getAllFoodBase() throws DAOException {
+        List<Food> foods = new ArrayList<>();
+        foods.add(new PaninoDonerKebab());
+        foods.add(new PiadinaDonerKebab());
+        foods.add(new KebabAlPiatto());
+        return foods;
+    }
+
+    @Override
+    public List<Food> getAllAddOn() throws DAOException {
+        List<Food> addons = new ArrayList<>();
+        addons.add(new Cipolla(null));
+        addons.add(new Patatine(null));
+        addons.add(new SalsaYogurt(null));
+        addons.add(new MixVerdureGrigliate(null));
+        return addons;
+    }
+
+    @Override
+    public void insert(Food food) {
+        throw new UnsupportedOperationException(
+            "Insert not supported in demo mode");
+    }
+
+    @Override
+    public void delete(Food food) {
+        throw new UnsupportedOperationException(
+            "Delete not supported in demo mode");
+    }
+
+    @Override
+    public void update(Food food) {
+        throw new UnsupportedOperationException(
+            "Update not supported in demo mode");
+    }
+
+    @Override
+    public Food getFoodById(Long id) throws ObjectNotFoundException {
+        throw new ObjectNotFoundException("Food not found in Demo");
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Pattern Factory Method Implicito}
+
+I metodi \methodname{getAllFoodBase} e \methodname{getAllAddOn} agiscono come Factory Methods, creando e restituendo collezioni di oggetti concreti. La creazione on-demand (senza static initializer) garantisce che ogni chiamata restituisca nuove istanze, utile per operazioni che modificano gli oggetti.
+
+\subsubsection{Operazioni Non Supportate}
+
+Le operazioni mutative (\texttt{insert}, \texttt{delete}, \texttt{update}) lanciano \classname{UnsupportedOperationException}. Questa è una scelta progettuale deliberata: in modalità Demo, il catalogo prodotti è considerato immutabile e pre-definito.
+
+\subsection{Classi Role DAO Demo}
+
+Le classi \classname{ClienteDAODemo}, \classname{KebabbaroDAODemo} e \classname{AmministratoreDAODemo} seguono un pattern comune: forniscono metodi factory per creare oggetti ruolo a partire da un \classname{User}.
+
+\begin{lstlisting}[caption={Implementazione di ClienteDAODemo.java}]
+public class ClienteDAODemo implements ClienteDAOInterface {
+
+    @Override
+    public Cliente getClienteByUser(User user) throws DAOException {
+        return new Cliente(user, "CLI-" + user.getCodiceFiscale());
+    }
+
+    @Override
+    public void insert(Cliente cliente) {
+        throw new UnsupportedOperationException(
+            "Insert not supported in demo mode");
+    }
+
+    @Override
+    public void delete(Cliente cliente) {
+        throw new UnsupportedOperationException(
+            "Delete not supported in demo mode");
+    }
+
+    @Override
+    public void update(Cliente cliente) {
+        throw new UnsupportedOperationException(
+            "Update not supported in demo mode");
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Implementazione di KebabbaroDAODemo.java}]
+public class KebabbaroDAODemo implements KebabbaroDAOInterface {
+
+    @Override
+    public Kebabbaro getKebabbaroByUser(User user) throws DAOException {
+        return new Kebabbaro(user, new ArrayList<>(), 50);
+    }
+
+    @Override
+    public void insert(Kebabbaro kebabbaro) {
+        throw new UnsupportedOperationException(
+            "Insert not supported in demo mode");
+    }
+
+    @Override
+    public void delete(Kebabbaro kebabbaro) {
+        throw new UnsupportedOperationException(
+            "Delete not supported in demo mode");
+    }
+
+    @Override
+    public void update(Kebabbaro kebabbaro) {
+        throw new UnsupportedOperationException(
+            "Update not supported in demo mode");
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Implementazione di AmministratoreDAODemo.java}]
+public class AmministratoreDAODemo implements AmministratoreDAOInterface {
+
+    @Override
+    public Amministratore getAmministratoreByUser(User user) 
+            throws DAOException {
+        return new Amministratore(user);
+    }
+
+    @Override
+    public void insert(Amministratore amministratore) {
+        // Metodo intenzionalmente vuoto per demo/mock
+    }
+
+    @Override
+    public void delete(Amministratore amministratore) {
+        // Metodo intenzionalmente vuoto per demo/mock
+    }
+
+    @Override
+    public void update(Amministratore amministratore) {
+        // Metodo intenzionalmente vuoto per demo/mock
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Differenza tra UnsupportedOperationException e No-Op}
+
+Si noti una differenza stilistica tra le implementazioni:
+
+\begin{itemize}
+    \item \classname{ClienteDAODemo} e \classname{KebabbaroDAODemo}: lanciano \classname{UnsupportedOperationException}, segnalando esplicitamente che l'operazione non è implementata;
+    \item \classname{AmministratoreDAODemo}: i metodi sono vuoti (no-op), permettendo chiamate senza errori ma senza effetti.
+\end{itemize}
+
+Entrambi gli approcci sono validi in contesti demo, ma il primo offre un feedback più esplicito durante il debug.
+
+% ========================================
+% SEZIONE 5: STRATEGIE DI POPOLAMENTO
+% ========================================
+\section{Strategie di Popolamento e Gestione dello Stato}
+
+\subsection{Static Initializer Blocks}
+
+Il pattern più rilevante nella gestione dei dati mock è l'uso dei \textbf{blocchi static initializer}. La JVM garantisce che tali blocchi siano eseguiti:
+
+\begin{enumerate}
+    \item \textbf{Una sola volta} durante il ciclo di vita dell'applicazione;
+    \item \textbf{Prima} di qualsiasi accesso a metodi o attributi della classe;
+    \item In modo \textbf{thread-safe}, poiché il caricamento delle classi è sincronizzato dal ClassLoader.
+\end{enumerate}
+
+\subsection{Condivisione Dati tra Istanze DAO}
+
+Poiché le liste \texttt{MOCK\_USERS}, \texttt{MOCK\_ORDINI}, \texttt{MOCK\_VOUCHERS} sono dichiarate \texttt{static final}, tutti gli oggetti DAO della stessa classe condividono lo stesso stato. Questo simula il comportamento di un database condiviso.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Classe DAO Demo} & \textbf{Lista Static} & \textbf{Dimensione} & \textbf{Modificabile} \\
+\hline
+UserDAODemo & MOCK\_USERS & 3 & Sì (insert/delete) \\
+OrdineDAODemo & MOCK\_ORDINI & 3 & Sì (CRUD completo) \\
+VoucherDAODemo & MOCK\_VOUCHERS & 2 & Sì (CRUD completo) \\
+FoodDAODemo & -- & On-demand & No (catalog only) \\
+ClienteDAODemo & -- & Factory & No \\
+KebabbaroDAODemo & -- & Factory & No \\
+AmministratoreDAODemo & -- & Factory & No \\
+\hline
+\end{tabular}
+\caption{Riepilogo delle liste statiche nei DAO Demo}
+\label{tab:static-lists}
+\end{table}
+
+\subsection{Logging di Inizializzazione}
+
+I blocchi static includono istruzioni di logging (\texttt{System.out.println}) per fornire feedback visivo durante l'avvio dell'applicazione, confermando il corretto caricamento dei dati mock.
+
+% ========================================
+% SEZIONE 6: VALUTAZIONE GRASP
+% ========================================
+\section{Valutazione secondo i Principi GRASP}
+
+\subsection{Information Expert}
+
+Il principio \principle{Information Expert} stabilisce che le responsabilità devono essere assegnate alla classe che possiede le informazioni necessarie per adempierle.
+
+\textbf{Valutazione}: Le classi DAO Demo rispettano questo principio. Ciascuna classe possiede e gestisce direttamente la lista static dei propri oggetti, e quindi è l'\textit{esperta} delle operazioni CRUD su tali oggetti.
+
+\subsection{Creator}
+
+Il principio \principle{Creator} definisce le condizioni per cui una classe A dovrebbe creare istanze di una classe B.
+
+\textbf{Valutazione}: I DAO Demo seguono il pattern Abstract Factory, dove \classname{DAOFactoryDemo} è il \textit{Creator} di tutti i DAO concreti, e ciascun DAO Demo è il \textit{Creator} dei rispettivi oggetti mock.
+
+\subsection{Low Coupling}
+
+Il principio \principle{Low Coupling} promuove la riduzione delle dipendenze tra moduli.
+
+\textbf{Valutazione}: L'uso di interfacce (\classname{*DAOInterface}) permette al codice client di dipendere solo dal contratto astratto, non dall'implementazione concreta. Il cambio da Demo a DB/FS non richiede modifiche al codice client.
+
+\subsection{High Cohesion}
+
+Il principio \principle{High Cohesion} suggerisce che ogni classe debba avere responsabilità fortemente correlate.
+
+\textbf{Valutazione}: Ogni DAO Demo ha un'unica responsabilità: gestire le operazioni di persistenza per una specifica entità. La coesione è elevata.
+
+\subsection{Protected Variations}
+
+Il principio \principle{Protected Variations} raccomanda di proteggere il sistema dalle variazioni identificando i punti di instabilità e wrappandoli con interfacce stabili.
+
+\textbf{Valutazione}: Il sistema è progettato per resistere a variazioni nel meccanismo di persistenza. L'Abstract Factory + interfacce DAO isolano completamente il layer di business dalle modifiche al layer di persistenza.
+
+% ========================================
+% SEZIONE 7: CONCLUSIONI
+% ========================================
+\section{Conclusioni}
+
+\subsection{Riepilogo delle Caratteristiche Architetturali}
+
+L'implementazione DAO Demo nell'applicazione ``Habibi Shawarma'' dimostra un'applicazione rigorosa dei pattern architetturali GoF e dei principi GRASP:
+
+\begin{itemize}
+    \item \textbf{Abstract Factory Pattern}: La classe \classname{DAOFactoryAbstract} funge da Abstract Factory, con \classname{DAOFactoryDemo}, \classname{DAOFactoryDB} e \classname{DAOFactoryFS} come Concrete Factories.
+    
+    \item \textbf{Singleton Pattern}: Sia \classname{DAOFactoryAbstract} che \classname{PropertiesHandler} implementano Singleton thread-safe per garantire un'unica istanza condivisa.
+    
+    \item \textbf{Interface Segregation}: Ogni entità ha la propria interfaccia DAO, evitando interfacce monolitiche.
+    
+    \item \textbf{In-Memory Storage}: L'uso di liste \texttt{static final} consente la condivisione dello stato tra tutte le istanze DAO, simulando un database condiviso.
+    
+    \item \textbf{Lazy Initialization}: I dati mock sono inizializzati in modo lazy al primo accesso alla classe, ottimizzando il tempo di startup quando la classe non è utilizzata.
+\end{itemize}
+
+\subsection{Vantaggi della Modalità Demo}
+
+\begin{enumerate}
+    \item \textbf{Zero Dipendenze Esterne}: Non richiede database o file system;
+    \item \textbf{Velocità di Sviluppo}: Permette testing e sviluppo rapido senza configurazioni;
+    \item \textbf{Ambiente Prevedibile}: I dati mock sono consistenti tra esecuzioni;
+    \item \textbf{Facilità di Dimostrazione}: Ideale per presentazioni e demo del software.
+\end{enumerate}
+
+\subsection{Limitazioni}
+
+\begin{enumerate}
+    \item \textbf{Volatilità}: I dati non persistono tra riavvii dell'applicazione;
+    \item \textbf{Scalabilità}: Non adatta per grandi volumi di dati;
+    \item \textbf{Concorrenza}: La sincronizzazione manuale (es. \texttt{AtomicLong}) è necessaria per operazioni critiche.
+\end{enumerate}
+
+\subsection{Considerazioni Finali}
+
+L'architettura DAO Demo rappresenta un esempio di design orientato alla flessibilità e alla manutenibilità. Il sistema è predisposto per una transizione fluida verso modalità di persistenza più robuste (DB, FS) senza richiedere modifiche al codice applicativo, dimostrando i benefici pratici dell'applicazione dei design pattern e dei principi architetturali.
+
+% ========================================
+% BIBLIOGRAFIA
+% ========================================
+\begin{thebibliography}{9}
+
+\bibitem{gof}
+Gamma, E., Helm, R., Johnson, R., \& Vlissides, J. (1994).
+\textit{Design Patterns: Elements of Reusable Object-Oriented Software}.
+Addison-Wesley.
+
+\bibitem{larman}
+Larman, C. (2004).
+\textit{Applying UML and Patterns: An Introduction to Object-Oriented Analysis and Design and Iterative Development} (3rd ed.).
+Prentice Hall.
+
+\bibitem{fowler}
+Fowler, M. (2002).
+\textit{Patterns of Enterprise Application Architecture}.
+Addison-Wesley.
+
+\bibitem{bloch}
+Bloch, J. (2018).
+\textit{Effective Java} (3rd ed.).
+Addison-Wesley.
+
+\bibitem{jls}
+Oracle Corporation.
+\textit{The Java Language Specification, Java SE 17 Edition}.
+\url{https://docs.oracle.com/javase/specs/jls/se17/html/index.html}
+
+\end{thebibliography}
+
+\end{document}

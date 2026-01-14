@@ -10,43 +10,44 @@ import java.util.List;
 
 public class ClienteLazyFactory {
     private static ClienteLazyFactory instance;
-    private final List<Cliente> Clients;
+    private final List<Cliente> clients;
 
-    private ClienteLazyFactory(){
-        Clients = new ArrayList<Cliente>();
+    private ClienteLazyFactory() {
+        clients = new ArrayList<Cliente>();
     }
 
-    public static synchronized ClienteLazyFactory getInstance(){
-        if (instance == null){
+    public static synchronized ClienteLazyFactory getInstance() {
+        if (instance == null) {
             instance = new ClienteLazyFactory();
         }
         return instance;
     }
 
-    public Cliente getClienteByUser(User user) throws DAOException, UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException,  WrongListQueryIdentifierValue {
-        for (Cliente s : Clients) {
+    public Cliente getClienteByUser(User user) throws DAOException, UserNotFoundException, UnrecognizedRoleException,
+            ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+        for (Cliente s : clients) {
             if (s.getUser().equals(user)) {
                 return s;
             }
         }
         try {
             Cliente daoCliente = DAOFactoryAbstract.getInstance().getClienteDAO().getClienteByUser(user);
-            Clients.add(daoCliente);
+            clients.add(daoCliente);
             return daoCliente;
         } catch (PropertyException | ResourceNotFoundException e) {
             throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
     }
 
-    public Cliente newCliente(User user, String ID) throws DAOException, MissingAuthorizationException {
-        Cliente student = new Cliente(user, ID);
+    public Cliente newCliente(User user, String id) throws DAOException, MissingAuthorizationException {
+        Cliente student = new Cliente(user, id);
         user.setRole(student);
         try {
             DAOFactoryAbstract.getInstance().getClienteDAO().insert(student);
         } catch (PropertyException | ResourceNotFoundException e) {
             throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
-        Clients.add(student);
+        clients.add(student);
         return student;
     }
 }

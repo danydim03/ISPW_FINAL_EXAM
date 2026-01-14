@@ -9,7 +9,7 @@ import org.example.exceptions.ValidationException;
  * 
  * Include validazione sintattica nei setter (Fail Fast principle).
  */
-public class OrdineBean implements Serializable {
+public class   OrdineBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

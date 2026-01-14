@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+  <key for="node" id="d6" yfiles.type="nodegraphics"/>
+  <key for="edge" id="d10" yfiles.type="edgegraphics"/>
+  <graph edgedefault="directed" id="G">
+    
+    <!-- java.lang.Exception -->
+    <node id="n0">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="50" width="180" x="400" y="0"/>
+          <y:Fill color="#E8E8E8" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>java.lang.Exception</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- java.lang.IllegalArgumentException -->
+    <node id="n1">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="50" width="220" x="650" y="0"/>
+          <y:Fill color="#E8E8E8" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>java.lang.IllegalArgumentException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- HabibiException -->
+    <node id="n2">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="80" width="200" x="400" y="100"/>
+          <y:Fill color="#FFFFCC" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="2.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="abstract" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel>+ HabibiException(String)
++ HabibiException(String, Throwable)
++ HabibiException(Throwable)</y:MethodLabel>
+          </y:UML>
+          <y:NodeLabel>HabibiException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- ValidationException -->
+    <node id="n3">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="70" width="200" x="650" y="100"/>
+          <y:Fill color="#FFE6E6" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="unchecked" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel>+ ValidationException(String)
++ ValidationException(String, Throwable)</y:MethodLabel>
+          </y:UML>
+          <y:NodeLabel>ValidationException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- DAOException -->
+    <node id="n4">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="160" x="50" y="230"/>
+          <y:Fill color="#CCE5FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>DAOException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- ObjectNotFoundException -->
+    <node id="n5">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="180" x="230" y="230"/>
+          <y:Fill color="#CCE5FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>ObjectNotFoundException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- UserNotFoundException -->
+    <node id="n6">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="170" x="430" y="230"/>
+          <y:Fill color="#CCE5FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>UserNotFoundException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- PropertyException -->
+    <node id="n7">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="160" x="620" y="230"/>
+          <y:Fill color="#CCE5FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>PropertyException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- ResourceNotFoundException -->
+    <node id="n8">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="195" x="800" y="230"/>
+          <y:Fill color="#CCE5FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>ResourceNotFoundException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- CreaOrdineException -->
+    <node id="n9">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="170" x="50" y="320"/>
+          <y:Fill color="#D4EDDA" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>CreaOrdineException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- VoucherNotValidException -->
+    <node id="n10">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="190" x="240" y="320"/>
+          <y:Fill color="#D4EDDA" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>VoucherNotValidException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- MissingAuthorizationException -->
+    <node id="n11">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="210" x="450" y="320"/>
+          <y:Fill color="#D4EDDA" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>MissingAuthorizationException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- UnrecognizedRoleException -->
+    <node id="n12">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="195" x="680" y="320"/>
+          <y:Fill color="#D4EDDA" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>UnrecognizedRoleException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- BeanFormatException -->
+    <node id="n13">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="170" x="100" y="410"/>
+          <y:Fill color="#F0E68C" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>BeanFormatException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- EmailFormatException -->
+    <node id="n14">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="170" x="290" y="410"/>
+          <y:Fill color="#F0E68C" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>EmailFormatException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- WrongPasswordException -->
+    <node id="n15">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="185" x="480" y="410"/>
+          <y:Fill color="#F0E68C" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>WrongPasswordException</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- WrongListQueryIdentifierValue -->
+    <node id="n16">
+      <data key="d6">
+        <y:UMLClassNode>
+          <y:Geometry height="60" width="220" x="685" y="410"/>
+          <y:Fill color="#F0E68C" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel/>
+            <y:MethodLabel/>
+          </y:UML>
+          <y:NodeLabel>WrongListQueryIdentifierValue</y:NodeLabel>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    
+    <!-- Edges - Inheritance -->
+    <!-- Exception -> HabibiException -->
+    <edge id="e0" source="n2" target="n0">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <!-- IllegalArgumentException -> ValidationException -->
+    <edge id="e1" source="n3" target="n1">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <!-- HabibiException -> all subclasses -->
+    <edge id="e2" source="n4" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e3" source="n5" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e4" source="n6" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e5" source="n7" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e6" source="n8" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e7" source="n9" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e8" source="n10" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e9" source="n11" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e10" source="n12" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e11" source="n13" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e12" source="n14" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e13" source="n15" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+    <edge id="e14" source="n16" target="n2">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="white_delta"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    
+  </graph>
+</graphml>

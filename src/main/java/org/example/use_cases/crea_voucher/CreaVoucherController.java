@@ -85,8 +85,7 @@ public class CreaVoucherController {
             logger.log(Level.FINE, () -> "Codice voucher disponibile: " + codice);
         } catch (DAOException | MissingAuthorizationException | WrongListQueryIdentifierValue | UserNotFoundException
                 | UnrecognizedRoleException e) {
-            // Errore durante la verifica, loggo e rilancio come ValidationException
-            logger.log(Level.SEVERE, "Errore durante la verifica unicità codice voucher", e);
+            // Errore durante la verifica, rilancio come ValidationException
             throw new ValidationException("Impossibile verificare l'unicità del codice voucher", e);
         }
     }
@@ -160,25 +159,14 @@ public class CreaVoucherController {
      * @param voucher il voucher da persistere
      * @throws DAOException                  se si verifica un errore durante la
      *                                       persistenza
-     * @throws PropertyException             se ci sono problemi con le properties
-     * @throws ResourceNotFoundException     se una risorsa necessaria non è trovata
      * @throws MissingAuthorizationException se mancano autorizzazioni
      */
     private void persistiVoucher(Voucher voucher)
-            throws DAOException, PropertyException, ResourceNotFoundException,
-            MissingAuthorizationException {
+            throws DAOException, MissingAuthorizationException {
+        // Usa il VoucherLazyFactory per persistere il voucher
+        // (DB, FileSystem o Demo a seconda della configurazione)
+        VoucherLazyFactory.getInstance().newVoucher(voucher);
 
-        try {
-            // Usa il VoucherLazyFactory per persistere il voucher
-            // (DB, FileSystem o Demo a seconda della configurazione)
-            VoucherLazyFactory.getInstance().newVoucher(voucher);
-
-            logger.log(Level.INFO, () -> "Voucher persistito: " + voucher.getCodice());
-
-        } catch (DAOException | MissingAuthorizationException e) {
-            // Loggo l'errore e rilancio l'eccezione con chaining
-            logger.log(Level.SEVERE, "Errore durante la persistenza del voucher", e);
-            throw e;
-        }
+        logger.log(Level.INFO, () -> "Voucher persistito: " + voucher.getCodice());
     }
 }

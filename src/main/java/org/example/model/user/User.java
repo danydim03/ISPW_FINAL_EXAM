@@ -46,17 +46,11 @@ public class User {
         return surname;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
 
     public String getCodiceFiscale() {
         return codiceFiscale;
     }
 
-    public void setCodiceFiscale(String codiceFiscale) {
-        this.codiceFiscale = codiceFiscale;
-    }
 
     public String getEmail() {
         return email;
@@ -78,9 +72,6 @@ public class User {
         return registrationDate;
     }
 
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
 
     public Boolean checkPassword(String password) throws WrongPasswordException {
         if (this.password.equals(password))

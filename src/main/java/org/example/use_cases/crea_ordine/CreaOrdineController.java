@@ -87,15 +87,15 @@ public class CreaOrdineController {
             return false;
         }
 
-        // Crea il prodotto base usando Factory Method
-        Food prodotto = creaProdottoBase(foodBean.getClasse());
+        // Crea il prodotto base usando FoodFactory (GRASP: Low Coupling)
+        Food prodotto = FoodFactory.creaProdottoBase(foodBean.getClasse());
         if (prodotto == null) {
             return false;
         }
 
         // Applica gli add-on usando il pattern Decorator
         for (String addOnClasse : foodBean.getAddOnSelezionati()) {
-            prodotto = applicaDecorator(prodotto, addOnClasse);
+            prodotto = FoodFactory.applicaDecorator(prodotto, addOnClasse);
         }
 
         // Aggiungi all'ordine
@@ -211,46 +211,8 @@ public class CreaOrdineController {
     }
 
     // ==================== METODI PRIVATI DI SUPPORTO ====================
-
-    /**
-     * Factory method per creare un prodotto base dalla classe
-     */
-    private Food creaProdottoBase(String classe) {
-        if (classe == null)
-            return null;
-
-        switch (classe) {
-            case "PaninoDonerKebab":
-                return new PaninoDonerKebab();
-            case "PiadinaDonerKebab":
-                return new PiadinaDonerKebab();
-            case "KebabAlPiatto":
-                return new KebabAlPiatto();
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * Applica un decorator (add-on) al prodotto usando il pattern Decorator
-     */
-    private Food applicaDecorator(Food food, String addOnClasse) {
-        if (addOnClasse == null || food == null)
-            return food;
-
-        switch (addOnClasse) {
-            case "Cipolla":
-                return new Cipolla(food);
-            case "SalsaYogurt":
-                return new SalsaYogurt(food);
-            case "Patatine":
-                return new Patatine(food);
-            case "MixVerdureGrigliate":
-                return new MixVerdureGrigliate(food);
-            default:
-                return food;
-        }
-    }
+    // Nota: creaProdottoBase e applicaDecorator sono stati spostati in FoodFactory
+    // per rispettare GRASP Low Coupling e Creator
 
     /**
      * Converte una lista di Food in lista di FoodBean
