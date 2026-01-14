@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cliente extends AbstractRole {
-    private String ID;
+    private String id;
     private List<String> voucherUtilizzati;
     private List<Long> ordiniEffettuati;
     private int punteggio;
@@ -17,7 +17,7 @@ public class Cliente extends AbstractRole {
         super(user); // puntatore all'oggetto User
         // il cliente viene puntato correttamente tramite puntatori e non tramite
         // l'utilizzo di chiavi esterne come nel modello relazionale.
-        this.ID = ID;
+        this.id = ID;
         this.voucherUtilizzati = new ArrayList<>();
         this.ordiniEffettuati = new ArrayList<>();
         this.punteggio = 0;
@@ -30,7 +30,7 @@ public class Cliente extends AbstractRole {
     }
 
     public String getCodiceFiscale() {
-        return ID;
+        return id;
     }
 
     public List<String> getVoucherUtilizzati() {
