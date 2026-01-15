@@ -1,0 +1,644 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+
+\geometry{margin=2.5cm}
+
+% Configurazione listings per Java
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.97}
+\definecolor{keywordcolor}{rgb}{0.0,0.0,0.7}
+
+\lstdefinestyle{javastyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen}\itshape,
+    keywordstyle=\color{keywordcolor}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    language=Java,
+    morekeywords={var, record, sealed, permits, yield}
+}
+
+\lstset{style=javastyle}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Analisi Pattern Observer}
+\lhead{Habibi Shawarma}
+\rfoot{Pagina \thepage}
+
+\title{\textbf{Analisi Dettagliata del Pattern Observer} \\ 
+\large Implementazione nel Progetto Habibi Shawarma \\
+\vspace{0.5cm}
+\normalsize Guida Passo-Passo per Principianti}
+\author{Daniel Di Meo}
+\date{14 Gennaio 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% ==============================================================================
+\section{Introduzione}
+% ==============================================================================
+
+Questo documento spiega in modo \textbf{dettagliato e accessibile} l'implementazione del pattern Observer nel progetto Habibi Shawarma. L'obiettivo è rendere comprensibile ogni singola istruzione anche a chi si avvicina per la prima volta alla programmazione Java e ai design pattern.
+
+\subsection{Cos'è il Pattern Observer?}
+
+Il pattern Observer è un \textbf{pattern comportamentale} (behavioral pattern) definito dalla Gang of Four (GoF). Permette di definire una dipendenza uno-a-molti tra oggetti, in modo che quando un oggetto cambia stato, tutti i suoi dipendenti vengono notificati automaticamente.
+
+\textbf{Analogia del mondo reale:} Immagina di iscriverti a una newsletter. Tu sei l'\textbf{Observer} (osservatore), mentre il sito web è il \textbf{Subject} (soggetto). Quando il sito pubblica una nuova notizia, tutti gli iscritti ricevono automaticamente una notifica.
+
+\subsection{Perché Usare l'Observer nel Nostro Progetto?}
+
+La traccia d'esame richiede una \textbf{notifica attiva} dall'Amministratore quando un Cliente conferma un ordine. Senza l'Observer, l'Amministratore dovrebbe controllare manualmente se ci sono nuovi ordini (polling passivo). Con l'Observer, l'Amministratore viene notificato automaticamente in tempo reale.
+
+% ==============================================================================
+\section{Architettura dell'Implementazione}
+% ==============================================================================
+
+L'implementazione coinvolge quattro classi principali:
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={rectangle, draw, minimum width=3.5cm, minimum height=1cm, align=center},
+    arrow/.style={-{Stealth[length=3mm]}, thick}
+]
+    % Nodes
+    \node[box, fill=blue!20] (event) at (0,0) {\textbf{OrdineEvent} \\ (Dati Evento)};
+    \node[box, fill=green!20] (listener) at (5,0) {\textbf{OrdineEventListener} \\ (Interfaccia Observer)};
+    \node[box, fill=orange!20] (publisher) at (0,-2.5) {\textbf{OrdineEventPublisher} \\ (Subject Singleton)};
+    \node[box, fill=red!20] (service) at (5,-2.5) {\textbf{AdminNotificationService} \\ (Concrete Observer)};
+    
+    % Arrows
+    \draw[arrow] (publisher) -- node[above] {notifica} (listener);
+    \draw[arrow] (listener) -- (service);
+    \draw[arrow] (publisher) -- node[left] {crea} (event);
+    \draw[arrow, dashed] (service) -- node[right] {implementa} (listener);
+\end{tikzpicture}
+\end{center}
+
+% ==============================================================================
+\section{Classe OrdineEvent --- Il Contenitore dei Dati}
+% ==============================================================================
+
+Questa classe rappresenta i \textbf{dati dell'evento}. È un oggetto immutabile che contiene tutte le informazioni necessarie per descrivere un ordine confermato.
+
+\subsection{Attributi della Classe}
+
+\begin{lstlisting}[caption={Attributi di OrdineEvent}]
+public class OrdineEvent {
+    private final Long numeroOrdine;      // ID univoco dell'ordine
+    private final String clienteId;       // Chi ha fatto l'ordine
+    private final double totale;          // Quanto costa
+    private final LocalDateTime timestamp; // Quando e' stato confermato
+}
+\end{lstlisting}
+
+\textbf{Spiegazione riga per riga:}
+
+\begin{enumerate}
+    \item \texttt{private final Long numeroOrdine;}
+    \begin{itemize}
+        \item \texttt{private}: L'attributo è accessibile solo dall'interno della classe
+        \item \texttt{final}: Una volta assegnato, il valore non può più essere modificato (immutabilità)
+        \item \texttt{Long}: Tipo wrapper per numeri interi grandi (può essere null, a differenza di \texttt{long})
+        \item \texttt{numeroOrdine}: Nome descrittivo dell'attributo
+    \end{itemize}
+    
+    \item \texttt{private final String clienteId;}
+    \begin{itemize}
+        \item Identifica il cliente che ha effettuato l'ordine (es. "CLI001")
+    \end{itemize}
+    
+    \item \texttt{private final double totale;}
+    \begin{itemize}
+        \item Il totale dell'ordine in euro (es. 15.50)
+    \end{itemize}
+    
+    \item \texttt{private final LocalDateTime timestamp;}
+    \begin{itemize}
+        \item \texttt{LocalDateTime}: Classe Java 8+ che rappresenta data e ora
+        \item Registra il momento esatto della conferma
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Il Costruttore --- Come Creare un Evento}
+
+\begin{lstlisting}[caption={Costruttore di OrdineEvent}]
+public OrdineEvent(Long numeroOrdine, String clienteId, double totale) {
+    // PASSO 1: Validazione del numero ordine
+    if (numeroOrdine == null) {
+        throw new IllegalArgumentException(
+            "Il numero ordine non puo' essere null");
+    }
+    
+    // PASSO 2: Validazione del cliente ID
+    if (clienteId == null || clienteId.trim().isEmpty()) {
+        throw new IllegalArgumentException(
+            "Il clienteId non puo' essere null o vuoto");
+    }
+    
+    // PASSO 3: Assegnazione dei valori
+    this.numeroOrdine = numeroOrdine;
+    this.clienteId = clienteId;
+    this.totale = totale;
+    
+    // PASSO 4: Generazione automatica del timestamp
+    this.timestamp = LocalDateTime.now();
+}
+\end{lstlisting}
+
+\textbf{Analisi dettagliata:}
+
+\paragraph{PASSO 1: Validazione numero ordine}
+\begin{lstlisting}
+if (numeroOrdine == null) {
+    throw new IllegalArgumentException("...");
+}
+\end{lstlisting}
+\begin{itemize}
+    \item \texttt{if (numeroOrdine == null)}: Controlla se il parametro passato è null
+    \item \texttt{throw new IllegalArgumentException}: Se null, lancia un'eccezione
+    \item Questo è il pattern \textbf{Fail-Fast}: meglio fallire subito con un errore chiaro che continuare con dati non validi
+\end{itemize}
+
+\paragraph{PASSO 2: Validazione cliente ID}
+\begin{lstlisting}
+if (clienteId == null || clienteId.trim().isEmpty()) {
+\end{lstlisting}
+\begin{itemize}
+    \item \texttt{clienteId == null}: Controlla se è null
+    \item \texttt{||}: Operatore OR logico (basta che una condizione sia vera)
+    \item \texttt{clienteId.trim()}: Rimuove spazi all'inizio e alla fine
+    \item \texttt{.isEmpty()}: Controlla se la stringa è vuota ("")
+    \item Quindi: rifiuta null, stringhe vuote e stringhe con solo spazi
+\end{itemize}
+
+\paragraph{PASSO 3: Assegnazione valori}
+\begin{lstlisting}
+this.numeroOrdine = numeroOrdine;
+\end{lstlisting}
+\begin{itemize}
+    \item \texttt{this}: Riferimento all'oggetto corrente che stiamo costruendo
+    \item \texttt{this.numeroOrdine}: L'attributo della classe
+    \item \texttt{= numeroOrdine}: Il parametro passato al costruttore
+    \item Questa distinzione serve quando parametro e attributo hanno lo stesso nome
+\end{itemize}
+
+\paragraph{PASSO 4: Timestamp automatico}
+\begin{lstlisting}
+this.timestamp = LocalDateTime.now();
+\end{lstlisting}
+\begin{itemize}
+    \item \texttt{LocalDateTime.now()}: Metodo statico che restituisce data/ora corrente
+    \item Il timestamp viene generato automaticamente, non passato come parametro
+    \item Questo garantisce che rappresenti esattamente quando l'evento è stato creato
+\end{itemize}
+
+% ==============================================================================
+\section{Interfaccia OrdineEventListener --- Il Contratto dell'Observer}
+% ==============================================================================
+
+Questa interfaccia definisce il \textbf{contratto} che tutti gli observer devono rispettare.
+
+\begin{lstlisting}[caption={OrdineEventListener completa}]
+@FunctionalInterface
+public interface OrdineEventListener {
+    void onOrdineConfermato(OrdineEvent event);
+}
+\end{lstlisting}
+
+\textbf{Spiegazione riga per riga:}
+
+\paragraph{@FunctionalInterface}
+\begin{itemize}
+    \item Annotation Java 8+ che indica che l'interfaccia ha un \textbf{solo metodo astratto}
+    \item Permette di usare espressioni lambda come implementazione
+    \item Se aggiungiamo un secondo metodo, il compilatore darà errore
+\end{itemize}
+
+\paragraph{void onOrdineConfermato(OrdineEvent event)}
+\begin{itemize}
+    \item \texttt{void}: Il metodo non restituisce nulla
+    \item \texttt{onOrdineConfermato}: Nome del metodo (convenzione: "on" + nome evento)
+    \item \texttt{OrdineEvent event}: Parametro contenente i dati dell'evento
+    \item Chi implementa questa interfaccia \textbf{deve} fornire il corpo di questo metodo
+\end{itemize}
+
+% ==============================================================================
+\section{Classe OrdineEventPublisher --- Il Subject Singleton}
+% ==============================================================================
+
+Questa è la classe più complessa. Implementa sia il pattern \textbf{Singleton} che il ruolo di \textbf{Subject} nell'Observer.
+
+\subsection{Attributi della Classe}
+
+\begin{lstlisting}[caption={Attributi di OrdineEventPublisher}]
+public class OrdineEventPublisher {
+    private static final Logger logger = 
+        Logger.getLogger(OrdineEventPublisher.class.getName());
+    
+    private static OrdineEventPublisher instance;  // Singleton
+    
+    private final List<OrdineEventListener> listeners;  // Lista observer
+    
+    private final Queue<OrdineEvent> pendingEvents;  // Coda eventi pendenti
+}
+\end{lstlisting}
+
+\textbf{Spiegazione:}
+
+\begin{enumerate}
+    \item \texttt{private static final Logger logger}
+    \begin{itemize}
+        \item \texttt{static}: Condiviso tra tutte le istanze (ma ce n'è solo una!)
+        \item \texttt{final}: Il logger non cambierà mai
+        \item Serve per registrare log (info, warning, error) nel sistema
+    \end{itemize}
+    
+    \item \texttt{private static OrdineEventPublisher instance}
+    \begin{itemize}
+        \item \texttt{static}: Variabile di classe, non di istanza
+        \item Contiene l'unica istanza del Singleton
+        \item Inizialmente è \texttt{null}
+    \end{itemize}
+    
+    \item \texttt{private final List<OrdineEventListener> listeners}
+    \begin{itemize}
+        \item \texttt{List<>}: Interfaccia Java per liste ordinate
+        \item \texttt{<OrdineEventListener>}: Generics --- la lista contiene solo listener
+        \item Contiene tutti gli observer registrati
+    \end{itemize}
+    
+    \item \texttt{private final Queue<OrdineEvent> pendingEvents}
+    \begin{itemize}
+        \item \texttt{Queue<>}: Interfaccia per code FIFO (First In, First Out)
+        \item Memorizza eventi quando non ci sono listener registrati
+        \item \textbf{Questa è la modifica chiave} che risolve il problema del timing
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Il Costruttore Privato}
+
+\begin{lstlisting}[caption={Costruttore privato Singleton}]
+private OrdineEventPublisher() {
+    this.listeners = new ArrayList<>();
+    this.pendingEvents = new java.util.concurrent.ConcurrentLinkedQueue<>();
+    logger.log(Level.INFO, "OrdineEventPublisher inizializzato");
+}
+\end{lstlisting}
+
+\textbf{Perché è privato?}
+\begin{itemize}
+    \item \texttt{private}: Nessuno può chiamare \texttt{new OrdineEventPublisher()}
+    \item Solo la classe stessa può creare l'istanza
+    \item Questo \textbf{garantisce} che esista una sola istanza (Singleton)
+\end{itemize}
+
+\textbf{Cosa crea:}
+\begin{itemize}
+    \item \texttt{new ArrayList<>()}: Lista vuota per i listener
+    \item \texttt{new ConcurrentLinkedQueue<>()}: Coda thread-safe per eventi pendenti
+\end{itemize}
+
+\subsection{Metodo getInstance() --- Ottenere il Singleton}
+
+\begin{lstlisting}[caption={Metodo getInstance() spiegato}]
+public static synchronized OrdineEventPublisher getInstance() {
+    // PASSO 1: Controlla se l'istanza esiste gia'
+    if (instance == null) {
+        // PASSO 2: Se non esiste, creala
+        instance = new OrdineEventPublisher();
+    }
+    // PASSO 3: Restituisci l'istanza (nuova o esistente)
+    return instance;
+}
+\end{lstlisting}
+
+\textbf{Analisi dettagliata:}
+
+\paragraph{public static synchronized}
+\begin{itemize}
+    \item \texttt{public}: Chiunque può chiamare questo metodo
+    \item \texttt{static}: Si può chiamare senza avere un'istanza: \texttt{OrdineEventPublisher.getInstance()}
+    \item \texttt{synchronized}: Solo un thread alla volta può eseguire questo metodo
+\end{itemize}
+
+\paragraph{Perché synchronized?}
+Immagina due thread che chiamano \texttt{getInstance()} contemporaneamente:
+\begin{enumerate}
+    \item Thread A controlla: \texttt{instance == null} $\rightarrow$ true
+    \item Thread B controlla: \texttt{instance == null} $\rightarrow$ true (non ancora creata!)
+    \item Thread A crea: \texttt{instance = new OrdineEventPublisher()}
+    \item Thread B crea: \texttt{instance = new OrdineEventPublisher()} \textbf{PROBLEMA!}
+\end{enumerate}
+Con \texttt{synchronized}, solo un thread alla volta può entrare, evitando duplicati.
+
+\paragraph{Il pattern Lazy Initialization}
+\begin{itemize}
+    \item L'istanza viene creata \textbf{solo quando serve} (prima chiamata a getInstance)
+    \item Non al caricamento della classe
+    \item Risparmio di memoria se il Singleton non viene mai usato
+\end{itemize}
+
+\subsection{Metodo addListener() --- Registrare un Observer}
+
+\begin{lstlisting}[caption={Metodo addListener() con consegna eventi pendenti}]
+public void addListener(OrdineEventListener listener) {
+    // PASSO 1: Validazione input
+    if (listener == null) {
+        throw new IllegalArgumentException(
+            "Il listener non puo' essere null");
+    }
+
+    // PASSO 2: Blocco synchronized per thread-safety
+    synchronized (listeners) {
+        // PASSO 3: Evita duplicati
+        if (!listeners.contains(listener)) {
+            // PASSO 4: Aggiungi alla lista
+            listeners.add(listener);
+            logger.log(Level.FINE, () -> "Listener aggiunto: " 
+                + listener.getClass().getSimpleName());
+            
+            // PASSO 5: Consegna eventi pendenti
+            if (!pendingEvents.isEmpty()) {
+                int count = pendingEvents.size();
+                logger.log(Level.INFO, () -> "Consegna " + count 
+                    + " eventi pendenti a " 
+                    + listener.getClass().getSimpleName());
+                    
+                // PASSO 6: Itera sugli eventi pendenti
+                for (OrdineEvent event : pendingEvents) {
+                    try {
+                        // PASSO 7: Notifica il nuovo listener
+                        listener.onOrdineConfermato(event);
+                    } catch (Exception e) {
+                        // PASSO 8: Gestione errori (fail-safe)
+                        logger.log(Level.WARNING, 
+                            "Errore durante consegna evento", e);
+                    }
+                }
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\textbf{Analisi dettagliata passo per passo:}
+
+\paragraph{PASSO 1: Validazione}
+\begin{lstlisting}
+if (listener == null) {
+    throw new IllegalArgumentException(...);
+}
+\end{lstlisting}
+Rifiutiamo listener null per evitare NullPointerException in seguito.
+
+\paragraph{PASSO 2: synchronized(listeners)}
+\begin{lstlisting}
+synchronized (listeners) {
+\end{lstlisting}
+\begin{itemize}
+    \item Acquisisce un lock sull'oggetto \texttt{listeners}
+    \item Solo un thread alla volta può eseguire il codice dentro il blocco
+    \item Protegge la lista da modifiche concorrenti
+\end{itemize}
+
+\paragraph{PASSO 3: Controllo duplicati}
+\begin{lstlisting}
+if (!listeners.contains(listener)) {
+\end{lstlisting}
+\begin{itemize}
+    \item \texttt{contains()}: Verifica se l'elemento è già nella lista
+    \item \texttt{!}: Negazione --- entra nel blocco solo se NON contiene
+    \item Evita di registrare lo stesso listener due volte
+\end{itemize}
+
+\paragraph{PASSO 5-7: Consegna eventi pendenti}
+Questa è la \textbf{modifica chiave}. Quando un nuovo listener si registra:
+\begin{enumerate}
+    \item Controlla se ci sono eventi in coda (\texttt{pendingEvents})
+    \item Se sì, li consegna immediatamente al nuovo listener
+    \item Il listener riceve tutti gli eventi passati che aveva "perso"
+\end{enumerate}
+
+\paragraph{PASSO 8: Gestione errori fail-safe}
+\begin{lstlisting}
+} catch (Exception e) {
+    logger.log(Level.WARNING, "Errore...", e);
+}
+\end{lstlisting}
+\begin{itemize}
+    \item Se un listener solleva un'eccezione, la catturiamo
+    \item Loggiamo l'errore ma \textbf{continuiamo} con gli altri eventi
+    \item Un listener difettoso non blocca il sistema
+\end{itemize}
+
+\subsection{Metodo notifyOrdineConfermato() --- Pubblicare un Evento}
+
+\begin{lstlisting}[caption={Metodo di notifica con coda eventi pendenti}]
+public void notifyOrdineConfermato(OrdineEvent event) {
+    // PASSO 1: Validazione
+    if (event == null) {
+        throw new IllegalArgumentException(
+            "L'evento non puo' essere null");
+    }
+
+    // PASSO 2: Log dell'evento
+    logger.log(Level.INFO, () -> "Pubblicazione evento: " + event);
+
+    // PASSO 3: Crea copia della lista listeners (thread-safe)
+    List<OrdineEventListener> listenersCopy;
+    synchronized (listeners) {
+        listenersCopy = new ArrayList<>(listeners);
+    }
+
+    // PASSO 4: Se non ci sono listener, accoda l'evento
+    if (listenersCopy.isEmpty()) {
+        pendingEvents.add(event);
+        int count = pendingEvents.size();
+        logger.log(Level.INFO, () -> 
+            "Nessun listener. Evento accodato. Pendenti: " + count);
+        return;  // Esci dal metodo
+    }
+
+    // PASSO 5: Notifica tutti i listener
+    for (OrdineEventListener listener : listenersCopy) {
+        try {
+            listener.onOrdineConfermato(event);
+        } catch (Exception e) {
+            logger.log(Level.WARNING,
+                "Errore durante notifica a " + 
+                listener.getClass().getSimpleName(), e);
+        }
+    }
+
+    // PASSO 6: Log finale
+    logger.log(Level.INFO, () -> 
+        "Evento notificato a " + listenersCopy.size() + " listener");
+}
+\end{lstlisting}
+
+\textbf{Analisi dettagliata:}
+
+\paragraph{PASSO 3: Copia difensiva}
+\begin{lstlisting}
+synchronized (listeners) {
+    listenersCopy = new ArrayList<>(listeners);
+}
+\end{lstlisting}
+\begin{itemize}
+    \item \texttt{new ArrayList<>(listeners)}: Crea una \textbf{copia} della lista
+    \item Perché? Durante l'iterazione, qualcuno potrebbe aggiungere/rimuovere listener
+    \item La copia ci protegge da \texttt{ConcurrentModificationException}
+    \item Il blocco synchronized è breve: solo il tempo di copiare
+\end{itemize}
+
+\paragraph{PASSO 4: Coda eventi pendenti}
+\begin{lstlisting}
+if (listenersCopy.isEmpty()) {
+    pendingEvents.add(event);
+    return;
+}
+\end{lstlisting}
+Questa è la logica \textbf{cruciale}:
+\begin{itemize}
+    \item Se nessun listener è registrato, l'evento non viene perso
+    \item Viene messo in una coda (\texttt{pendingEvents})
+    \item Quando un listener si registrerà, riceverà tutti gli eventi accodati
+    \item \texttt{return}: Esce dal metodo (non continua inutilmente)
+\end{itemize}
+
+\paragraph{PASSO 5: For-each con try-catch}
+\begin{lstlisting}
+for (OrdineEventListener listener : listenersCopy) {
+    try {
+        listener.onOrdineConfermato(event);
+    } catch (Exception e) {
+        // log error
+    }
+}
+\end{lstlisting}
+\begin{itemize}
+    \item \texttt{for (... : ...)}: Enhanced for loop (for-each)
+    \item Itera su ogni listener nella copia
+    \item Ogni listener riceve l'evento tramite \texttt{onOrdineConfermato()}
+    \item Il try-catch garantisce che un errore in un listener non blocchi gli altri
+\end{itemize}
+
+% ==============================================================================
+\section{Flusso Completo di Esecuzione}
+% ==============================================================================
+
+Vediamo cosa succede quando un Cliente conferma un ordine:
+
+\subsection{Scenario 1: Admin Già Loggato}
+
+\begin{enumerate}
+    \item \textbf{Admin fa login} $\rightarrow$ AdminHomepageGUIController.initialize()
+    \item AdminNotificationService.register() viene chiamato
+    \item OrdineEventPublisher.addListener(adminService) --- listener registrato
+    \item \textbf{Cliente conferma ordine} $\rightarrow$ CreaOrdineController.confermaOrdine()
+    \item Viene creato: \texttt{new OrdineEvent(30, "CLI001", 15.50)}
+    \item OrdineEventPublisher.notifyOrdineConfermato(event)
+    \item Lista listeners: [AdminNotificationService] --- non vuota!
+    \item AdminNotificationService.onOrdineConfermato(event) viene chiamato
+    \item Platform.runLater() $\rightarrow$ popup mostrato all'Admin
+\end{enumerate}
+
+\subsection{Scenario 2: Admin Fa Login Dopo (Risolto!)}
+
+\begin{enumerate}
+    \item \textbf{Cliente conferma ordine} (Admin non ancora loggato)
+    \item OrdineEventPublisher.notifyOrdineConfermato(event)
+    \item Lista listeners: [] --- \textbf{vuota!}
+    \item Invece di perdere l'evento: \texttt{pendingEvents.add(event)}
+    \item Log: "Nessun listener. Evento accodato. Pendenti: 1"
+    \item \textbf{Più tardi, Admin fa login}
+    \item OrdineEventPublisher.addListener(adminService)
+    \item Controllo: pendingEvents non è vuota!
+    \item Per ogni evento in coda: adminService.onOrdineConfermato(event)
+    \item Admin riceve la notifica anche se ha fatto login dopo!
+\end{enumerate}
+
+% ==============================================================================
+\section{Diagramma di Sequenza}
+% ==============================================================================
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9, transform shape]
+    % Lifelines
+    \draw[thick] (0,0) -- (0,-10) node[above, yshift=10.5cm] {\textbf{Cliente}};
+    \draw[thick] (3,0) -- (3,-10) node[above, yshift=10.5cm] {\textbf{Controller}};
+    \draw[thick] (6,0) -- (6,-10) node[above, yshift=10.5cm] {\textbf{Publisher}};
+    \draw[thick] (9,0) -- (9,-10) node[above, yshift=10.5cm] {\textbf{pendingEvents}};
+    \draw[thick] (12,0) -- (12,-10) node[above, yshift=10.5cm] {\textbf{Admin}};
+    
+    % Messages - Scenario without Admin
+    \draw[->, thick] (0,-1) -- (3,-1) node[midway, above] {confermaOrdine()};
+    \draw[->, thick] (3,-2) -- (6,-2) node[midway, above] {notify(event)};
+    \draw[->, thick, dashed] (6,-3) -- (9,-3) node[midway, above] {add(event)};
+    \draw[<-, thick, dashed] (6,-3.5) -- (9,-3.5);
+    
+    % Admin logs in later
+    \draw[->, thick] (12,-5) -- (6,-5) node[midway, above] {addListener(this)};
+    \draw[->, thick] (6,-6) -- (9,-6) node[midway, above] {foreach event};
+    \draw[<-, thick] (6,-6.5) -- (9,-6.5) node[midway, below] {event};
+    \draw[->, thick] (6,-7.5) -- (12,-7.5) node[midway, above] {onOrdineConfermato(event)};
+    
+    % Annotations
+    \node[text width=3cm, align=center] at (7.5,-4) {\small\textit{Admin non loggato}};
+    \node[text width=3cm, align=center] at (9,-8.5) {\small\textit{Admin riceve evento pending}};
+\end{tikzpicture}
+\end{center}
+
+% ==============================================================================
+\section{Conclusioni}
+% ==============================================================================
+
+\subsection{Vantaggi della Soluzione}
+
+\begin{itemize}
+    \item \textbf{Disaccoppiamento}: Il Controller non conosce l'AdminNotificationService
+    \item \textbf{Estensibilità}: Possiamo aggiungere nuovi observer senza modificare il codice esistente
+    \item \textbf{Robustezza}: Gli eventi non vengono mai persi grazie alla coda pendingEvents
+    \item \textbf{Thread-Safety}: Tutti i metodi critici sono synchronized
+\end{itemize}
+
+\subsection{Pattern e Principi Applicati}
+
+\begin{itemize}
+    \item \textbf{Observer (GoF)}: Notifica uno-a-molti
+    \item \textbf{Singleton (GoF)}: Unica istanza del Publisher
+    \item \textbf{Low Coupling (GRASP)}: Dipendenza solo dall'interfaccia
+    \item \textbf{High Cohesion (GRASP)}: Ogni classe ha una sola responsabilità
+    \item \textbf{Fail-Fast}: Validazione immediata dei parametri
+    \item \textbf{Fail-Safe}: Gestione errori che non blocca il sistema
+\end{itemize}
+
+\end{document}

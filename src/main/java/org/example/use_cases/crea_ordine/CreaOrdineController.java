@@ -190,7 +190,17 @@ public class CreaOrdineController {
     /**
      * Conferma e salva l'ordine nel sistema.
      * 
+     * <p>
+     * Dopo il salvataggio, pubblica un evento {@link OrdineEvent} per notificare
+     * attivamente l'Amministratore (A2) che un nuovo ordine è stato confermato.
+     * Questo implementa il requisito della traccia d'esame che richiede una
+     * "notifica attiva" verso A2.
+     * </p>
+     * 
      * @return true se l'ordine è stato confermato con successo
+     * @throws DAOException                  se si verifica un errore durante il
+     *                                       salvataggio
+     * @throws MissingAuthorizationException se mancano le autorizzazioni
      */
     public boolean confermaOrdine() throws DAOException, MissingAuthorizationException {
         if (ordineCorrente == null || ordineCorrente.getProdotti().isEmpty()) {
@@ -199,6 +209,18 @@ public class CreaOrdineController {
 
         // Salva l'ordine tramite il DAO
         OrdineLazyFactory.getInstance().salvaOrdine(ordineCorrente);
+
+        // ==================== NOTIFICA ATTIVA (Pattern Observer) ====================
+        // Pubblica l'evento per notificare l'Amministratore (A2) che un ordine
+        // è stato confermato. Questo rispetta il requisito della traccia:
+        // "UC1 notifica A2 che qualcosa nel sistema si è evoluto"
+        org.example.events.OrdineEvent event = new org.example.events.OrdineEvent(
+                ordineCorrente.getNumeroOrdine(),
+                ordineCorrente.getClienteId(),
+                ordineCorrente.getTotale());
+        org.example.events.OrdineEventPublisher.getInstance().notifyOrdineConfermato(event);
+        // =============================================================================
+
         return true;
     }
 

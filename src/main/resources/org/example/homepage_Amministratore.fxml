@@ -23,14 +23,27 @@
         <ColumnConstraints hgrow="NEVER" />
     </columnConstraints>
     <rowConstraints>
+        <RowConstraints vgrow="NEVER" minHeight="40" prefHeight="40" /> <!-- Riga notifiche -->
         <RowConstraints vgrow="NEVER" />
         <RowConstraints vgrow="NEVER" />
     </rowConstraints>
 
-    <!-- ================= RIGA 1 ================= -->
+    <!-- ================= PANNELLO NOTIFICHE (RIGA 0) ================= -->
+    <HBox fx:id="panelNotifiche" alignment="CENTER" spacing="10" visible="false" managed="false" 
+          style="-fx-background-color: #fff3cd; -fx-background-radius: 8; -fx-border-color: #ffc107; -fx-border-radius: 8;"
+          GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="3">
+        <padding>
+            <Insets bottom="10" left="20" right="20" top="10" />
+        </padding>
+        <Label fx:id="labelNotifiche" text="" style="-fx-text-fill: #856404; -fx-font-weight: bold; -fx-font-size: 16px;" />
+    </HBox>
+
+    <!-- ================= RIGA 1 (prima era riga 0) ================= -->
+
+
 
     <!-- Card 1: Visualizza Ordini -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="1">
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
             <Image url="@images/habibi_comingSOON.png" />
         </ImageView>
@@ -59,7 +72,7 @@
     </AnchorPane>
 
     <!-- Card 2: Crea Voucher -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="1">
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
             <Image url="@images/habibi_comingSOON.png" />
         </ImageView>
@@ -88,7 +101,7 @@
     </AnchorPane>
 
     <!-- Card 3: Gestione Utenti -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="1">
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
             <Image url="@images/habibi_comingSOON.png" />
         </ImageView>
@@ -119,7 +132,7 @@
     <!-- ================= RIGA 2 ================= -->
 
     <!-- Card 4: Logout -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="2">
         <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
             <Image url="@images/habibi_comingSOON.png" />
         </ImageView>

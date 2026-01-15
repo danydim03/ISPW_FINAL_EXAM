@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import org.example.PageNavigationController;
+import org.example.session_manager.SessionManager;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,6 +46,9 @@ public class ClienteHomepageGraphicController {
         alert.setContentText("Sei sicuro di voler effettuare il logout?");
 
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            // Invalida la sessione corrente nel SessionManager
+            SessionManager.getInstance().logout();
+
             logger.log(Level.INFO, "Utente disconnesso");
             PageNavigationController.getInstance().navigateTo("login");
         }

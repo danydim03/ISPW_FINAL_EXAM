@@ -100,7 +100,7 @@ public class RiepilogoOrdineBean implements Serializable {
     public void setTotale(double totale) {
         this.totale = totale;
     }
-    
+
 
     public void setDurataTotale(int durataTotale) {
         this.durataTotale = durataTotale;

@@ -1,10 +1,13 @@
 package org.example;
 
+
+import org.example.exceptions.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,6 +20,10 @@ public class BaseGraphicControl implements Initializable {
     private Button backButton;
     @FXML
     private Button accountButton;
+    @FXML
+    private Button notificationButton;
+    @FXML
+    private VBox pendingEventList;
 
     /**
      * Default constructor - initialization is handled by JavaFX's initialize()
@@ -53,12 +60,17 @@ public class BaseGraphicControl implements Initializable {
             backButton.setVisible(true);
     }
 
+
+
     void openMainPage(Node node, String name) {
         content.getChildren().clear();
         content.getChildren().add(node);
         if (accountButton != null) {
             accountButton.setText(name);
             accountButton.setVisible(true);
+        }
+        if (notificationButton != null) {
+            notificationButton.setVisible(true);
         }
     }
 }
