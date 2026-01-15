@@ -201,7 +201,6 @@ public class OrdineEventPublisher {
             listenersCopy = new ArrayList<>(listeners);
         }
 
-
         // Se non ci sono listener, accoda l'evento per consegna successiva
         // Questo supporta scenari in cui i listener si registrano in ritardo
         // rispetto alla generazione degli eventi
@@ -223,8 +222,9 @@ public class OrdineEventPublisher {
                 listener.onOrdineConfermato(event);
             } catch (Exception e) {
                 // Fail-safe: un errore in un listener non deve bloccare gli altri
-                logger.log(Level.WARNING,
-                        "Errore durante la notifica al listener " + listener.getClass().getSimpleName(), e);
+                String listenerName = listener.getClass().getSimpleName();
+                logger.log(Level.WARNING, e,
+                        () -> "Errore durante la notifica al listener " + listenerName);
             }
         }
 
