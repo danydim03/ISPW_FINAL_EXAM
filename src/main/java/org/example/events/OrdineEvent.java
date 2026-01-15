@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
  * necessarie per descrivere l'evento</li>
  * </ul>
  * 
- * @author Daniel Di Meo
+ * @author Daniele Di Meo
  * @version 1.0
  * @since 2026-01-14
  */

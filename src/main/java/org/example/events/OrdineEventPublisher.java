@@ -186,18 +186,25 @@ public class OrdineEventPublisher {
      * @throws IllegalArgumentException se event è null
      */
     public void notifyOrdineConfermato(OrdineEvent event) {
+        // Validazione dell'input
+        // Controlla che l'evento non sia null
         if (event == null) {
             throw new IllegalArgumentException("L'evento non può essere null");
         }
 
         logger.log(Level.INFO, () -> "Pubblicazione evento: " + event);
 
+        // Copia la lista dei listener per evitare ConcurrentModificationException
         List<OrdineEventListener> listenersCopy;
         synchronized (listeners) {
+            // Crea una copia della lista per iterare in sicurezza
             listenersCopy = new ArrayList<>(listeners);
         }
 
+
         // Se non ci sono listener, accoda l'evento per consegna successiva
+        // Questo supporta scenari in cui i listener si registrano in ritardo
+        // rispetto alla generazione degli eventi
         if (listenersCopy.isEmpty()) {
             pendingEvents.add(event);
             int count = pendingEvents.size();
@@ -206,8 +213,13 @@ public class OrdineEventPublisher {
             return;
         }
 
+        // Notifica tutti i listener registrati
+        // Itera sulla copia per evitare problemi di concorrenza
+        // Ogni listener viene notificato in un blocco try-catch
+        // per garantire che un errore in uno non blocchi gli altri
         for (OrdineEventListener listener : listenersCopy) {
             try {
+                // Invoca il callback del listener
                 listener.onOrdineConfermato(event);
             } catch (Exception e) {
                 // Fail-safe: un errore in un listener non deve bloccare gli altri

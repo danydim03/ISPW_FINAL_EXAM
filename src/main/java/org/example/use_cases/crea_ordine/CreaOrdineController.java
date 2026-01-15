@@ -8,9 +8,10 @@ import org.example.model.voucher.Voucher;
 import org.example.use_cases.crea_ordine.beans.*;
 import org.example.use_cases.crea_ordine.beans.RiepilogoOrdineBean.RigaOrdineBean;
 import org.example.use_cases.usa_voucher.UsaVoucherController;
-
+import  org.example.events.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.example.mappers.*;
 
 /**
  * Controller Applicativo per lo Use Case "Crea Ordine".
@@ -45,7 +46,7 @@ public class CreaOrdineController {
 
         // Converti in Bean e restituisci
         // Converti in Bean e restituisci
-        return org.example.mappers.OrdineMapper.toBean(ordineCorrente);
+        return OrdineMapper.toBean(ordineCorrente);
     }
 
     /**
@@ -86,7 +87,7 @@ public class CreaOrdineController {
             return false;
         }
 
-        // Crea il prodotto base usando FoodFactory (GRASP: Low Coupling)
+        // Creo il prodotto base usando FoodFactory (GRASP: Low Coupling)
         Food prodotto = FoodFactory.creaProdottoBase(foodBean.getClasse());
         if (prodotto == null) {
             return false;
@@ -212,13 +213,12 @@ public class CreaOrdineController {
 
         // ==================== NOTIFICA ATTIVA (Pattern Observer) ====================
         // Pubblica l'evento per notificare l'Amministratore (A2) che un ordine
-        // è stato confermato. Questo rispetta il requisito della traccia:
         // "UC1 notifica A2 che qualcosa nel sistema si è evoluto"
-        org.example.events.OrdineEvent event = new org.example.events.OrdineEvent(
+        OrdineEvent event = new OrdineEvent(
                 ordineCorrente.getNumeroOrdine(),
                 ordineCorrente.getClienteId(),
                 ordineCorrente.getTotale());
-        org.example.events.OrdineEventPublisher.getInstance().notifyOrdineConfermato(event);
+        OrdineEventPublisher.getInstance().notifyOrdineConfermato(event);
         // =============================================================================
 
         return true;
