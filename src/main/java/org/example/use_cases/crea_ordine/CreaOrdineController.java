@@ -8,7 +8,7 @@ import org.example.model.voucher.Voucher;
 import org.example.use_cases.crea_ordine.beans.*;
 import org.example.use_cases.crea_ordine.beans.RiepilogoOrdineBean.RigaOrdineBean;
 import org.example.use_cases.usa_voucher.UsaVoucherController;
-import  org.example.events.*;
+import org.example.events.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.example.mappers.*;
@@ -218,7 +218,7 @@ public class CreaOrdineController {
                 ordineCorrente.getNumeroOrdine(),
                 ordineCorrente.getClienteId(),
                 ordineCorrente.getTotale());
-        OrdineEventPublisher.getInstance().notifyOrdineConfermato(event);
+        OrdineEventPublisher.getInstance().notifyOrdineConfermato(event); // Notifica l'evento all'amministratore
         // =============================================================================
 
         return true;

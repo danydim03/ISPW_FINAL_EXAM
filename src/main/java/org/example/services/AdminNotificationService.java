@@ -186,7 +186,7 @@ public class AdminNotificationService implements OrdineEventListener {
         // Notifica l'UI se è stato impostato un callback
         if (onNewNotification != null) {
             // Platform.runLater garantisce l'esecuzione sul JavaFX Application Thread
-            Platform.runLater(onNewNotification);
+            Platform.runLater(onNewNotification);// esegue il callback sul thread dell'interfaccia utente
         }
     }
 

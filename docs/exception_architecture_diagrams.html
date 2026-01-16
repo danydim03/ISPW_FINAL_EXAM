@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -189,15 +190,15 @@
             .header {
                 padding: 1.5rem 1rem;
             }
-            
+
             .header h1 {
                 font-size: 1.8rem;
             }
-            
+
             .container {
                 padding: 1rem;
             }
-            
+
             .diagram-header {
                 flex-direction: column;
                 text-align: center;
@@ -205,6 +206,7 @@
         }
     </style>
 </head>
+
 <body>
     <header class="header">
         <h1>🏛️ Architettura di Gestione delle Eccezioni</h1>
@@ -271,7 +273,8 @@ sequenceDiagram
                 </pre>
             </div>
             <div class="description">
-                <p><strong>Nota:</strong> L'eccezione cambia "identità" (Tipo) attraversando i layer architetturali per proteggere l'astrazione di ogni livello.</p>
+                <p><strong>Nota:</strong> L'eccezione cambia "identità" (Tipo) attraversando i layer architetturali per
+                    proteggere l'astrazione di ogni livello.</p>
             </div>
         </section>
 
@@ -333,7 +336,8 @@ classDiagram
                 </pre>
             </div>
             <div class="description">
-                <p><strong>Separazione delle responsabilità:</strong> La gerarchia garantisce granularità nel catch e una chiara distinzione tra eccezioni checked (gestibili) e unchecked (fatali).</p>
+                <p><strong>Separazione delle responsabilità:</strong> La gerarchia garantisce granularità nel catch e
+                    una chiara distinzione tra eccezioni checked (gestibili) e unchecked (fatali).</p>
             </div>
         </section>
 
@@ -378,7 +382,9 @@ graph TD
                 </pre>
             </div>
             <div class="description">
-                <p><strong>Scatole Cinesi:</strong> Quando il Controller cattura l'eccezione finale, l'oggetto in memoria è strutturato come una serie di wrapper. Questo permette a <code>e.printStackTrace()</code> di stampare l'intera storia.</p>
+                <p><strong>Scatole Cinesi:</strong> Quando il Controller cattura l'eccezione finale, l'oggetto in
+                    memoria è strutturato come una serie di wrapper. Questo permette a <code>e.printStackTrace()</code>
+                    di stampare l'intera storia.</p>
             </div>
         </section>
 
@@ -390,21 +396,24 @@ graph TD
                     <span class="note-icon">🔗</span>
                     <div>
                         <div class="note-title">Non interrompere la catena</div>
-                        <div class="note-desc">Assicurarsi sempre che il costruttore della Custom Exception chiami <code>super(message, cause)</code>.</div>
+                        <div class="note-desc">Assicurarsi sempre che il costruttore della Custom Exception chiami
+                            <code>super(message, cause)</code>.</div>
                     </div>
                 </li>
                 <li>
                     <span class="note-icon">📝</span>
                     <div>
                         <div class="note-title">Logga una volta sola</div>
-                        <div class="note-desc">Il logging avviene solo nella Boundary (UI). Evitare di loggare nel DAO e poi rilanciare, altrimenti i file di log si riempiono di duplicati.</div>
+                        <div class="note-desc">Il logging avviene solo nella Boundary (UI). Evitare di loggare nel DAO e
+                            poi rilanciare, altrimenti i file di log si riempiono di duplicati.</div>
                     </div>
                 </li>
                 <li>
                     <span class="note-icon">👤</span>
                     <div>
                         <div class="note-title">User Friendly</div>
-                        <div class="note-desc">La UI usa il messaggio dell'eccezione esterna (TransactionException) o un codice errore generico, mai il messaggio della SQLException.</div>
+                        <div class="note-desc">La UI usa il messaggio dell'eccezione esterna (TransactionException) o un
+                            codice errore generico, mai il messaggio della SQLException.</div>
                     </div>
                 </li>
             </ul>
@@ -430,4 +439,5 @@ graph TD
         });
     </script>
 </body>
+
 </html>
