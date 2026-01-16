@@ -36,22 +36,22 @@
     <!-- ================= RIGA 1 ================= -->
 
     <!-- Card 1: Nuovo Ordine -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    <AnchorPane prefHeight="265" prefWidth="200" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="0">
         <!-- Immagine di sfondo/copertina -->
-        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <ImageView fitHeight="200" fitWidth="200" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
             <!-- Sostituisci con la tua immagine locale -->
             <Image url="@images/habibi_nuovo_ordine.png" />
         </ImageView>
 
         <!-- Parte inferiore Card -->
-        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
-            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="200">
+            <HBox alignment="CENTER" prefHeight="65" spacing="8" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
                 <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Label styleClass="card-title" text="Nuovo Ordine" />
-                    <Text styleClass="card-description" text="Crea una nuova spedizione" wrappingWidth="130" />
+                    <Text styleClass="card-description" text="Crea una nuova spedizione" wrappingWidth="120" />
                 </VBox>
                 <Button maxWidth="Infinity" onAction="#handleNuovoOrdine" styleClass="card-button" HBox.hgrow="NEVER">
                     <shape>
@@ -69,19 +69,19 @@
     </AnchorPane>
 
     <!-- Card 2: Storico Ordini -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="0">
-        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/habibi_storico.png" />
+    <AnchorPane prefHeight="265" prefWidth="200" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <ImageView fitHeight="200" fitWidth="200" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_storico_ordini.jpg" />
         </ImageView>
 
-        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
-            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="200">
+            <HBox alignment="CENTER" prefHeight="65" spacing="8" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
                 <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Label styleClass="card-title" text="Storico" />
-                    <Text styleClass="card-description" text="Visualizza i tuoi ordini passati" wrappingWidth="130" />
+                    <Text styleClass="card-description" text="Visualizza i tuoi ordini passati" wrappingWidth="120" />
                 </VBox>
                 <Button maxWidth="Infinity" onAction="#handleStoricoOrdini" styleClass="card-button" HBox.hgrow="NEVER">
                     <shape>
@@ -98,19 +98,19 @@
     </AnchorPane>
 
     <!-- Card 3: Mappa -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="0">
-        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/habibi_map.png" />
+    <AnchorPane prefHeight="265" prefWidth="200" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+        <ImageView fitHeight="200" fitWidth="200" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_maps.jpg" />
         </ImageView>
 
-        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
-            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="200">
+            <HBox alignment="CENTER" prefHeight="65" spacing="8" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
                 <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Label styleClass="card-title" text="Mappa" />
-                    <Text styleClass="card-description" text="Traccia le tue consegne" wrappingWidth="130" />
+                    <Text styleClass="card-description" text="Traccia le tue consegne" wrappingWidth="120" />
                 </VBox>
                 <Button maxWidth="Infinity" onAction="#handleVisualizzaMappa" styleClass="card-button" HBox.hgrow="NEVER">
                     <shape>
@@ -129,19 +129,19 @@
     <!-- ================= RIGA 2 ================= -->
 
     <!-- Card 4: Profilo -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="1">
-        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/habibi_comingSOON.png" />
+    <AnchorPane prefHeight="265" prefWidth="200" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <ImageView fitHeight="200" fitWidth="200" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_profilo.jpg" />
         </ImageView>
 
-        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
-            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="200">
+            <HBox alignment="CENTER" prefHeight="65" spacing="8" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
                 <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Label styleClass="card-title" text="Il mio Profilo" />
-                    <Text styleClass="card-description" text="Gestisci i tuoi dati personali" wrappingWidth="130" />
+                    <Text styleClass="card-description" text="Gestisci i tuoi dati personali" wrappingWidth="120" />
                 </VBox>
                 <Button maxWidth="Infinity" styleClass="card-button" HBox.hgrow="NEVER">
                     <shape>
@@ -158,19 +158,19 @@
     </AnchorPane>
 
     <!-- Card 5: WEBSITE -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="1">
-        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/habibi_comingSOON.png" />
+    <AnchorPane prefHeight="265" prefWidth="200" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <ImageView fitHeight="200" fitWidth="200" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_website.png" />
         </ImageView>
 
-        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
-            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="200">
+            <HBox alignment="CENTER" prefHeight="65" spacing="8" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
                 <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Label styleClass="card-title" text="Website" />
-                    <Text styleClass="card-description" text="Contatta il supporto clienti" wrappingWidth="130" />
+                    <Text styleClass="card-description" text="Contatta il supporto clienti" wrappingWidth="120" />
                 </VBox>
                 <Button maxWidth="Infinity" styleClass="card-button" HBox.hgrow="NEVER" onAction="#handleWebsite">
                     <shape>
@@ -187,19 +187,19 @@
     </AnchorPane>
 
     <!-- Card 6: Logout -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="1">
-        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/habibi_comingSOON.png" />
+    <AnchorPane prefHeight="265" prefWidth="200" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="1">
+        <ImageView fitHeight="200" fitWidth="200" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_logout.jpg" />
         </ImageView>
 
-        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
-            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="200">
+            <HBox alignment="CENTER" prefHeight="65" spacing="8" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
                 <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Label styleClass="card-title" text="Esci" />
-                    <Text styleClass="card-description" text="Disconnettiti dall'applicazione" wrappingWidth="130" />
+                    <Text styleClass="card-description" text="Disconnettiti dall'applicazione" wrappingWidth="120" />
                 </VBox>
                 <Button maxWidth="Infinity" onAction="#handleLogout" styleClass="card-button" HBox.hgrow="NEVER">
                     <shape>

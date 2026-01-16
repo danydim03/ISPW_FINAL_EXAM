@@ -43,19 +43,19 @@
 
 
     <!-- Card 1: Visualizza Ordini -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="1">
-        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/habibi_comingSOON.png" />
+    <AnchorPane prefHeight="265" prefWidth="200" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <ImageView fitHeight="200" fitWidth="200" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_ordini.jpg" />
         </ImageView>
 
-        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
-            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="200">
+            <HBox alignment="CENTER" prefHeight="65" spacing="8" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
                 <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Label styleClass="card-title" text="Ordini" />
-                    <Text styleClass="card-description" text="Visualizza e gestisci ordini" wrappingWidth="130" />
+                    <Text styleClass="card-description" text="Visualizza e gestisci ordini" wrappingWidth="120" />
                 </VBox>
                 <Button maxWidth="Infinity" onAction="#handleVisualizzaOrdini" styleClass="card-button" HBox.hgrow="NEVER">
                     <shape>
@@ -72,19 +72,19 @@
     </AnchorPane>
 
     <!-- Card 2: Crea Voucher -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="1">
-        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/habibi_comingSOON.png" />
+    <AnchorPane prefHeight="265" prefWidth="200" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <ImageView fitHeight="200" fitWidth="200" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_voucher.jpg" />
         </ImageView>
 
-        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
-            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="200">
+            <HBox alignment="CENTER" prefHeight="65" spacing="8" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
                 <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Label styleClass="card-title" text="Voucher" />
-                    <Text styleClass="card-description" text="Crea nuovi voucher sconto" wrappingWidth="130" />
+                    <Text styleClass="card-description" text="Crea nuovi voucher sconto" wrappingWidth="120" />
                 </VBox>
                 <Button maxWidth="Infinity" onAction="#handleCreaVoucher" styleClass="card-button" HBox.hgrow="NEVER">
                     <shape>
@@ -101,19 +101,19 @@
     </AnchorPane>
 
     <!-- Card 3: Gestione Utenti -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="1">
-        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/habibi_comingSOON.png" />
+    <AnchorPane prefHeight="265" prefWidth="200" styleClass="card" GridPane.columnIndex="2" GridPane.rowIndex="1">
+        <ImageView fitHeight="200" fitWidth="200" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_utenti.jpg" />
         </ImageView>
 
-        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
-            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="200">
+            <HBox alignment="CENTER" prefHeight="65" spacing="8" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
                 <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Label styleClass="card-title" text="Utenti" />
-                    <Text styleClass="card-description" text="Gestisci gli utenti registrati" wrappingWidth="130" />
+                    <Text styleClass="card-description" text="Gestisci gli utenti registrati" wrappingWidth="120" />
                 </VBox>
                 <Button maxWidth="Infinity" onAction="#handleGestioneUtenti" styleClass="card-button" HBox.hgrow="NEVER">
                     <shape>
@@ -132,19 +132,19 @@
     <!-- ================= RIGA 2 ================= -->
 
     <!-- Card 4: Logout -->
-    <AnchorPane prefHeight="200" prefWidth="220" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="2">
-        <ImageView fitHeight="135" fitWidth="220" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Image url="@images/habibi_comingSOON.png" />
+    <AnchorPane prefHeight="265" prefWidth="200" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="2">
+        <ImageView fitHeight="200" fitWidth="200" preserveRatio="false" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Image url="@images/habibi_logout.jpg" />
         </ImageView>
 
-        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="135">
-            <HBox alignment="CENTER" prefHeight="65" spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+        <AnchorPane prefHeight="65" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="200">
+            <HBox alignment="CENTER" prefHeight="65" spacing="8" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
                 <padding>
                     <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
                 <VBox maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Label styleClass="card-title" text="Esci" />
-                    <Text styleClass="card-description" text="Disconnettiti dall'applicazione" wrappingWidth="130" />
+                    <Text styleClass="card-description" text="Disconnettiti dall'applicazione" wrappingWidth="120" />
                 </VBox>
                 <Button maxWidth="Infinity" onAction="#handleLogout" styleClass="card-button" HBox.hgrow="NEVER">
                     <shape>

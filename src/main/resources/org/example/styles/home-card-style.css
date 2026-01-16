@@ -1,6 +1,6 @@
 /* Impostazioni generali */
 .root {
-    -fx-background-color: #F4F6F8;
+    -fx-background-color: #FDF8F3;
     -fx-font-family: 'Segoe UI', sans-serif;
 }
 
@@ -8,21 +8,22 @@
 .card {
     -fx-background-color: white;
     -fx-background-radius: 15;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
     -fx-cursor: hand;
 }
 
 /* Effetto Hover sulla Card */
 .card:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 15, 0, 0, 8);
-    -fx-translate-y: -2; /* Leggero sollevamento */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 8);
+    -fx-translate-y: -2;
+    /* Leggero sollevamento */
 }
 
 /* Titolo della Card */
 .card-title {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2D3447;
+    -fx-text-fill: #5D4E37;
 }
 
 /* Descrizione della Card */
@@ -33,7 +34,7 @@
 
 /* Bottone circolare con la freccia */
 .card-button {
-    -fx-background-color: #1565C0;
+    -fx-background-color: #9A8262;
     -fx-min-width: 30px;
     -fx-min-height: 30px;
     -fx-max-width: 30px;
@@ -42,5 +43,5 @@
 }
 
 .card-button:hover {
-    -fx-background-color: #0D47A1;
+    -fx-background-color: #7A614E;
 }
