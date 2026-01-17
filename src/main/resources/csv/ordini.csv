@@ -1,0 +1,5 @@
+"numero_ordine","cliente_id","data_creazione","data_conferma","stato","totale","voucher_id"
+"1","CLI001","2025-12-26T14:34:37.635261","","IN_CREAZIONE","6.8",""
+"2","2025-12-27","2025-12-27T23:03:30.713392","","IN_CONSEGNA","6.0",""
+"3","CLI001","2025-12-28T00:53:50.71043","","IN_CONSEGNA","13.5",""
+"4","CLI001","2026-01-16T22:47:50.875169","","IN_CONSEGNA","6.8",""

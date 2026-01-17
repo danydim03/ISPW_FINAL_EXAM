@@ -1,0 +1,8 @@
+"id","descrizione","tipo","costo","durata","classe_java"
+"1","Panino Doner Kebab","BASE","5.50","5","PaninoDonerKebab"
+"2","Piadina Doner Kebab","BASE","6.00","6","PiadinaDonerKebab"
+"3","Kebab al Piatto","BASE","7.50","8","KebabAlPiatto"
+"4","Cipolla","ADDON","0.50","0","Cipolla"
+"5","Patatine","ADDON","1.50","3","Patatine"
+"6","Salsa Yogurt","ADDON","0.50","0","SalsaYogurt"
+"7","Mix Verdure Grigliate","ADDON","1.00","2","MixVerdureGrigliate"

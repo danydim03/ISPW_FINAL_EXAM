@@ -1,0 +1,23 @@
+
+
+-----------------
+
+//DB & FS
+cliente : 
+email : mario.rossi@example.com
+pass: hash-password
+
+amministratore : 
+email : admin@ispw.it
+pass: admin
+
+-----------------
+
+//DAO DEMO 
+// cliente 
+cliente@gmail.com, cliente;
+        
+// Admin User
+admin@gmail.com, admin;
+           
+-----------------

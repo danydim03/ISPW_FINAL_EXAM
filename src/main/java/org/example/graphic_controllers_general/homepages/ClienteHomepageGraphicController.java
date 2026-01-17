@@ -56,7 +56,7 @@ public class ClienteHomepageGraphicController {
 
     @FXML
     void handleProfilo(ActionEvent event) {
-        mostraPlaceholder("Profilo Utente", "Gestione dati anagrafici e password.");
+        mostraPlaceholder("Profilo Utente", "Funzionalità in arrivo! Presto potrai gestire i tuoi dati.");
     }
 
     @FXML

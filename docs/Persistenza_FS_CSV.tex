@@ -1,0 +1,702 @@
+% ============================================================================
+%                 ANALISI DELLA PERSISTENZA FILE SYSTEM (FS/CSV)
+%                     Applicazione Habibi - Kebab Management
+% ============================================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning}
+
+\geometry{margin=2.5cm}
+
+% Colori per il codice
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{habibiGold}{RGB}{154,130,98}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single
+}
+\lstset{style=mystyle}
+
+\title{
+    \vspace{-1cm}
+    {\Huge \textbf{Persistenza File System (CSV)}}\\[0.5cm]
+    {\Large Analisi Completa dell'Architettura}\\[0.3cm]
+    {\large Applicazione Habibi - Sistema Gestione Kebab}
+}
+\author{Documentazione Tecnica}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Introduzione: Cos'è la Persistenza?}
+% ============================================================================
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Concetto Chiave]
+\textbf{Persistenza} significa ``salvare i dati in modo che non si perdano quando il programma si chiude''. È come scrivere su un quaderno invece che su una lavagna: quando spegni il computer, i dati restano!
+\end{tcolorbox}
+
+Immagina di giocare a un videogioco: quando salvi la partita, il gioco scrive i tuoi progressi su un file. La prossima volta che giochi, può leggere quel file e riprendere da dove avevi lasciato. Questo è esattamente ciò che fa l'applicazione Habibi con i suoi dati!
+
+\subsection{I Tre Modi di Salvare i Dati}
+
+L'applicazione Habibi può salvare i dati in tre modi diversi:
+
+\begin{enumerate}
+    \item \textbf{DB (Database)} - Come un grande archivio organizzato (MySQL)
+    \item \textbf{FS (File System)} - Come scrivere su file di testo (CSV)
+    \item \textbf{DEMO} - Dati finti in memoria (per test)
+\end{enumerate}
+
+Questo documento spiega in dettaglio come funziona il modo \textbf{FS (File System)}, che usa i file \textbf{CSV}.
+
+% ============================================================================
+\section{Cos'è un File CSV?}
+% ============================================================================
+
+\subsection{Spiegazione Semplice}
+
+\textbf{CSV} sta per \textit{Comma-Separated Values} (Valori Separati da Virgole). È come una tabella Excel, ma scritta in un semplice file di testo!
+
+\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black,title=Esempio di File users.csv]
+\begin{verbatim}
+id,name,surname,codice_fiscale,email,password,registration_date,role_type
+1,Mario,Rossi,RSSMRA80A01H501U,mario@email.it,pass123,2024-01-15,1
+2,Luigi,Verdi,VRDLGU75B02F205X,luigi@email.it,pass456,2024-01-16,2
+\end{verbatim}
+\end{tcolorbox}
+
+\subsection{Come Leggere un CSV}
+
+\begin{itemize}
+    \item La \textbf{prima riga} è l'\textbf{intestazione} (header): dice cosa significa ogni colonna
+    \item Ogni riga successiva è un \textbf{record} (un utente, un ordine, ecc.)
+    \item I valori sono separati da \textbf{virgole} (,)
+    \item È un formato \textbf{universale}: qualsiasi programma può leggerlo!
+\end{itemize}
+
+\subsection{Vantaggi dei CSV}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Vantaggio} & \textbf{Perché è utile} \\
+\hline
+Leggibile & Puoi aprirlo con Blocco Note \\
+Leggero & Occupa poco spazio \\
+Portabile & Funziona su qualsiasi computer \\
+Semplice & Non servono programmi speciali \\
+\hline
+\end{tabular}
+\caption{Vantaggi del formato CSV}
+\end{table}
+
+% ============================================================================
+\section{Dove Sono i File CSV?}
+% ============================================================================
+
+\subsection{La Directory dei Dati}
+
+Tutti i file CSV vengono salvati in una cartella speciale nella \textit{home} dell'utente:
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=orange!75!black]
+\texttt{\textasciitilde/.habibi/data/}
+
+Su macOS diventa: \texttt{/Users/tuonome/.habibi/data/}
+\end{tcolorbox}
+
+\subsection{Lista dei File CSV}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|p{6cm}|}
+\hline
+\textbf{File} & \textbf{Entità} & \textbf{Cosa Contiene} \\
+\hline
+\texttt{users.csv} & User & Tutti gli utenti registrati \\
+\texttt{clienti.csv} & Cliente & Dati specifici dei clienti \\
+\texttt{amministratori.csv} & Amministratore & Dati degli admin \\
+\texttt{ordini.csv} & Ordine & Tutti gli ordini effettuati \\
+\texttt{ordine\_prodotti.csv} & Relazione & Link tra ordini e prodotti \\
+\texttt{food.csv} & Food & Menu e prodotti disponibili \\
+\texttt{voucher.csv} & Voucher & Codici sconto attivi \\
+\hline
+\end{tabular}
+\caption{Mappatura file CSV e entità}
+\end{table}
+
+% ============================================================================
+\section{Come Si Attiva la Persistenza FS?}
+% ============================================================================
+
+\subsection{Il File .properties}
+
+La ``magia'' avviene grazie al file di configurazione:
+
+\begin{lstlisting}[language=Java,caption=File .properties]
+persistence_type=FS
+front_end_type=JAVAFX
+username=root
+password=rootroot
+\end{lstlisting}
+
+Quando scrivi \texttt{persistence\_type=FS}, stai dicendo all'applicazione: ``Usa i file CSV per salvare i dati!''.
+
+\subsection{L'Enum PersistenceTypeEnum}
+
+Il programma legge questa impostazione e la trasforma in un valore ``sicuro'':
+
+\begin{lstlisting}[language=Java,caption=PersistenceTypeEnum.java]
+public enum PersistenceTypeEnum {
+    DB("DB"),      // Usa il database MySQL
+    FS("FS"),      // Usa i file CSV
+    DEMO("DEMO");  // Usa dati finti in memoria
+    
+    public final String value;
+    
+    PersistenceTypeEnum(String value) {
+        this.value = value;
+    }
+}
+\end{lstlisting}
+
+% ============================================================================
+\section{Il Pattern Abstract Factory}
+% ============================================================================
+
+\subsection{Spiegazione per Bambini}
+
+Immagina di avere una fabbrica di giocattoli. Questa fabbrica può produrre giocattoli in \textbf{tre modi}:
+\begin{itemize}
+    \item Metodo 1: Costruirli con il legno
+    \item Metodo 2: Costruirli con la plastica  
+    \item Metodo 3: Costruirli con la carta (solo per mostra)
+\end{itemize}
+
+Il \textbf{cliente} (chi usa i giocattoli) non deve sapere \textit{come} sono stati costruiti: gli basta che funzionino!
+
+Nel nostro caso:
+\begin{itemize}
+    \item \textbf{DAOFactoryDB} = Fabbrica che usa MySQL
+    \item \textbf{DAOFactoryFS} = Fabbrica che usa CSV
+    \item \textbf{DAOFactoryDemo} = Fabbrica che usa dati finti
+\end{itemize}
+
+\subsection{Schema UML Semplificato}
+
+\begin{center}
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    every node/.style={font=\small},
+    abstract/.style={rectangle, draw, fill=blue!20, text width=4cm, text centered, minimum height=1cm},
+    concrete/.style={rectangle, draw, fill=green!20, text width=3.5cm, text centered, minimum height=0.8cm},
+    arrow/.style={->, thick}
+]
+    % Nodo astratto
+    \node[abstract] (factory) {\textbf{DAOFactoryAbstract}\\(classe astratta)};
+    
+    % Nodi concreti
+    \node[concrete, below left=1.5cm and 0.5cm of factory] (db) {DAOFactoryDB\\(MySQL)};
+    \node[concrete, below=1.5cm of factory] (fs) {DAOFactoryFS\\(CSV)};
+    \node[concrete, below right=1.5cm and 0.5cm of factory] (demo) {DAOFactoryDemo\\(Memory)};
+    
+    % Frecce
+    \draw[arrow] (db) -- (factory);
+    \draw[arrow] (fs) -- (factory);
+    \draw[arrow] (demo) -- (factory);
+\end{tikzpicture}
+\end{center}
+
+\subsection{Il Codice della Factory Astratta}
+
+\begin{lstlisting}[language=Java,caption=DAOFactoryAbstract.java (semplificato)]
+public abstract class DAOFactoryAbstract {
+
+    private static DAOFactoryAbstract me = null;
+
+    public static synchronized DAOFactoryAbstract getInstance() 
+            throws ResourceNotFoundException, PropertyException {
+        if (me == null) {
+            // Legge dal file .properties
+            PersistenceTypeEnum persistenceType = PersistenceTypeEnum
+                .getPersistenceTypeByValue(
+                    PropertiesHandler.getInstance()
+                        .getProperty("persistence_type")
+                );
+            
+            // Crea la factory giusta in base al tipo
+            switch (persistenceType) {
+                case DB   -> me = new DAOFactoryDB();
+                case DEMO -> me = new DAOFactoryDemo();
+                case FS   -> me = new DAOFactoryFS();
+            }
+        }
+        return me;
+    }
+
+    // Metodi astratti che ogni factory deve implementare
+    public abstract UserDAOInterface getUserDAO();
+    public abstract OrdineDAOInterface getOrdineDAO();
+    public abstract VoucherDAOInterface getVoucherDAO();
+    public abstract ClienteDAOInterface getClienteDAO();
+    // ... altri DAO
+}
+\end{lstlisting}
+
+\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Punto Critico]
+Il \texttt{switch} alla riga 12-16 è il ``cervello'' che decide quale factory usare. Se nel file \texttt{.properties} c'è scritto \texttt{FS}, verrà creata \texttt{DAOFactoryFS}!
+\end{tcolorbox}
+
+% ============================================================================
+\section{DAOFactoryFS: La Fabbrica per i CSV}
+% ============================================================================
+
+\subsection{Cosa Fa}
+
+\texttt{DAOFactoryFS} è la classe che ``produce'' tutti i DAO per lavorare con i file CSV.
+
+\begin{lstlisting}[language=Java,caption=DAOFactoryFS.java]
+public class DAOFactoryFS extends DAOFactoryAbstract {
+
+    @Override
+    public KebabbaroDAOInterface getKebabbaroDAO() {
+        return KebabbaroDAOFS.getInstance();
+    }
+
+    @Override
+    public AmministratoreDAOInterface getAmministratoreDAO() {
+        return AmministratoreDAOFS.getInstance();
+    }
+
+    @Override
+    public ClienteDAOInterface getClienteDAO() {
+        return ClienteDAOFS.getInstance();
+    }
+
+    @Override
+    public OrdineDAOInterface getOrdineDAO() {
+        return OrdineDAOFS.getInstance();
+    }
+
+    @Override
+    public VoucherDAOInterface getVoucherDAO() {
+        return VoucherDAOFS.getInstance();
+    }
+
+    @Override
+    public UserDAOInterface getUserDAO() {
+        return UserDAOFS.getInstance();
+    }
+
+    @Override
+    public FoodDAOInterface getFoodDAO() {
+        return FoodDAOFS.getInstance();
+    }
+}
+\end{lstlisting}
+
+\subsection{I DAO Prodotti}
+
+Ogni metodo restituisce un DAO specifico per i CSV:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Metodo} & \textbf{DAO Restituito} & \textbf{File CSV} \\
+\hline
+\texttt{getUserDAO()} & UserDAOFS & users.csv \\
+\texttt{getClienteDAO()} & ClienteDAOFS & clienti.csv \\
+\texttt{getOrdineDAO()} & OrdineDAOFS & ordini.csv \\
+\texttt{getVoucherDAO()} & VoucherDAOFS & voucher.csv \\
+\texttt{getFoodDAO()} & FoodDAOFS & food.csv \\
+\hline
+\end{tabular}
+\caption{Mappatura DAO e file CSV}
+\end{table}
+
+% ============================================================================
+\section{CSVFileManager: Il Cuore del Sistema}
+% ============================================================================
+
+\subsection{Cosa È}
+
+\texttt{CSVFileManager} è la classe che fa tutto il ``lavoro sporco'': legge e scrive i file CSV. È come un bibliotecario che sa esattamente dove trovare ogni libro e dove riporre i nuovi!
+
+\subsection{Caratteristiche Principali}
+
+\begin{enumerate}
+    \item \textbf{Singleton}: Esiste una sola istanza (un solo bibliotecario)
+    \item \textbf{Thread-Safe}: Può essere usato da più ``persone'' contemporaneamente senza fare confusione
+    \item \textbf{Backup Automatico}: Prima di modificare un file, ne crea una copia di sicurezza (.bak)
+\end{enumerate}
+
+\subsection{Directory dei File}
+
+\begin{lstlisting}[language=Java,caption=Directory predefinita]
+private static final String DEFAULT_CSV_DIR = 
+    System.getProperty("user.home") + "/.habibi/data/";
+\end{lstlisting}
+
+\texttt{System.getProperty("user.home")} restituisce la tua cartella home (es. \texttt{/Users/mario} su Mac).
+
+\subsection{Thread Safety con ReadWriteLock}
+
+\begin{lstlisting}[language=Java,caption=Lock per accesso concorrente]
+private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+\end{lstlisting}
+
+\begin{tcolorbox}[colback=purple!5!white,colframe=purple!75!black,title=Cos'è un Lock?]
+Immagina un bagno pubblico con una porta. Il \textbf{Lock} è come la serratura:
+\begin{itemize}
+    \item \textbf{Read Lock}: Più persone possono \textit{leggere} il giornale insieme
+    \item \textbf{Write Lock}: Solo una persona può \textit{scrivere} alla volta
+\end{itemize}
+Questo evita che due persone scrivano sullo stesso file insieme, causando errori!
+\end{tcolorbox}
+
+\subsection{Operazioni Disponibili}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|p{8cm}|}
+\hline
+\textbf{Metodo} & \textbf{Cosa Fa} \\
+\hline
+\texttt{readAll()} & Legge tutte le righe del file CSV \\
+\texttt{readAllWithoutHeader()} & Legge tutte le righe, escludendo l'intestazione \\
+\texttt{writeAll()} & Sovrascrive tutto il file con nuovi dati \\
+\texttt{appendLine()} & Aggiunge una nuova riga alla fine \\
+\texttt{updateLine()} & Modifica una riga specifica \\
+\texttt{deleteLine()} & Elimina una riga specifica \\
+\texttt{createFileWithHeader()} & Crea un nuovo file con l'intestazione \\
+\hline
+\end{tabular}
+\caption{Metodi principali di CSVFileManager}
+\end{table}
+
+\subsection{Esempio: Lettura di un File}
+
+\begin{lstlisting}[language=Java,caption=Metodo readAll()]
+public List<String[]> readAll(String filename) throws DAOException {
+    lock.readLock().lock();  // Prendi il lock di lettura
+    try {
+        String filePath = getFilePath(filename);
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            return new ArrayList<>();  // File non esiste? Lista vuota!
+        }
+
+        try (CSVReader reader = new CSVReader(new FileReader(file))) {
+            return reader.readAll();
+        } catch (IOException | CsvException e) {
+            throw new DAOException("Errore lettura CSV", e);
+        }
+    } finally {
+        lock.readLock().unlock();  // Rilascia SEMPRE il lock!
+    }
+}
+\end{lstlisting}
+
+\subsection{Backup Automatico}
+
+Prima di ogni scrittura, viene creata una copia di backup:
+
+\begin{lstlisting}[language=Java,caption=Sistema di backup]
+private void createBackup(String filePath) {
+    File file = new File(filePath);
+    if (file.exists()) {
+        Path source = Paths.get(filePath);
+        Path backup = Paths.get(filePath + ".bak");  // Es: users.csv.bak
+        Files.copy(source, backup, StandardCopyOption.REPLACE_EXISTING);
+    }
+}
+\end{lstlisting}
+
+% ============================================================================
+\section{Esempio Completo: UserDAOFS}
+% ============================================================================
+
+\subsection{Struttura del File users.csv}
+
+\begin{lstlisting}[caption=Header del file users.csv]
+id,name,surname,codice_fiscale,email,password,registration_date,role_type
+\end{lstlisting}
+
+Ogni colonna ha un significato:
+\begin{itemize}
+    \item \texttt{id}: Identificativo unico dell'utente
+    \item \texttt{name}: Nome
+    \item \texttt{surname}: Cognome
+    \item \texttt{codice\_fiscale}: Codice fiscale italiano
+    \item \texttt{email}: Email (usata per il login)
+    \item \texttt{password}: Password (in chiaro per semplicità)
+    \item \texttt{registration\_date}: Data di registrazione (formato ISO)
+    \item \texttt{role\_type}: Tipo di ruolo (1=Cliente, 2=Kebabbaro, 3=Admin)
+\end{itemize}
+
+\subsection{Operazioni CRUD}
+
+\textbf{CRUD} = Create, Read, Update, Delete (le 4 operazioni base)
+
+\subsubsection{CREATE - Inserimento}
+
+\begin{lstlisting}[language=Java,caption=Inserimento di un nuovo utente]
+@Override
+public void insert(User user) throws DAOException {
+    String[] row = buildRowFromUser(user);  // Converte User in array
+    csvManager.appendLine(FILENAME, row);   // Aggiunge riga al CSV
+}
+\end{lstlisting}
+
+\subsubsection{READ - Lettura}
+
+\begin{lstlisting}[language=Java,caption=Ricerca per email]
+@Override
+public User getUserByEmail(String email) throws UserNotFoundException {
+    List<String[]> allUsers = csvManager.readAllWithoutHeader(FILENAME);
+    
+    for (String[] row : allUsers) {
+        if (row[4].equalsIgnoreCase(email)) {  // Colonna 4 = email
+            return buildUserFromRow(row);      // Converte array in User
+        }
+    }
+    throw new UserNotFoundException("Utente non trovato!");
+}
+\end{lstlisting}
+
+\subsubsection{UPDATE - Modifica}
+
+\begin{lstlisting}[language=Java,caption=Aggiornamento utente]
+@Override
+public void update(User user) throws DAOException {
+    List<String[]> allLines = csvManager.readAll(FILENAME);
+
+    for (int i = 1; i < allLines.size(); i++) {  // Salta header (i=0)
+        String[] row = allLines.get(i);
+        if (row[4].equalsIgnoreCase(user.getEmail())) {
+            csvManager.updateLine(FILENAME, i, buildRowFromUser(user));
+            return;
+        }
+    }
+}
+\end{lstlisting}
+
+\subsubsection{DELETE - Cancellazione}
+
+\begin{lstlisting}[language=Java,caption=Cancellazione utente]
+@Override
+public void delete(User user) throws DAOException {
+    List<String[]> allLines = csvManager.readAll(FILENAME);
+
+    for (int i = 1; i < allLines.size(); i++) {
+        String[] row = allLines.get(i);
+        if (row[4].equalsIgnoreCase(user.getEmail())) {
+            csvManager.deleteLine(FILENAME, i);
+            break;
+        }
+    }
+}
+\end{lstlisting}
+
+\subsection{Conversione Oggetto ↔ Riga CSV}
+
+\subsubsection{Da Riga a Oggetto}
+
+\begin{lstlisting}[language=Java,caption=buildUserFromRow]
+private User buildUserFromRow(String[] row) {
+    String id = row[0];
+    String name = row[1];
+    String surname = row[2];
+    String codiceFiscale = row[3];
+    String email = row[4];
+    String password = row[5];
+    LocalDate registrationDate = LocalDate.parse(row[6], DATE_FORMAT);
+    int roleType = Integer.parseInt(row[7]);
+
+    User user = new User(name, surname, codiceFiscale, email, 
+                         password, registrationDate);
+    user.setId(id);
+    
+    // Creazione del ruolo in base al tipo
+    UserRoleEnum roleEnum = UserRoleEnum.getUserRoleByType(roleType);
+    AbstractRole role = createRoleForUser(user, roleEnum);
+    user.setRole(role);
+
+    return user;
+}
+\end{lstlisting}
+
+\subsubsection{Da Oggetto a Riga}
+
+\begin{lstlisting}[language=Java,caption=buildRowFromUser]
+private String[] buildRowFromUser(User user) {
+    int roleType = user.getRole().getRoleEnumType().type;
+    
+    return new String[] {
+        user.getId(),
+        user.getName(),
+        user.getSurname(),
+        user.getCodiceFiscale(),
+        user.getEmail(),
+        user.getPassword(),
+        user.getRegistrationDate().format(DATE_FORMAT),
+        String.valueOf(roleType)
+    };
+}
+\end{lstlisting}
+
+% ============================================================================
+\section{Gestione delle Relazioni}
+% ============================================================================
+
+\subsection{Il Problema delle Relazioni}
+
+Un \textbf{Ordine} può contenere molti \textbf{Prodotti}. Come rappresentiamo questa relazione in CSV?
+
+\subsection{Tabella di Relazione}
+
+Usiamo un file separato \texttt{ordine\_prodotti.csv}:
+
+\begin{lstlisting}[caption=ordine\_prodotti.csv]
+ordine_id,food_id
+1,101
+1,102
+1,103
+2,101
+\end{lstlisting}
+
+L'ordine 1 contiene i prodotti 101, 102 e 103. L'ordine 2 contiene solo il prodotto 101.
+
+\subsection{Salvataggio dei Prodotti}
+
+\begin{lstlisting}[language=Java,caption=Salvataggio relazione ordine-prodotti]
+private void saveProdotti(Ordine ordine) throws DAOException {
+    for (Food food : ordine.getProdotti()) {
+        if (food.getId() != null) {
+            csvManager.appendLine(PRODOTTI_FILENAME, new String[] {
+                String.valueOf(ordine.getNumeroOrdine()),
+                String.valueOf(food.getId())
+            });
+        }
+    }
+}
+\end{lstlisting}
+
+% ============================================================================
+\section{Flusso Completo: Cosa Succede Quando Fai Login}
+% ============================================================================
+
+\begin{enumerate}
+    \item L'utente inserisce email e password
+    \item Il \texttt{LoginController} chiama \texttt{DAOFactoryAbstract.getInstance()}
+    \item La factory legge \texttt{persistence\_type=FS} dal file \texttt{.properties}
+    \item Viene restituita l'istanza di \texttt{DAOFactoryFS}
+    \item Il controller chiama \texttt{factory.getUserDAO()} → ottiene \texttt{UserDAOFS}
+    \item Chiama \texttt{userDAO.getUserByEmail("mario@email.it")}
+    \item \texttt{UserDAOFS} legge il file \texttt{users.csv}
+    \item Cerca la riga con l'email corrispondente
+    \item Costruisce l'oggetto \texttt{User} dalla riga trovata
+    \item Restituisce l'utente al controller
+\end{enumerate}
+
+% ============================================================================
+\section{Vantaggi e Svantaggi della Persistenza FS}
+% ============================================================================
+
+\subsection{Vantaggi}
+
+\begin{itemize}
+    \item[$\checkmark$] \textbf{Nessun database richiesto}: Non devi installare MySQL
+    \item[$\checkmark$] \textbf{Portabilità}: Copia la cartella e hai tutti i dati
+    \item[$\checkmark$] \textbf{Debug facile}: Puoi aprire i CSV con Excel
+    \item[$\checkmark$] \textbf{Setup immediato}: Funziona subito
+\end{itemize}
+
+\subsection{Svantaggi}
+
+\begin{itemize}
+    \item[$\times$] \textbf{Performance}: Lento con molti dati (legge tutto il file ogni volta)
+    \item[$\times$] \textbf{Concorrenza limitata}: Anche con i lock, non è efficiente come un DB
+    \item[$\times$] \textbf{Nessuna query complessa}: Non puoi fare JOIN come in SQL
+    \item[$\times$] \textbf{Sicurezza}: I dati sono in chiaro sul disco
+\end{itemize}
+
+% ============================================================================
+\section{Libreria OpenCSV}
+% ============================================================================
+
+Il progetto usa la libreria \textbf{OpenCSV} per leggere e scrivere i file CSV.
+
+\subsection{Dipendenza Maven}
+
+\begin{lstlisting}[language=XML,caption=pom.xml]
+<dependency>
+    <groupId>com.opencsv</groupId>
+    <artifactId>opencsv</artifactId>
+    <version>5.8</version>
+</dependency>
+\end{lstlisting}
+
+\subsection{Classi Principali}
+
+\begin{itemize}
+    \item \texttt{CSVReader}: Legge file CSV
+    \item \texttt{CSVWriter}: Scrive file CSV
+    \item Gestisce automaticamente le virgolette e caratteri speciali
+\end{itemize}
+
+% ============================================================================
+\section{Conclusione}
+% ============================================================================
+
+La persistenza File System (FS) rappresenta un'alternativa leggera e pratica al database tradizionale. Il suo punto di forza è la \textbf{semplicità}: nessuna installazione di software aggiuntivo, nessuna configurazione complessa.
+
+Il pattern \textbf{Abstract Factory} permette di cambiare strategia di persistenza semplicemente modificando una riga nel file \texttt{.properties}, senza toccare il codice dell'applicazione. Questo è un esempio perfetto di \textbf{Open/Closed Principle}: il sistema è aperto all'estensione (nuove strategie) ma chiuso alle modifiche.
+
+\begin{tcolorbox}[colback=habibiGold!10!white,colframe=habibiGold,title=Ricorda!]
+Per passare da CSV a Database basta cambiare:
+
+\texttt{persistence\_type=FS} → \texttt{persistence\_type=DB}
+
+E tutto il resto del codice continuerà a funzionare!
+\end{tcolorbox}
+
+\end{document}

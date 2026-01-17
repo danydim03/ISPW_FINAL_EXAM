@@ -25,8 +25,8 @@ public class CSVFileManager {
     private final String csvDirectory;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    // Default directory for CSV files (relative to user home)
-    private static final String DEFAULT_CSV_DIR = System.getProperty("user.home") + "/.habibi/data/";
+    // Default directory for CSV files (in project resources)
+    private static final String DEFAULT_CSV_DIR = "src/main/resources/csv/";
 
     private CSVFileManager() {
         this.csvDirectory = DEFAULT_CSV_DIR;

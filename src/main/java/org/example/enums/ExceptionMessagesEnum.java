@@ -8,16 +8,14 @@ public enum ExceptionMessagesEnum {
     MISSING_AUTH("User doesn't have the authorization to execute the requested action"),
     OBJ_NOT_FOUND("Object requested is not present in the persistence strate"),
     USER_NOT_FOUND("No user has been found with this credentials"),
-    CLIENT_NOT_FOUND("No student has been found with this credentials"),
-    KEBABBARO_NOT_FOUND("No professor has been found with this credentials"),
-    AMMINISTRATORE_NOT_FOUND("No secretary has been found with this credentials"),
+    CLIENT_NOT_FOUND("No cliente has been found with this credentials"),
+    KEBABBARO_NOT_FOUND("No kebabbaro has been found with this credentials"),
+    AMMINISTRATORE_NOT_FOUND("No amministratore has been found with this credentials"),
     WRONG_PASSWORD("Inserted email or password is incorrect"),
     UNEXPECTED_PROPERTY_NAME("Unexpected property name"),
     RESOURCE_NOT_FOUND("The requested resource has not been found"),
     UNRECOGNIZED_ROLE("Unrecognized user role value"),
-    WRONG_LIST_QUERY_IDENTIFIER_VALUE("Wrong list query id value"),
     NUMBERS_DONT_MATCH("id and values number don't match"),
-    NOT_INSTANTIABLE("Cannot instantiate this utility class")
     ;
 
     public final String message;

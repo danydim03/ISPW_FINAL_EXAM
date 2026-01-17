@@ -14,11 +14,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<!--
-    Struttura modificata a GRIGLIA come richiesto.
-    Controller mantenuto: com.tuoprogetto.controller.ClientHomeController
-    CSS: styles/home-card-style.css
--->
+
 
 <GridPane alignment="CENTER" hgap="30" prefHeight="500.0" prefWidth="800.0" stylesheets="@styles/home-card-style.css" vgap="30" xmlns="http://javafx.com/javafx/17.0.17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.graphic_controllers_general.homepages.ClienteHomepageGraphicController">
 
@@ -143,7 +139,7 @@
                     <Label styleClass="card-title" text="Il mio Profilo" />
                     <Text styleClass="card-description" text="Gestisci i tuoi dati personali" wrappingWidth="120" />
                 </VBox>
-                <Button maxWidth="Infinity" styleClass="card-button" HBox.hgrow="NEVER">
+                <Button maxWidth="Infinity" onAction="#handleProfilo" styleClass="card-button" HBox.hgrow="NEVER">
                     <shape>
                         <Circle radius="15" />
                     </shape>
