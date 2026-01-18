@@ -76,16 +76,15 @@ public abstract class BaseCLIGraphicController {
      * Reads a password (hides input if possible, otherwise just reads)
      */
     protected String readPassword(String prompt) {
-        System.out.print("  " + prompt + ": ");
         java.io.Console console = System.console();
+
         if (console != null) {
+            System.out.print("  " + prompt + ": ");
             char[] pwd = console.readPassword();
             return pwd == null ? "" : new String(pwd).trim();
         }
 
         // Fallback: lettura normale (se eseguito da IDE la console è null)
-        // Avviso all'utente che la password sarà visibile
-        showWarning("Console non disponibile, la password sarà visibile durante la digitazione.");
         System.out.print("  " + prompt + ": ");
         return scanner.nextLine().trim();
     }

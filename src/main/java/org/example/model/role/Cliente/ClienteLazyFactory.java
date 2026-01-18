@@ -40,14 +40,14 @@ public class ClienteLazyFactory {
     }
 
     public Cliente newCliente(User user, String id) throws DAOException, MissingAuthorizationException {
-        Cliente student = new Cliente(user, id);
-        user.setRole(student);
+        Cliente cliente = new Cliente(user, id);
+        user.setRole(cliente);
         try {
-            DAOFactoryAbstract.getInstance().getClienteDAO().insert(student);
+            DAOFactoryAbstract.getInstance().getClienteDAO().insert(cliente);
         } catch (PropertyException | ResourceNotFoundException e) {
             throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
-        clients.add(student);
-        return student;
+        clients.add(cliente);
+        return cliente;
     }
 }
