@@ -11,6 +11,9 @@ public class FoodFactory {
 
     private FoodFactory() {
         // Utility class
+        // Prevent instantiation
+        // Private constructor
+        // No instances allowed
     }
 
     /**
@@ -20,11 +23,14 @@ public class FoodFactory {
      * @return il Food creato, o null se classe non riconosciuta
      */
     public static Food creaProdottoBase(String classe) {
+        // Se la classe è null, ritorna null
         if (classe == null) {
             return null;
         }
 
         switch (classe) {
+            // Istanzia il prodotto base corrispondente
+            // e lo ritorna
             case "PaninoDonerKebab":
                 return new PaninoDonerKebab();
             case "PiadinaDonerKebab":
@@ -44,12 +50,16 @@ public class FoodFactory {
      * @return il Food decorato
      */
     public static Food applicaDecorator(Food food, String addOnClasse) {
+        // Se food o addOnClasse sono null, ritorna food non modificato
         if (addOnClasse == null || food == null) {
+
             return food;
         }
 
         switch (addOnClasse) {
             case "Cipolla":
+                //wrapping food with Cipolla decorator
+                //returning the new decorated food
                 return new Cipolla(food);
             case "SalsaYogurt":
                 return new SalsaYogurt(food);

@@ -1,0 +1,1040 @@
+% ============================================================================
+%           RISPOSTE ALLE DOMANDE D'ESAME - PROGETTO HABIBI
+%           Risposte Tecniche e Dettagliate
+% ============================================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\geometry{margin=2.5cm}
+
+\definecolor{domanda}{RGB}{0,51,102}
+\definecolor{risposta}{RGB}{0,100,0}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{java}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    language=Java
+}
+\lstset{style=java}
+
+\title{
+    \vspace{-1cm}
+    {\Huge \textbf{Risposte alle Domande d'Esame}}\\[0.5cm]
+    {\Large Progetto Habibi - Sistema Gestione Kebab}\\[0.3cm]
+    {\normalsize Risposte Tecniche di Livello Accademico}
+}
+\author{Preparazione Esame ISPW}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Design Patterns GoF}
+% ============================================================================
+
+% --- D1 ---
+\subsection{Pattern Decorator}
+
+\textbf{Domanda:} \textit{Nel suo progetto è presente il pattern Decorator. Mi spieghi cos'è, qual è il suo intent secondo il GoF, e come l'ha implementato.}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+Il \textbf{Decorator} è un pattern strutturale definito dalla Gang of Four (GoF) nel libro "Design Patterns: Elements of Reusable Object-Oriented Software" (1994).
+
+\textbf{Intent ufficiale GoF:} "Attach additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality."
+
+Il pattern permette di aggiungere comportamenti a singoli oggetti senza modificare la struttura della classe, utilizzando la \textbf{composizione} invece dell'ereditarietà.
+
+\textbf{Implementazione nel progetto Habibi:}
+
+\begin{itemize}
+    \item \textbf{Component (Food):} Classe astratta che definisce l'interfaccia comune con i metodi \texttt{getCosto()}, \texttt{getDurata()}, \texttt{getDescrizione()}.
+    
+    \item \textbf{ConcreteComponent:} Le classi \texttt{PaninoDonerKebab}, \texttt{PiadinaDonerKebab}, \texttt{KebabAlPiatto} che implementano i prodotti base.
+    
+    \item \textbf{Decorator (DecoratorAddON):} Classe astratta che estende Food e mantiene un riferimento \texttt{protected Food foodDecorato} al componente wrappato.
+    
+    \item \textbf{ConcreteDecorator:} Le classi \texttt{Cipolla}, \texttt{SalsaYogurt}, \texttt{Patatine}, \texttt{MixVerdureGrigliate} che aggiungono comportamento specifico.
+\end{itemize}
+
+Il meccanismo funziona tramite \textbf{delegation}: quando si chiama \texttt{getCosto()} su un Decorator, esso delega al componente wrappato e aggiunge il proprio contributo.
+\end{tcolorbox}
+
+% --- D2 ---
+\subsection{Decorator vs Inheritance}
+
+\textbf{Domanda:} \textit{Qual è la differenza tra Decorator e Inheritance? Perché ha scelto Decorator invece di creare sottoclassi come "PaninoConCipolla"?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+La differenza fondamentale è nella \textbf{temporalità} dell'estensione:
+
+\begin{itemize}
+    \item \textbf{Inheritance:} L'estensione avviene a \textbf{compile-time}. Le combinazioni sono fissate nel codice sorgente.
+    \item \textbf{Decorator:} L'estensione avviene a \textbf{runtime}. Le combinazioni sono costruite dinamicamente.
+\end{itemize}
+
+\textbf{Problema dell'esplosione combinatoria:}
+
+Con 3 prodotti base e 4 add-on, usando l'inheritance avrei dovuto creare:
+\begin{itemize}
+    \item 3 classi base
+    \item 3 × 4 = 12 classi con 1 addon
+    \item 3 × 6 = 18 classi con 2 addon
+    \item 3 × 4 = 12 classi con 3 addon
+    \item 3 × 1 = 3 classi con 4 addon
+    \item Totale: \textbf{48 classi!}
+\end{itemize}
+
+Con Decorator:
+\begin{itemize}
+    \item 3 classi base (ConcreteComponent)
+    \item 1 classe astratta (DecoratorAddON)
+    \item 4 classi decoratori
+    \item Totale: \textbf{8 classi}
+\end{itemize}
+
+Inoltre, con Decorator posso applicare lo stesso addon più volte (es. "doppia cipolla") e l'ordine di applicazione è flessibile.
+\end{tcolorbox}
+
+% --- D3 ---
+\subsection{Composizione vs Aggregazione nel Decorator}
+
+\textbf{Domanda:} \textit{Nel Decorator, la classe DecoratorAddON mantiene un riferimento a Food. Si tratta di composizione o aggregazione?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+Nel contesto del pattern Decorator in Habibi, si tratta di \textbf{Aggregazione}.
+
+\textbf{Definizioni UML:}
+\begin{itemize}
+    \item \textbf{Composizione:} Relazione "part-of" forte. Il componente non può esistere senza il contenitore. Se il contenitore viene distrutto, anche il componente viene distrutto.
+    \item \textbf{Aggregazione:} Relazione "has-a" debole. Il componente può esistere indipendentemente dal contenitore.
+\end{itemize}
+
+\textbf{Analisi del codice:}
+
+\begin{lstlisting}
+public class Cipolla extends DecoratorAddON {
+    public Cipolla(Food food) {
+        super(food);  // Riceve un Food già esistente
+    }
+}
+\end{lstlisting}
+
+L'oggetto \texttt{Food} passato al costruttore:
+\begin{enumerate}
+    \item È \textbf{creato esternamente} (da FoodFactory o altro)
+    \item \textbf{Esiste prima} della creazione del Decorator
+    \item \textbf{Può sopravvivere} alla distruzione del Decorator
+    \item Non è responsabilità del Decorator distruggerlo
+\end{enumerate}
+
+Pertanto è \textbf{Aggregazione}: il Decorator "ha" un Food, ma non ne "possiede" il ciclo di vita.
+\end{tcolorbox}
+
+% --- D4 ---
+\subsection{Flusso getCosto() con Decoratori Multipli}
+
+\textbf{Domanda:} \textit{Cosa succede quando chiama getCosto() su un prodotto decorato più volte? Mi descriva il flusso delle chiamate.}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+Consideriamo un Panino decorato con Cipolla e Patatine:
+
+\begin{lstlisting}
+Food kebab = new PaninoDonerKebab();      // Costo: 5.50
+kebab = new Cipolla(kebab);               // Wrap con Cipolla
+kebab = new Patatine(kebab);              // Wrap con Patatine
+double totale = kebab.getCosto();         // ?
+\end{lstlisting}
+
+\textbf{Struttura in memoria:}
+\begin{verbatim}
+Patatine
+  └── foodDecorato → Cipolla
+                       └── foodDecorato → PaninoDonerKebab
+\end{verbatim}
+
+\textbf{Flusso di chiamata (Call Stack):}
+
+\begin{enumerate}
+    \item \texttt{Patatine.getCosto()} viene invocato
+    \item Patatine chiama \texttt{foodDecorato.getCosto()} (delegation a Cipolla) + 1.50
+    \item \texttt{Cipolla.getCosto()} viene invocato
+    \item Cipolla chiama \texttt{foodDecorato.getCosto()} (delegation a Panino) + 0.50
+    \item \texttt{PaninoDonerKebab.getCosto()} ritorna 5.50
+    \item Risalita: Cipolla ritorna 5.50 + 0.50 = 6.00
+    \item Risalita: Patatine ritorna 6.00 + 1.50 = \textbf{7.50}
+\end{enumerate}
+
+È un meccanismo \textbf{ricorsivo implicito} basato sulla catena di delegation.
+\end{tcolorbox}
+
+% --- D5 ---
+\subsection{Abstract Factory nel Progetto}
+
+\textbf{Domanda:} \textit{Il pattern Abstract Factory è presente nel suo progetto. Mi mostri dove e perché l'ha usato.}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+Il pattern \textbf{Abstract Factory} è implementato nel sistema di persistenza.
+
+\textbf{Intent GoF:} "Provide an interface for creating families of related or dependent objects without specifying their concrete classes."
+
+\textbf{Implementazione:}
+
+\begin{itemize}
+    \item \textbf{AbstractFactory:} \texttt{DAOFactoryAbstract} - Definisce i metodi astratti per ottenere i DAO.
+    
+    \item \textbf{ConcreteFactory 1:} \texttt{DAOFactoryDB} - Produce DAO per MySQL.
+    
+    \item \textbf{ConcreteFactory 2:} \texttt{DAOFactoryFS} - Produce DAO per File System (CSV).
+    
+    \item \textbf{ConcreteFactory 3:} \texttt{DAOFactoryDemo} - Produce DAO in memoria.
+    
+    \item \textbf{AbstractProduct:} Le interfacce \texttt{UserDAOInterface}, \texttt{OrdineDAOInterface}, ecc.
+    
+    \item \textbf{ConcreteProduct:} \texttt{UserDAODB}, \texttt{UserDAOFS}, \texttt{UserDAODemo}, ecc.
+\end{itemize}
+
+\textbf{Vantaggio:} Il codice applicativo dipende solo da \texttt{DAOFactoryAbstract} e dalle interfacce DAO. Per cambiare strategia di persistenza, basta modificare \texttt{persistence\_type} nel file \texttt{.properties}.
+\end{tcolorbox}
+
+% --- D6 ---
+\subsection{Vantaggio Abstract Factory}
+
+\textbf{Domanda:} \textit{Qual è il vantaggio di usare Abstract Factory per la persistenza? Cosa succede se vuole aggiungere un nuovo tipo di storage?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Vantaggi principali:}
+
+\begin{enumerate}
+    \item \textbf{Open/Closed Principle:} Il sistema è aperto all'estensione (nuovi storage) ma chiuso alle modifiche (codice esistente invariato).
+    
+    \item \textbf{Dependency Inversion:} Il codice applicativo dipende da astrazioni (\texttt{DAOFactoryAbstract}, interfacce DAO), non da implementazioni concrete.
+    
+    \item \textbf{Consistency:} La factory garantisce che tutti i DAO prodotti siano della stessa "famiglia" (tutti DB, tutti FS, ecc.).
+\end{enumerate}
+
+\textbf{Aggiungere un nuovo storage (es. MongoDB):}
+
+\begin{enumerate}
+    \item Creare \texttt{DAOFactoryMongo extends DAOFactoryAbstract}
+    \item Creare \texttt{UserDAOMongo implements UserDAOInterface}
+    \item Creare gli altri DAO Mongo
+    \item Aggiungere \texttt{MONGO} in \texttt{PersistenceTypeEnum}
+    \item Aggiungere il case nello switch di \texttt{DAOFactoryAbstract.getInstance()}
+\end{enumerate}
+
+\textbf{Nessuna modifica} al codice applicativo, ai Controller, ai Facade. Solo le classi del layer di persistenza.
+\end{tcolorbox}
+
+% --- D7 ---
+\subsection{Singleton nel Progetto}
+
+\textbf{Domanda:} \textit{Il Singleton è utilizzato in più classi del suo progetto. Mi dica quali e perché usa questo pattern.}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+Il pattern \textbf{Singleton} garantisce che una classe abbia una sola istanza e fornisce un punto di accesso globale.
+
+\textbf{Classi Singleton nel progetto:}
+
+\begin{enumerate}
+    \item \textbf{DAOFactoryAbstract} e sottoclassi - Una sola factory per l'intera applicazione.
+    
+    \item \textbf{CSVFileManager} - Un solo gestore dei file CSV per garantire thread-safety.
+    
+    \item \textbf{SessionManager} - Una sola sessione utente attiva.
+    
+    \item \textbf{FoodLazyFactory, VoucherLazyFactory} - Cache centralizzata degli oggetti.
+    
+    \item \textbf{Tutti i DAO} (UserDAODemo, OrdineDAOFS, ecc.) - Risorse condivise.
+\end{enumerate}
+
+\textbf{Motivazioni:}
+
+\begin{itemize}
+    \item \textbf{Risorse condivise:} Connessione database, file CSV, cache.
+    \item \textbf{Stato globale coerente:} Sessione utente, configurazione.
+    \item \textbf{Efficienza:} Evita duplicazione di risorse costose.
+\end{itemize}
+\end{tcolorbox}
+
+% --- D8 ---
+\subsection{Singleton e Multi-Thread}
+
+\textbf{Domanda:} \textit{Quali sono i rischi del Singleton in un contesto multi-thread? Come li ha gestiti?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Rischio principale: Double-Checked Locking Problem}
+
+Senza sincronizzazione, due thread potrebbero eseguire contemporaneamente:
+\begin{lstlisting}
+if (instance == null) {           // Thread A: true
+    // Thread B: true (anche lui vede null!)
+    instance = new Singleton();   // Due istanze create!
+}
+\end{lstlisting}
+
+\textbf{Soluzione implementata: synchronized getInstance()}
+
+\begin{lstlisting}
+public static synchronized DAOFactoryAbstract getInstance() {
+    if (me == null) {
+        me = new DAOFactoryDB();  // Eseguito da un solo thread
+    }
+    return me;
+}
+\end{lstlisting}
+
+La keyword \texttt{synchronized} acquisisce un lock intrinseco sulla classe, garantendo che un solo thread alla volta possa eseguire il metodo.
+
+\textbf{Trade-off:} Overhead di sincronizzazione su ogni chiamata, ma nel contesto dell'applicazione Habibi è accettabile perché le chiamate sono relativamente poco frequenti.
+
+\textbf{In CSVFileManager:} Uso di \texttt{ReentrantReadWriteLock} per permettere letture concorrenti ma scritture esclusive.
+\end{tcolorbox}
+
+% --- D9 ---
+\subsection{FoodFactory: Singleton o Utility Class?}
+
+\textbf{Domanda:} \textit{La sua FoodFactory è un Singleton? Se no, che tipo di classe è e perché i metodi sono static?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\texttt{FoodFactory} \textbf{NON è un Singleton}, è una \textbf{Utility Class} (o Static Factory).
+
+\textbf{Differenze chiave:}
+
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Caratteristica} & \textbf{Singleton} & \textbf{Utility Class} \\
+\hline
+Istanza statica & Sì (\texttt{instance}) & No \\
+\texttt{getInstance()} & Sì & No \\
+Costruttore private & Per impedire altre istanze & Per impedire qualsiasi istanza \\
+Metodi & Di istanza & \textbf{Static} \\
+Stato interno & Può avere stato & \textbf{Stateless} \\
+\hline
+\end{tabular}
+
+\textbf{Perché static?}
+
+I metodi \texttt{creaProdottoBase()} e \texttt{applicaDecorator()} sono static perché:
+\begin{enumerate}
+    \item \textbf{Non accedono a this:} Non usano attributi di istanza.
+    \item \textbf{Pure functions:} Dato lo stesso input, producono lo stesso output.
+    \item \textbf{Stateless:} Non mantengono stato tra chiamate.
+\end{enumerate}
+
+Un metodo dovrebbe essere static se non ha bisogno di accedere a dati specifici di un'istanza.
+\end{tcolorbox}
+
+% --- D10 ---
+\subsection{Pattern State}
+
+\textbf{Domanda:} \textit{Il pattern State è presente nel suo progetto? Dove? Quali sono gli stati coinvolti?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+Sì, il pattern \textbf{State} è utilizzato nella gestione dello stato dell'ordine.
+
+\textbf{Intent GoF:} "Allow an object to alter its behavior when its internal state changes. The object will appear to change its class."
+
+\textbf{Implementazione:}
+
+L'entità \texttt{Ordine} ha un attributo \texttt{stato} di tipo \texttt{StatoOrdine} (enum):
+
+\begin{lstlisting}
+public enum StatoOrdine {
+    IN_CREAZIONE,    // Ordine in fase di composizione
+    CONFERMATO,      // Ordine confermato dal cliente
+    IN_PREPARAZIONE, // Kebabbaro sta preparando
+    PRONTO,          // Ordine pronto per il ritiro
+    CONSEGNATO,      // Ordine consegnato
+    ANNULLATO        // Ordine annullato
+}
+\end{lstlisting}
+
+\textbf{Transizioni:}
+\begin{itemize}
+    \item IN\_CREAZIONE → CONFERMATO (cliente conferma)
+    \item CONFERMATO → IN\_PREPARAZIONE (kebabbaro accetta)
+    \item IN\_PREPARAZIONE → PRONTO (preparazione completata)
+    \item PRONTO → CONSEGNATO (consegna effettuata)
+    \item Qualsiasi stato → ANNULLATO (annullamento)
+\end{itemize}
+
+Il comportamento dell'ordine (quali operazioni sono permesse) dipende dallo stato corrente.
+\end{tcolorbox}
+
+% --- D11 ---
+\subsection{State vs Strategy}
+
+\textbf{Domanda:} \textit{Qual è la differenza tra State e Strategy? Entrambi usano polimorfismo, cosa li distingue?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+Entrambi i pattern usano composizione e polimorfismo, ma differiscono nel \textbf{controllo delle transizioni}:
+
+\textbf{Strategy:}
+\begin{itemize}
+    \item Il \textbf{client} sceglie quale strategia usare.
+    \item Le strategie sono \textbf{interscambiabili} e indipendenti.
+    \item Non ci sono transizioni automatiche tra strategie.
+    \item Esempio: Scegliere l'algoritmo di ordinamento (QuickSort vs MergeSort).
+\end{itemize}
+
+\textbf{State:}
+\begin{itemize}
+    \item L'\textbf{oggetto stesso} (o lo stato) decide le transizioni.
+    \item Gli stati hanno \textbf{relazioni definite} (macchina a stati).
+    \item Le transizioni seguono regole precise.
+    \item Esempio: Stato di un ordine (IN\_CREAZIONE → CONFERMATO → ...).
+\end{itemize}
+
+\textbf{Nel progetto Habibi:}
+\begin{itemize}
+    \item \textbf{State:} StatoOrdine - L'ordine transita tra stati secondo regole definite.
+    \item \textbf{Strategy:} Voucher - Il tipo di sconto (Percentuale vs Fisso) è scelto al momento della creazione.
+\end{itemize}
+\end{tcolorbox}
+
+% --- D12 ---
+\subsection{Pattern Facade}
+
+\textbf{Domanda:} \textit{Il pattern Facade è presente. Mi spieghi come e perché lo usa nei suoi Controller.}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Intent GoF:} "Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use."
+
+\textbf{Implementazione nel progetto:}
+
+I Facade (\texttt{CreaOrdineFacade}, \texttt{VisualizzaOrdiniFacade}) fungono da interfaccia semplificata tra i GraphicController (Boundary) e la logica di business.
+
+\textbf{Esempio CreaOrdineFacade:}
+
+\begin{lstlisting}
+public class CreaOrdineFacade {
+    public boolean aggiungiProdottoAOrdine(FoodBean request) {
+        // Nasconde la complessità:
+        // 1. Crea Food da FoodBean
+        // 2. Applica decoratori
+        // 3. Delega al Controller
+        // 4. Gestisce eccezioni
+    }
+}
+\end{lstlisting}
+
+\textbf{Vantaggi:}
+\begin{enumerate}
+    \item \textbf{Decoupling:} Il Boundary non conosce la struttura interna del subsystem.
+    \item \textbf{Semplicità:} Un'unica chiamata invece di orchestrare più oggetti.
+    \item \textbf{Manutenibilità:} Cambiamenti interni non impattano i client.
+\end{enumerate}
+\end{tcolorbox}
+
+% ============================================================================
+\section{Principi SOLID e GRASP}
+% ============================================================================
+
+% --- D13 ---
+\subsection{Open/Closed Principle}
+
+\textbf{Domanda:} \textit{Mi parli del principio Open/Closed. Dove lo rispetta nel suo progetto?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Definizione (Bertrand Meyer):} "Software entities should be open for extension, but closed for modification."
+
+Il codice deve poter essere esteso senza modificare il codice esistente.
+
+\textbf{Esempi nel progetto:}
+
+\begin{enumerate}
+    \item \textbf{Decorator:} Per aggiungere un nuovo addon (es. "Insalata"), creo una nuova classe \texttt{Insalata extends DecoratorAddON}. Non modifico \texttt{Food}, \texttt{DecoratorAddON}, né gli altri decorator.
+    
+    \item \textbf{Abstract Factory:} Per aggiungere MongoDB, creo \texttt{DAOFactoryMongo}. Non modifico le factory esistenti (DB, FS, Demo).
+    
+    \item \textbf{Strategy (Voucher):} Per aggiungere un nuovo tipo di voucher (es. "VoucherDuePerUno"), creo una nuova classe. Non modifico \texttt{VoucherPercentuale} o \texttt{VoucherFisso}.
+\end{enumerate}
+
+\textbf{Violazione potenziale:} Il metodo \texttt{applicaDecorator()} in FoodFactory richiede modifica dello switch per nuovi decorator. Una soluzione migliore sarebbe usare reflection o un registry.
+\end{tcolorbox}
+
+% --- D14 ---
+\subsection{Single Responsibility nei Bean}
+
+\textbf{Domanda:} \textit{Il principio Single Responsibility è rispettato nei suoi Bean? Qual è la loro unica responsabilità?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Definizione (Robert C. Martin):} "A class should have one, and only one, reason to change."
+
+\textbf{Responsabilità dei Bean:}
+
+I Bean (es. \texttt{FoodBean}, \texttt{OrdineBean}) hanno \textbf{una sola responsabilità}: trasportare dati tra i layer dell'applicazione.
+
+\begin{itemize}
+    \item \textbf{Non contengono logica di business} (quella è nelle Entity e nei Controller).
+    \item \textbf{Non accedono al database} (quello è nei DAO).
+    \item \textbf{Non gestiscono UI} (quello è nei GraphicController).
+\end{itemize}
+
+\textbf{Validazione nei Bean:}
+
+Una eccezione è la validazione sintattica nei setter:
+\begin{lstlisting}
+public void setEmail(String email) throws BeanFormatException {
+    if (!email.matches(EMAIL_REGEX)) {
+        throw new BeanFormatException("Email non valida");
+    }
+    this.email = email;
+}
+\end{lstlisting}
+
+Questa è comunque coerente con SRP: la validazione del formato è parte del "trasporto sicuro" dei dati.
+\end{tcolorbox}
+
+% --- D15 ---
+\subsection{Dependency Inversion}
+
+\textbf{Domanda:} \textit{Cos'è il principio di Dependency Inversion? Le sue classi dipendono da astrazioni o da implementazioni concrete?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Definizione:} 
+\begin{enumerate}
+    \item I moduli di alto livello non devono dipendere da moduli di basso livello. Entrambi devono dipendere da astrazioni.
+    \item Le astrazioni non devono dipendere dai dettagli. I dettagli devono dipendere dalle astrazioni.
+\end{enumerate}
+
+\textbf{Nel progetto Habibi:}
+
+\begin{lstlisting}
+// Il Controller dipende dall'astrazione (Interface)
+public class CreaOrdineController {
+    private OrdineDAOInterface ordineDAO;
+    
+    public CreaOrdineController() {
+        // Ottiene l'implementazione tramite Factory
+        this.ordineDAO = DAOFactoryAbstract.getInstance().getOrdineDAO();
+    }
+}
+\end{lstlisting}
+
+\texttt{CreaOrdineController} (alto livello) non dipende da \texttt{OrdineDAODB} (basso livello), ma dall'interfaccia \texttt{OrdineDAOInterface}.
+
+\textbf{Vantaggio:} Posso cambiare l'implementazione del DAO (DB → FS → Demo) senza modificare il Controller.
+\end{tcolorbox}
+
+% --- D16 ---
+\subsection{Information Expert (GRASP)}
+
+\textbf{Domanda:} \textit{Nel pattern GRASP, cos'è l'Information Expert? Chi è l'esperto per calcolare il totale dell'ordine?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Definizione:} Assegna la responsabilità alla classe che ha le informazioni necessarie per adempierla.
+
+\textbf{Chi calcola il totale dell'ordine?}
+
+L'entità \texttt{Ordine} è l'Information Expert per il calcolo del totale perché:
+\begin{itemize}
+    \item Ha la lista dei \texttt{prodotti} (List<Food>)
+    \item Ha il \texttt{voucher} applicato
+    \item Ha tutte le informazioni necessarie
+\end{itemize}
+
+\begin{lstlisting}
+public class Ordine {
+    private List<Food> prodotti;
+    private Voucher voucher;
+    
+    public double getTotale() {
+        double subtotale = getSubtotale();  // Somma costi prodotti
+        return voucher.applicaSconto(subtotale);  // Applica sconto
+    }
+}
+\end{lstlisting}
+
+Sarebbe \textbf{sbagliato} calcolare il totale nel Controller o nel DAO, perché dovrebbero "chiedere" all'Ordine tutte le informazioni.
+\end{tcolorbox}
+
+% --- D17 ---
+\subsection{Low Coupling (GRASP)}
+
+\textbf{Domanda:} \textit{Cos'è il Low Coupling in GRASP? Come lo garantisce nel suo progetto?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Definizione:} Minimizzare le dipendenze tra classi per aumentare riusabilità e ridurre l'impatto delle modifiche.
+
+\textbf{Strategie nel progetto:}
+
+\begin{enumerate}
+    \item \textbf{Interfacce:} I controller dipendono da \texttt{DAOInterface}, non da implementazioni concrete.
+    
+    \item \textbf{Facade:} I GraphicController comunicano solo con il Facade, non con Controller + DAO + Entity.
+    
+    \item \textbf{Bean:} I layer comunicano tramite Bean (DTO), non passandosi Entity direttamente.
+    
+    \item \textbf{Factory:} La creazione degli oggetti è delegata a Factory, non hardcoded.
+\end{enumerate}
+
+\textbf{Esempio:}
+\begin{lstlisting}
+// Alta coupling (MALE)
+CreaOrdineGUIController dipende da: Controller, DAO, Entity, ...
+
+// Bassa coupling (BENE)
+CreaOrdineGUIController dipende solo da: CreaOrdineFacade
+\end{lstlisting}
+\end{tcolorbox}
+
+% --- D18 ---
+\subsection{Creator (GRASP)}
+
+\textbf{Domanda:} \textit{Il principio Creator di GRASP: chi dovrebbe creare gli oggetti Food? Perché ha scelto FoodFactory?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Definizione Creator:} La classe B dovrebbe creare istanze di A se:
+\begin{itemize}
+    \item B contiene o aggrega A
+    \item B registra A
+    \item B usa strettamente A
+    \item B ha i dati iniziali per A
+\end{itemize}
+
+\textbf{Perché FoodFactory?}
+
+\texttt{FoodFactory} è appropriata perché:
+\begin{enumerate}
+    \item \textbf{Ha i dati iniziali:} Conosce le classi concrete (PaninoDonerKebab, ecc.)
+    \item \textbf{Centralizza la logica:} Un unico punto per la creazione
+    \item \textbf{Nasconde i dettagli:} Il client non sa quali classi concrete esistono
+\end{enumerate}
+
+\textbf{Alternativa respinta:} Far creare Food direttamente a Ordine violerebbe SRP (Ordine si occuperebbe sia di gestire prodotti che di crearli) e renderebbe Ordine dipendente da tutte le classi concrete Food.
+\end{tcolorbox}
+
+% --- D19 ---
+\subsection{Controller GRASP vs MVC}
+
+\textbf{Domanda:} \textit{Cos'è un Controller nel senso GRASP? In cosa differisce dal Controller MVC?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Controller GRASP:}
+\begin{itemize}
+    \item Riceve eventi di sistema (use case) e li coordina.
+    \item È il primo oggetto oltre il layer UI a gestire l'operazione.
+    \item Può essere un "use case controller" o un "facade controller".
+    \item Esempio: \texttt{CreaOrdineController}, \texttt{LoginControl}.
+\end{itemize}
+
+\textbf{Controller MVC:}
+\begin{itemize}
+    \item Gestisce l'input utente dalla View.
+    \item Aggiorna il Model basandosi sull'input.
+    \item Seleziona la View da mostrare.
+    \item È più orientato al flusso UI.
+\end{itemize}
+
+\textbf{Nel progetto Habibi:}
+\begin{itemize}
+    \item \texttt{CreaOrdineGUIController} → Più vicino a MVC Controller (gestisce UI JavaFX)
+    \item \texttt{CreaOrdineController} → Controller GRASP (coordina use case)
+\end{itemize}
+
+Il GraphicController (MVC) delega al Controller GRASP la logica di business.
+\end{tcolorbox}
+
+% ============================================================================
+\section{Architettura BCE}
+% ============================================================================
+
+% --- D20 ---
+\subsection{Boundary, Control, Entity}
+
+\textbf{Domanda:} \textit{Cosa sono Boundary, Control ed Entity nel suo progetto? Mi faccia degli esempi concreti.}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+L'architettura BCE (Boundary-Control-Entity) è un refinement del modello MVC per sistemi enterprise.
+
+\textbf{Boundary (Interfacce utente/sistema):}
+\begin{itemize}
+    \item \texttt{CreaOrdineGUIController} - Interfaccia grafica JavaFX
+    \item \texttt{CreaOrdineCLIController} - Interfaccia a riga di comando
+    \item File FXML - Definizione layout UI
+\end{itemize}
+
+\textbf{Control (Logica applicativa):}
+\begin{itemize}
+    \item \texttt{CreaOrdineController} - Coordina use case "Crea Ordine"
+    \item \texttt{LoginControl} - Coordina use case "Login"
+    \item \texttt{CreaOrdineFacade} - Facade per semplificare interfaccia
+\end{itemize}
+
+\textbf{Entity (Dati persistenti):}
+\begin{itemize}
+    \item \texttt{Ordine} - Rappresenta un ordine
+    \item \texttt{Food}, \texttt{PaninoDonerKebab} - Prodotti
+    \item \texttt{User}, \texttt{Cliente} - Utenti e ruoli
+    \item \texttt{Voucher} - Codici sconto
+\end{itemize}
+\end{tcolorbox}
+
+% --- D21 ---
+\subsection{Comunicazione Boundary-Entity}
+
+\textbf{Domanda:} \textit{Un Boundary può comunicare direttamente con un Entity? Perché no?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{No}, un Boundary \textbf{non dovrebbe} comunicare direttamente con un Entity.
+
+\textbf{Ragioni:}
+
+\begin{enumerate}
+    \item \textbf{Separazione delle responsabilità:} Il Boundary si occupa di UI, non di logica di business o accesso dati.
+    
+    \item \textbf{Testabilità:} Se il Boundary dipende direttamente da Entity e DAO, è difficile testarlo in isolamento.
+    
+    \item \textbf{Manutenibilità:} Cambiamenti alla struttura dell'Entity impatterebbero direttamente la UI.
+    
+    \item \textbf{Security:} Il Boundary potrebbe bypassare validazioni e controlli del Control.
+\end{enumerate}
+
+\textbf{Flusso corretto:}
+\begin{verbatim}
+Boundary → Bean → Control → Entity → DAO
+             ↑        ↓
+             └── Bean ←
+\end{verbatim}
+
+I Bean fungono da "contratto" tra i layer, isolandoli dalle rispettive implementazioni.
+\end{tcolorbox}
+
+% --- D22 ---
+\subsection{Ruolo dei Bean}
+
+\textbf{Domanda:} \textit{Cosa sono i Bean nel suo progetto? A quale layer BCE appartengono?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+I \textbf{Bean} sono \textbf{Data Transfer Objects (DTO)}: oggetti semplici che trasportano dati tra layer.
+
+\textbf{Caratteristiche:}
+\begin{itemize}
+    \item Contengono solo attributi e getter/setter
+    \item Nessuna logica di business
+    \item Serializzabili (\texttt{implements Serializable})
+    \item Validazione sintattica opzionale nei setter
+\end{itemize}
+
+\textbf{A quale layer appartengono?}
+
+I Bean sono \textbf{trasversali} - non appartengono strettamente a un solo layer ma fungono da "ponte":
+
+\begin{verbatim}
+Boundary       Control        Entity
+    │              │              │
+    └── FoodBean ─→│              │
+                   └── FoodBean ─→│ (conversione a Food)
+                   ←── OrdineBean ←│ (conversione da Ordine)
+    ←── OrdineBean ←│              │
+\end{verbatim}
+
+Concettualmente, sono più vicini al \textbf{Boundary} perché trasportano la "vista utente" dei dati, non la rappresentazione di persistenza.
+\end{tcolorbox}
+
+% --- D23 ---
+\subsection{FoodBean vs Food}
+
+\textbf{Domanda:} \textit{Perché ha bisogno sia di FoodBean che di Food (Entity)? Non bastava uno solo?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+Servono entrambi per \textbf{separare le responsabilità} e \textbf{isolare i layer}.
+
+\textbf{FoodBean:}
+\begin{itemize}
+    \item Usato dalla UI per mostrare/raccogliere dati
+    \item Contiene solo stringhe e tipi primitivi
+    \item Attributo \texttt{classe} come String (es. "PaninoDonerKebab")
+    \item Attributo \texttt{addOnSelezionati} come List<String>
+    \item Non conosce il pattern Decorator
+\end{itemize}
+
+\textbf{Food (Entity):}
+\begin{itemize}
+    \item Usato dalla logica di business
+    \item Classe astratta con gerarchia (Decorator pattern)
+    \item Metodi come \texttt{getCosto()} con logica
+    \item Conosce la struttura del Decorator
+\end{itemize}
+
+\textbf{Vantaggio della separazione:}
+
+Se usassi solo Food:
+\begin{itemize}
+    \item La UI dovrebbe conoscere il pattern Decorator
+    \item Cambiamenti a Food impatterebbero la UI
+    \item La UI avrebbe accesso a metodi che non dovrebbe usare
+\end{itemize}
+
+Il Facade/Controller converte FoodBean → Food e viceversa, mantenendo i layer indipendenti.
+\end{tcolorbox}
+
+% --- D24 ---
+\subsection{GraphicController: Boundary o Controller?}
+
+\textbf{Domanda:} \textit{Il GraphicController è un Boundary o un Controller? Giustifichi.}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+Il \texttt{GraphicController} è un \textbf{Boundary}.
+
+\textbf{Motivazione:}
+
+\begin{enumerate}
+    \item \textbf{Gestisce la UI:} Riceve eventi JavaFX (@FXML onClick, ecc.)
+    \item \textbf{Aggiorna la vista:} Modifica componenti grafici (Label, TextField, ecc.)
+    \item \textbf{Non contiene logica di business:} Delega tutto al Facade/Controller
+    \item \textbf{È sostituibile:} Può essere rimpiazzato con CLIController senza impatto sulla logica
+\end{enumerate}
+
+\textbf{Perché "Controller" nel nome?}
+
+È una convenzione JavaFX: il file FXML ha un \texttt{fx:controller} che punta alla classe che gestisce gli eventi. Ma nel senso BCE/GRASP, è il layer che "confina" con l'utente → Boundary.
+
+\textbf{Schema:}
+\begin{verbatim}
+User ←→ [CreaOrdineGUIController] ←→ [CreaOrdineFacade] ←→ [Controller] ←→ [Entity/DAO]
+            Boundary                     Control              Control
+\end{verbatim}
+\end{tcolorbox}
+
+% --- D25 ---
+\subsection{Flusso Completo di una Richiesta}
+
+\textbf{Domanda:} \textit{Qual è il flusso di una richiesta dal click dell'utente fino al salvataggio nel database?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Esempio: Aggiunta prodotto all'ordine}
+
+\begin{enumerate}
+    \item \textbf{UI Event:} Utente clicca "Aggiungi" → JavaFX chiama \texttt{@FXML onAggiungiProdotto()}
+    
+    \item \textbf{Boundary:} \texttt{CreaOrdineGUIController} crea un \texttt{FoodBean} con i dati selezionati
+    
+    \item \textbf{Facade:} \texttt{facade.aggiungiProdottoAOrdine(foodBean)}
+    
+    \item \textbf{Control:} Il Facade delega a \texttt{CreaOrdineController}:
+    \begin{itemize}
+        \item Crea Food da FoodBean usando \texttt{FoodFactory.creaProdottoBase()}
+        \item Applica decoratori con \texttt{FoodFactory.applicaDecorator()}
+    \end{itemize}
+    
+    \item \textbf{Entity:} \texttt{ordine.aggiungiProdotto(food)} - L'ordine aggiorna la sua lista
+    
+    \item \textbf{DAO:} \texttt{OrdineDAO.update(ordine)} - Salva su DB/CSV/Memory
+    
+    \item \textbf{Response:} Il Facade ritorna \texttt{true/false} al Boundary
+    
+    \item \textbf{UI Update:} Il Boundary aggiorna la vista (riepilogo ordine)
+\end{enumerate}
+\end{tcolorbox}
+
+% ============================================================================
+\section{Java e OOP}
+% ============================================================================
+
+% --- D26 ---
+\subsection{Abstract Class vs Interface}
+
+\textbf{Domanda:} \textit{Qual è la differenza tra una classe abstract e un'interface in Java?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Caratteristica} & \textbf{Abstract Class} & \textbf{Interface} \\
+\hline
+Metodi astratti & Può avere & Tutti (prima Java 8) \\
+Metodi concreti & Può avere & Solo default/static (Java 8+) \\
+Costruttori & Può avere & No \\
+Attributi & Qualsiasi tipo & Solo public static final \\
+Ereditarietà & Singola (extends) & Multipla (implements) \\
+Modificatori metodi & Qualsiasi & public (implicito) \\
+\hline
+\end{tabular}
+
+\textbf{Nel progetto Habibi:}
+\begin{itemize}
+    \item \texttt{Food} è \textbf{abstract class} perché ha attributi (\texttt{id}, \texttt{descrizione}) e costruttori.
+    \item \texttt{UserDAOInterface} è \textbf{interface} perché definisce solo il contratto, senza stato.
+\end{itemize}
+
+\textbf{Regola generale:} Usa interface per "cosa fa" (contratto), abstract class per "cosa è" (base comune).
+\end{tcolorbox}
+
+% --- D27 ---
+\subsection{Perché Interface per i DAO}
+
+\textbf{Domanda:} \textit{Le sue classi DAO implementano interfacce. Perché non ha usato classi astratte?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{Motivo 1: Dependency Inversion}
+
+Il codice applicativo deve dipendere da astrazioni, non da implementazioni. Le interfacce sono il modo più "puro" per definire un contratto senza alcuna implementazione.
+
+\textbf{Motivo 2: Flessibilità}
+
+Un DAO potrebbe voler estendere un'altra classe (es. una classe di utility DB). Con l'interface, può:
+\begin{lstlisting}
+public class UserDAODB extends JDBCTemplate implements UserDAOInterface
+\end{lstlisting}
+
+Con una classe astratta, Java non permetterebbe l'ereditarietà multipla.
+
+\textbf{Motivo 3: Testing/Mocking}
+
+Le interfacce sono facilmente mockabili nei test:
+\begin{lstlisting}
+UserDAOInterface mockDAO = Mockito.mock(UserDAOInterface.class);
+\end{lstlisting}
+
+\textbf{Motivo 4: Nessuno stato condiviso}
+
+I DAO non hanno logica comune che richieda attributi condivisi. Ogni implementazione (DB, FS, Demo) è completamente indipendente.
+\end{tcolorbox}
+
+% --- D28 ---
+\subsection{Keyword Static su Attributi}
+
+\textbf{Domanda:} \textit{Cosa significa la keyword 'static' su un attributo? Dove vive in memoria?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+Un attributo \texttt{static} appartiene alla \textbf{classe}, non alle istanze.
+
+\textbf{Caratteristiche:}
+\begin{itemize}
+    \item Una sola copia condivisa tra tutte le istanze
+    \item Accessibile tramite \texttt{NomeClasse.attributo}
+    \item Inizializzato al caricamento della classe
+\end{itemize}
+
+\textbf{Posizione in memoria:}
+
+\begin{verbatim}
+┌─────────────────────────────────────────────────────────┐
+│                        JVM MEMORY                        │
+├──────────────────┬──────────────────────────────────────┤
+│   METASPACE      │  HEAP                                │
+│ (Class Metadata) │  (Object Instances)                  │
+├──────────────────┼──────────────────────────────────────┤
+│ FoodFactory.class│                                      │
+│ └─static PIPPO   │                                      │
+│                  │  PaninoDonerKebab@1234               │
+│                  │  └─ descrizione (instance attr)      │
+│                  │                                      │
+│                  │  PaninoDonerKebab@5678               │
+│                  │  └─ descrizione (instance attr)      │
+└──────────────────┴──────────────────────────────────────┘
+\end{verbatim}
+
+Gli attributi statici risiedono nel \textbf{Metaspace} (area delle classi), non nell'Heap con gli oggetti.
+\end{tcolorbox}
+
+% --- D29 ---
+\subsection{Static e Garbage Collection}
+
+\textbf{Domanda:} \textit{Se un attributo è static, viene garbage-collected? Perché?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+\textbf{No}, un attributo static non viene garbage-collected durante la normale esecuzione.
+
+\textbf{Ragione:}
+
+Gli attributi static sono associati alla \textbf{classe}, non a un'istanza. Finché la classe è caricata in memoria (e lo è finché il ClassLoader è attivo), l'attributo esiste.
+
+\textbf{Implicazioni:}
+
+\begin{itemize}
+    \item \textbf{Memory leak:} Se un attributo static è una collezione che cresce (es. cache), può causare OutOfMemoryError.
+    
+    \begin{lstlisting}
+    static List<Food> cache = new ArrayList<>();  // Cresce per sempre!
+    \end{lstlisting}
+    
+    \item \textbf{Soluzione:} Implementare pulizia periodica o size limit.
+    
+    \item \textbf{Eccezione:} Se il ClassLoader viene distrutto (es. undeploy di web app), anche le classi e i loro static vengono garbage-collected.
+\end{itemize}
+
+\textbf{Nel progetto:} Le cache nelle LazyFactory sono static. Esiste un metodo \texttt{clearCache()} per svuotarle se necessario.
+\end{tcolorbox}
+
+% --- D30 ---
+\subsection{Stream in Java 8+}
+
+\textbf{Domanda:} \textit{Cosa sono gli Stream in Java 8+? Li usa nel suo progetto?}
+
+\begin{tcolorbox}[colback=risposta!5!white,colframe=risposta!75!black]
+Gli \textbf{Stream} sono un'astrazione per elaborare sequenze di elementi in modo dichiarativo e funzionale.
+
+\textbf{Caratteristiche:}
+\begin{itemize}
+    \item \textbf{Lazy evaluation:} Le operazioni intermedie non vengono eseguite finché non c'è un'operazione terminale.
+    \item \textbf{Pipeline:} Concatenazione fluente di operazioni.
+    \item \textbf{No side effects:} Preferiscono funzioni pure.
+    \item \textbf{Parallelizzabili:} \texttt{.parallelStream()} per elaborazione parallela.
+\end{itemize}
+
+\textbf{Uso nel progetto:}
+
+\begin{lstlisting}
+// Cerca il prodotto con classe corrispondente
+return prodottiBaseDisponibili.stream()
+        .filter(f -> classeRichiesta.equals(f.getClasse()))
+        .findFirst()
+        .orElse(null);
+\end{lstlisting}
+
+\textbf{Operazioni:}
+\begin{itemize}
+    \item \texttt{stream()} - Crea lo stream dalla lista
+    \item \texttt{filter()} - Operazione intermedia, filtra elementi
+    \item \texttt{findFirst()} - Operazione terminale, restituisce Optional
+    \item \texttt{orElse()} - Estrae valore da Optional
+\end{itemize}
+\end{tcolorbox}
+
+% Continuo nelle prossime sezioni per completezza...
+
+% ============================================================================
+\section{Sintesi Rapida (Ultime Domande)}
+% ============================================================================
+
+Per brevità, fornisco risposte più concise alle domande rimanenti.
+
+\subsection{UML: Aggregazione vs Composizione}
+\textbf{Aggregazione:} Relazione debole "has-a". Esempio: Ordine-Food. Food può esistere senza Ordine.\\
+\textbf{Composizione:} Relazione forte "part-of". Se il contenitore muore, anche il contenuto. Esempio: Car-Engine (ma non presente nel progetto).
+
+\subsection{Persistenza FS: ReentrantReadWriteLock}
+Permette \textbf{letture concorrenti} (più thread leggono insieme) ma \textbf{scritture esclusive} (un solo thread scrive, nessuno legge).
+
+\subsection{LazyFactory: Perché "Lazy"?}
+L'istanza viene creata solo alla prima richiesta (\texttt{if instance == null}), non al caricamento della classe. Risparmia risorse se l'oggetto non viene mai usato.
+
+\subsection{Copia FoodBean in onAggiungiProdotto}
+Necessaria per non modificare l'oggetto nella lista \texttt{prodottiBaseDisponibili}. Gli addon devono essere aggiunti solo alla copia, non al template.
+
+\subsection{ExceptionMessagesEnum}
+Enum per centralizzare i messaggi di errore. Vantaggio: una sola modifica per cambiare il testo ovunque. Evita typo e garantisce consistenza.
+
+\subsection{Pattern Observer}
+Usato per notifiche admin. \texttt{AdminNotificationService} è l'Observable, gli admin sono notificati quando viene confermato un ordine tramite evento.
+
+\end{document}

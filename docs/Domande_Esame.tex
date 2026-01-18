@@ -1,0 +1,280 @@
+% ============================================================================
+%           DOMANDE D'ESAME - PROGETTO HABIBI
+%           Simulazione Interrogazione Critica
+% ============================================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+
+\geometry{margin=2.5cm}
+
+\definecolor{domanda}{RGB}{0,51,102}
+\definecolor{categoria}{RGB}{154,130,98}
+
+\title{
+    \vspace{-1cm}
+    {\Huge \textbf{Domande d'Esame}}\\[0.5cm]
+    {\Large Progetto Habibi - Sistema Gestione Kebab}\\[0.3cm]
+    {\normalsize Simulazione Interrogazione Critica}
+}
+\author{Preparazione Esame ISPW}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Design Patterns GoF}
+% ============================================================================
+
+\begin{tcolorbox}[colback=categoria!10!white,colframe=categoria,title=Pattern Strutturali e Creazionali]
+
+\begin{enumerate}[label=\textbf{D\arabic*.}]
+
+\item \textcolor{domanda}{\textbf{Nel suo progetto è presente il pattern Decorator. Mi spieghi cos'è, qual è il suo intent secondo il GoF, e come l'ha implementato.}}
+
+\item \textcolor{domanda}{\textbf{Qual è la differenza tra Decorator e Inheritance? Perché ha scelto Decorator invece di creare sottoclassi come "PaninoConCipolla"?}}
+
+\item \textcolor{domanda}{\textbf{Nel Decorator, la classe DecoratorAddON mantiene un riferimento a Food. Si tratta di composizione o aggregazione? Giustifichi la risposta.}}
+
+\item \textcolor{domanda}{\textbf{Cosa succede quando chiama getCosto() su un prodotto decorato più volte? Mi descriva il flusso delle chiamate.}}
+
+\item \textcolor{domanda}{\textbf{Il pattern Abstract Factory è presente nel suo progetto. Mi mostri dove e perché l'ha usato.}}
+
+\item \textcolor{domanda}{\textbf{Qual è il vantaggio di usare Abstract Factory per la persistenza? Cosa succede se vuole aggiungere un nuovo tipo di storage?}}
+
+\item \textcolor{domanda}{\textbf{Il Singleton è utilizzato in più classi del suo progetto. Mi dica quali e perché usa questo pattern.}}
+
+\item \textcolor{domanda}{\textbf{Quali sono i rischi del Singleton in un contesto multi-thread? Come li ha gestiti?}}
+
+\item \textcolor{domanda}{\textbf{La sua FoodFactory è un Singleton? Se no, che tipo di classe è e perché i metodi sono static?}}
+
+\item \textcolor{domanda}{\textbf{Il pattern State è presente nel suo progetto? Dove? Quali sono gli stati coinvolti?}}
+
+\item \textcolor{domanda}{\textbf{Qual è la differenza tra State e Strategy? Entrambi usano polimorfismo, cosa li distingue?}}
+
+\item \textcolor{domanda}{\textbf{Il pattern Facade è presente. Mi spieghi come e perché lo usa nei suoi Controller.}}
+
+\end{enumerate}
+\end{tcolorbox}
+
+% ============================================================================
+\section{Principi SOLID e GRASP}
+% ============================================================================
+
+\begin{tcolorbox}[colback=categoria!10!white,colframe=categoria,title=Principi di Progettazione]
+
+\begin{enumerate}[label=\textbf{D\arabic*.},resume]
+
+\item \textcolor{domanda}{\textbf{Mi parli del principio Open/Closed. Dove lo rispetta nel suo progetto?}}
+
+\item \textcolor{domanda}{\textbf{Il principio Single Responsibility è rispettato nei suoi Bean? Qual è la loro unica responsabilità?}}
+
+\item \textcolor{domanda}{\textbf{Cos'è il principio di Dependency Inversion? Le sue classi dipendono da astrazioni o da implementazioni concrete?}}
+
+\item \textcolor{domanda}{\textbf{Nel pattern GRASP, cos'è l'Information Expert? Chi è l'esperto per calcolare il totale dell'ordine?}}
+
+\item \textcolor{domanda}{\textbf{Cos'è il Low Coupling in GRASP? Come lo garantisce nel suo progetto?}}
+
+\item \textcolor{domanda}{\textbf{Il principio Creator di GRASP: chi dovrebbe creare gli oggetti Food? Perché ha scelto FoodFactory?}}
+
+\item \textcolor{domanda}{\textbf{Cos'è un Controller nel senso GRASP? In cosa differisce dal Controller MVC?}}
+
+\end{enumerate}
+\end{tcolorbox}
+
+% ============================================================================
+\section{Architettura e BCE}
+% ============================================================================
+
+\begin{tcolorbox}[colback=categoria!10!white,colframe=categoria,title=Architettura Layered e BCE]
+
+\begin{enumerate}[label=\textbf{D\arabic*.},resume]
+
+\item \textcolor{domanda}{\textbf{Cosa sono Boundary, Control ed Entity nel suo progetto? Mi faccia degli esempi concreti.}}
+
+\item \textcolor{domanda}{\textbf{Un Boundary può comunicare direttamente con un Entity? Perché no?}}
+
+\item \textcolor{domanda}{\textbf{Cosa sono i Bean nel suo progetto? A quale layer BCE appartengono?}}
+
+\item \textcolor{domanda}{\textbf{Perché ha bisogno sia di FoodBean che di Food (Entity)? Non bastava uno solo?}}
+
+\item \textcolor{domanda}{\textbf{Il GraphicController è un Boundary o un Controller? Giustifichi.}}
+
+\item \textcolor{domanda}{\textbf{Qual è il flusso di una richiesta dal click dell'utente fino al salvataggio nel database?}}
+
+\end{enumerate}
+\end{tcolorbox}
+
+% ============================================================================
+\section{Java e OOP}
+% ============================================================================
+
+\begin{tcolorbox}[colback=categoria!10!white,colframe=categoria,title=Teoria Java]
+
+\begin{enumerate}[label=\textbf{D\arabic*.},resume]
+
+\item \textcolor{domanda}{\textbf{Qual è la differenza tra una classe abstract e un'interface in Java?}}
+
+\item \textcolor{domanda}{\textbf{Le sue classi DAO implementano interfacce. Perché non ha usato classi astratte?}}
+
+\item \textcolor{domanda}{\textbf{Cosa significa la keyword 'static' su un attributo? Dove vive in memoria?}}
+
+\item \textcolor{domanda}{\textbf{Se un attributo è static, viene garbage-collected? Perché?}}
+
+\item \textcolor{domanda}{\textbf{Cosa sono gli Stream in Java 8+? Li usa nel suo progetto?}}
+
+\item \textcolor{domanda}{\textbf{Nel codice filter(f -> ...).findFirst().orElse(null), mi spieghi ogni passaggio.}}
+
+\item \textcolor{domanda}{\textbf{Cos'è un Optional? Perché findFirst() restituisce Optional e non direttamente l'oggetto?}}
+
+\item \textcolor{domanda}{\textbf{Cosa sono le eccezioni checked e unchecked? Quali usa nel suo progetto?}}
+
+\item \textcolor{domanda}{\textbf{Cos'è l'exception chaining? Mi mostri un esempio nel suo codice.}}
+
+\item \textcolor{domanda}{\textbf{Perché nel catch usa 'throw new DAOException(message, e)' passando 'e' come secondo parametro?}}
+
+\end{enumerate}
+\end{tcolorbox}
+
+% ============================================================================
+\section{UML e Diagrammi}
+% ============================================================================
+
+\begin{tcolorbox}[colback=categoria!10!white,colframe=categoria,title=Unified Modeling Language]
+
+\begin{enumerate}[label=\textbf{D\arabic*.},resume]
+
+\item \textcolor{domanda}{\textbf{Qual è la differenza tra aggregazione e composizione in UML? Mi faccia un esempio dal suo progetto.}}
+
+\item \textcolor{domanda}{\textbf{L'ordine ha una relazione con Food: è aggregazione o composizione? Perché?}}
+
+\item \textcolor{domanda}{\textbf{Cosa rappresenta una freccia tratteggiata in un diagramma delle classi?}}
+
+\item \textcolor{domanda}{\textbf{Come si rappresenta un'interfaccia in UML? E una classe astratta?}}
+
+\item \textcolor{domanda}{\textbf{Cosa sono le molteplicità in UML? Quali sono tra Ordine e Food?}}
+
+\item \textcolor{domanda}{\textbf{Cosa rappresenta un diagramma di sequenza? Quale use case del suo progetto mi descriverebbe con esso?}}
+
+\end{enumerate}
+\end{tcolorbox}
+
+% ============================================================================
+\section{Persistenza}
+% ============================================================================
+
+\begin{tcolorbox}[colback=categoria!10!white,colframe=categoria,title=Data Access Object e Persistenza]
+
+\begin{enumerate}[label=\textbf{D\arabic*.},resume]
+
+\item \textcolor{domanda}{\textbf{Cos'è il pattern DAO? Perché lo usa?}}
+
+\item \textcolor{domanda}{\textbf{Quali sono i tre tipi di persistenza nel suo progetto? Come si selezionano?}}
+
+\item \textcolor{domanda}{\textbf{Dove vengono salvati i file CSV? Perché in quella posizione?}}
+
+\item \textcolor{domanda}{\textbf{Il CSVFileManager è thread-safe? Come garantisce la sicurezza?}}
+
+\item \textcolor{domanda}{\textbf{Cos'è un ReentrantReadWriteLock? Perché lo usa nel CSVFileManager?}}
+
+\item \textcolor{domanda}{\textbf{Cosa succede se due thread provano a scrivere sullo stesso file CSV contemporaneamente?}}
+
+\item \textcolor{domanda}{\textbf{Cos'è una LazyFactory? Perché "lazy"?}}
+
+\item \textcolor{domanda}{\textbf{Qual è il vantaggio di usare una cache nelle LazyFactory? E gli svantaggi?}}
+
+\end{enumerate}
+\end{tcolorbox}
+
+% ============================================================================
+\section{Domande Specifiche sul Codice}
+% ============================================================================
+
+\begin{tcolorbox}[colback=categoria!10!white,colframe=categoria,title=Implementazione Specifica]
+
+\begin{enumerate}[label=\textbf{D\arabic*.},resume]
+
+\item \textcolor{domanda}{\textbf{Nel metodo onAggiungiProdotto() crea una copia del FoodBean. Perché non usa direttamente quello selezionato?}}
+
+\item \textcolor{domanda}{\textbf{Cos'è ExceptionMessagesEnum.DAO.message? Perché usa un enum per i messaggi?}}
+
+\item \textcolor{domanda}{\textbf{Il costruttore di DecoratorAddON è protected. Perché questa scelta?}}
+
+\item \textcolor{domanda}{\textbf{In Cipolla, il metodo getDescrizione() controlla se foodDecorato è null. Quando può essere null?}}
+
+\item \textcolor{domanda}{\textbf{Perché FoodFactory ha un costruttore private se non è un Singleton?}}
+
+\item \textcolor{domanda}{\textbf{Cosa fa il metodo synchronized getInstance() nei Singleton? Perché synchronized?}}
+
+\item \textcolor{domanda}{\textbf{Nel file .properties, cosa succede se scrivo persistence\_type=XYZ (valore non valido)?}}
+
+\item \textcolor{domanda}{\textbf{Come gestisce il login per i diversi ruoli (Cliente, Amministratore, Kebabbaro)?}}
+
+\item \textcolor{domanda}{\textbf{Cos'è la SessionManager? È un Singleton? Perché?}}
+
+\item \textcolor{domanda}{\textbf{Come implementa le notifiche all'amministratore quando viene creato un ordine?}}
+
+\end{enumerate}
+\end{tcolorbox}
+
+% ============================================================================
+\section{Testing e Qualità}
+% ============================================================================
+
+\begin{tcolorbox}[colback=categoria!10!white,colframe=categoria,title=Testing e Code Quality]
+
+\begin{enumerate}[label=\textbf{D\arabic*.},resume]
+
+\item \textcolor{domanda}{\textbf{Ha scritto test unitari? Con quale framework?}}
+
+\item \textcolor{domanda}{\textbf{Cos'è JaCoCo? A cosa serve nel suo progetto?}}
+
+\item \textcolor{domanda}{\textbf{Usa SonarCloud? Quali metriche analizza?}}
+
+\item \textcolor{domanda}{\textbf{Cos'è un code smell? Me ne citi uno che ha risolto.}}
+
+\item \textcolor{domanda}{\textbf{Come testa la modalità DEMO senza un database reale?}}
+
+\end{enumerate}
+\end{tcolorbox}
+
+% ============================================================================
+\section{Domande Trabocchetto}
+% ============================================================================
+
+\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Attenzione: Domande Difficili]
+
+\begin{enumerate}[label=\textbf{D\arabic*.},resume]
+
+\item \textcolor{domanda}{\textbf{Se il Decorator aggiunge comportamento dinamicamente, perché non lo considera un pattern comportamentale?}}
+
+\item \textcolor{domanda}{\textbf{Il suo DecoratorAddON estende Food. Cosa succederebbe se Food fosse un'interfaccia?}}
+
+\item \textcolor{domanda}{\textbf{Può applicare lo stesso decorator due volte (es. doppia cipolla)? Come gestirebbe il prezzo?}}
+
+\item \textcolor{domanda}{\textbf{La sua Abstract Factory restituisce un Singleton per ogni DAO. Questo viola qualche principio?}}
+
+\item \textcolor{domanda}{\textbf{Se volesse aggiungere un nuovo prodotto base (es. Burrito), quali classi dovrebbe modificare?}}
+
+\item \textcolor{domanda}{\textbf{Se l'ordine ha 100 prodotti e chiama getCosto(), quante chiamate ricorsive ci sono?}}
+
+\item \textcolor{domanda}{\textbf{Il pattern Observer è presente nel suo progetto? Come notifica l'admin di un nuovo ordine?}}
+
+\end{enumerate}
+\end{tcolorbox}
+
+\vspace{1cm}
+\begin{center}
+\textit{Totale: 70+ domande di preparazione}
+\end{center}
+
+\end{document}

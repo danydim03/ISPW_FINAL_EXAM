@@ -83,27 +83,11 @@ public abstract class BaseCLIGraphicController {
             return pwd == null ? "" : new String(pwd).trim();
         }
 
-        // Fallback GUI (funziona anche dentro IDE)
-        try {
-            javax.swing.JPasswordField pf = new javax.swing.JPasswordField();
-            Object[] message = { "  " + prompt + ":", pf };
-            int option = javax.swing.JOptionPane.showConfirmDialog(
-                    null,
-                    message,
-                    "Inserisci password",
-                    javax.swing.JOptionPane.OK_CANCEL_OPTION,
-                    javax.swing.JOptionPane.PLAIN_MESSAGE);
-            if (option == javax.swing.JOptionPane.OK_OPTION) {
-                char[] pwd = pf.getPassword();
-                return pwd == null ? "" : new String(pwd).trim();
-            } else {
-                return "";
-            }
-        } catch (Exception e) {
-            // Ultimo fallback: lettura normale con avviso
-            showWarning("Console non disponibile, inserimento password non nascosto.");
-            return scanner.nextLine().trim();
-        }
+        // Fallback: lettura normale (se eseguito da IDE la console è null)
+        // Avviso all'utente che la password sarà visibile
+        showWarning("Console non disponibile, la password sarà visibile durante la digitazione.");
+        System.out.print("  " + prompt + ": ");
+        return scanner.nextLine().trim();
     }
 
     /**

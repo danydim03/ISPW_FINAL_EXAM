@@ -231,7 +231,12 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 labelNumeroOrdine.setText(" Numero Ordine: " + ordine.getNumeroOrdine());
             }
             aggiornaRiepilogo();
+            // Log di successo
+            // Non necessario mostrare messaggio all'utente in questa fase
         } catch (DAOException e) {
+            // Gestione eccezioni specifiche
+            // Rilancia come CreaOrdineException per la vista
+            // Log dell'errore già effettuato nel Facade
             throw new CreaOrdineException("Impossibile inizializzare l'ordine: " + e.getMessage(), e);
         }
     }

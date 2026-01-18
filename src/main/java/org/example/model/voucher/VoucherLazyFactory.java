@@ -1,6 +1,6 @@
 package org.example.model.voucher;
 
-import org.example. dao_manager.DAOFactoryAbstract;
+import org.example.dao_manager.DAOFactoryAbstract;
 import org.example.enums.ExceptionMessagesEnum;
 import org.example.exceptions.*;
 
@@ -23,9 +23,9 @@ public class VoucherLazyFactory {
         return instance;
     }
 
-
     public Voucher getVoucherById(Long id) throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
+            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
+            UnrecognizedRoleException {
 
         for (Voucher v : voucherCache) {
             if (v.getId() != null && v.getId().equals(id)) {
@@ -35,15 +35,16 @@ public class VoucherLazyFactory {
 
         try {
             Voucher daoVoucher = DAOFactoryAbstract.getInstance().getVoucherDAO().getVoucherById(id);
-            voucherCache. add(daoVoucher);
+            voucherCache.add(daoVoucher);
             return daoVoucher;
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum. DAO. message, e);
+            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
     }
 
     public Voucher getVoucherByCodice(String codice) throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
+            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
+            UnrecognizedRoleException {
 
         for (Voucher v : voucherCache) {
             if (v.getCodice() != null && v.getCodice().equalsIgnoreCase(codice)) {
@@ -61,17 +62,18 @@ public class VoucherLazyFactory {
     }
 
     public List<Voucher> getAllVoucherAttivi() throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
+            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
+            UnrecognizedRoleException {
         try {
             List<Voucher> vouchers = DAOFactoryAbstract.getInstance().getVoucherDAO().getAllVoucherAttivi();
             for (Voucher v : vouchers) {
-                if (! isVoucherInCache(v. getId())) {
+                if (!isVoucherInCache(v.getId())) {
                     voucherCache.add(v);
                 }
             }
             return vouchers;
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum.DAO. message, e);
+            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
     }
 
@@ -79,14 +81,15 @@ public class VoucherLazyFactory {
         try {
             DAOFactoryAbstract.getInstance().getVoucherDAO().insert(voucher);
         } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum. DAO.message, e);
+            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
         voucherCache.add(voucher);
         return voucher;
     }
 
     private boolean isVoucherInCache(Long id) {
-        if (id == null) return false;
+        if (id == null)
+            return false;
         for (Voucher v : voucherCache) {
             if (v.getId() != null && v.getId().equals(id)) {
                 return true;

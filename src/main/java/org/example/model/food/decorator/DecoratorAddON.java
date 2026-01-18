@@ -26,6 +26,8 @@ public abstract class DecoratorAddON extends Food {
         if (foodDecorato == null) {
             return getCostoPlus();
         }
+        // wrapping food with DecoratorAddON
+        // returning the new decorated food
         return foodDecorato.getCosto() + getCostoPlus();
     }
 
@@ -35,6 +37,8 @@ public abstract class DecoratorAddON extends Food {
         if (foodDecorato == null) {
             return getDurataPlus();
         }
+        // wrapping food with DecoratorAddON
+        // returning the new decorated food
         return foodDecorato.getDurata() + getDurataPlus();
     }
 }

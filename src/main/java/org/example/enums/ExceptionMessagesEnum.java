@@ -16,7 +16,7 @@ public enum ExceptionMessagesEnum {
     RESOURCE_NOT_FOUND("The requested resource has not been found"),
     UNRECOGNIZED_ROLE("Unrecognized user role value"),
     NUMBERS_DONT_MATCH("id and values number don't match"),
-    ;
+    NOT_INSTANTIABLE("This class cannot be instantiated");
 
     public final String message;
 
