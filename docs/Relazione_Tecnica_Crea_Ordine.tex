@@ -1,0 +1,1171 @@
+\documentclass[12pt,a4paper]{article}
+
+% ==================== PACKAGES ====================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{parskip}
+
+% ==================== GEOMETRY ====================
+\geometry{
+    top=2.5cm,
+    bottom=2.5cm,
+    left=3cm,
+    right=3cm
+}
+
+% ==================== COLORS ====================
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{boundary}{RGB}{66,133,244}
+\definecolor{control}{RGB}{52,168,83}
+\definecolor{entity}{RGB}{251,188,5}
+\definecolor{factory}{RGB}{234,67,53}
+
+% ==================== LISTINGS STYLE ====================
+\lstdefinestyle{javastyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    language=Java,
+    morekeywords={String, List, void, boolean, double, int, Long, extends, implements, throws, new, return, if, else, for, while, try, catch, finally, public, private, protected, static, final, abstract, class, interface, enum, package, import, this, super, null, true, false}
+}
+\lstset{style=javastyle}
+
+% ==================== HEADERS AND FOOTERS ====================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{Use Case: Crea Ordine}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ==================== HYPERREF SETUP ====================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Relazione Tecnica - Use Case Crea Ordine},
+    pdfauthor={ISPW Final Exam},
+    bookmarks=true
+}
+
+% ==================== TITLE FORMATTING ====================
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ==================== DOCUMENT BEGIN ====================
+\begin{document}
+
+% ==================== TITLE PAGE ====================
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge\bfseries Relazione Tecnica Accademica\\[0.5cm]}
+    {\LARGE\bfseries Use Case ``Crea Ordine''\\[1cm]}
+    
+    \vspace{1cm}
+    
+    {\Large Analisi Architetturale Completa del Sistema\\di Gestione Ordini per Kebabberia\\[0.5cm]}
+    
+    \vspace{2cm}
+    
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}[scale=0.8]
+            % BCE Pattern visualization
+            \draw[fill=boundary!30, draw=boundary, thick, rounded corners] (0,0) rectangle (3,2);
+            \node at (1.5,1) {\textbf{Boundary}};
+            
+            \draw[fill=control!30, draw=control, thick, rounded corners] (4,0) rectangle (7,2);
+            \node at (5.5,1) {\textbf{Control}};
+            
+            \draw[fill=entity!30, draw=entity, thick, rounded corners] (8,0) rectangle (11,2);
+            \node at (9.5,1) {\textbf{Entity}};
+            
+            % Arrows
+            \draw[->, thick] (3,1) -- (4,1);
+            \draw[->, thick] (7,1) -- (8,1);
+        \end{tikzpicture}
+        \caption*{Pattern BCE (Boundary-Control-Entity)}
+    \end{figure}
+    
+    \vspace{2cm}
+    
+    {\large\textbf{Ingegneria del Software e Progettazione Web}\\[0.5cm]}
+    {\large Università degli Studi\\[0.5cm]}
+    {\large Anno Accademico 2024/2025\\[1cm]}
+    
+    \vfill
+    
+    {\large Data di redazione: \today}
+\end{titlepage}
+
+% ==================== TABLE OF CONTENTS ====================
+\newpage
+\tableofcontents
+\newpage
+
+% ==================== CHAPTER 1: INTRODUCTION ====================
+\section{Introduzione}
+\label{sec:introduzione}
+
+\subsection{Scopo del Documento}
+La presente relazione tecnica accademica si propone di fornire un'analisi esaustiva e approfondita dello use case principale del sistema software analizzato: \textbf{``Crea Ordine''}. Tale documento è stato redatto con l'obiettivo di sviscerare in maniera prolissa e dettagliata ogni singolo aspetto architetturale, progettuale e implementativo che caratterizza questo caso d'uso fondamentale.
+
+L'analisi che segue è strutturata secondo i canoni della documentazione tecnica accademica, privilegiando la completezza espositiva rispetto alla sintesi, al fine di garantire una comprensione totale e inequivocabile di tutti i meccanismi sottostanti il funzionamento del sistema.
+
+\subsection{Contesto Applicativo}
+Il sistema oggetto di analisi è un'applicazione software per la gestione di una kebabberia, denominata internamente ``Habibi Kebab''. L'applicazione consente ai clienti di effettuare ordini di prodotti alimentari (kebab in varie forme), personalizzandoli con ingredienti aggiuntivi (add-on) e applicando eventuali voucher sconto.
+
+Lo use case ``Crea Ordine'' rappresenta il cuore funzionale dell'intero sistema, in quanto costituisce il processo principale attraverso il quale i clienti interagiscono con l'applicazione per soddisfare il loro bisogno primario: ordinare cibo.
+
+\subsection{Architettura Software Adottata}
+L'architettura software del sistema si basa sul pattern architetturale \textbf{BCE (Boundary-Control-Entity)}, una variante del pattern MVC (Model-View-Controller) particolarmente indicata per lo sviluppo di applicazioni orientate agli oggetti. Tale pattern prevede una netta separazione delle responsabilità tra tre tipologie di classi:
+
+\begin{itemize}[leftmargin=2cm]
+    \item \textbf{Boundary}: Classi responsabili dell'interazione con l'utente e con sistemi esterni. Rappresentano il confine del sistema.
+    \item \textbf{Control}: Classi che orchestrano la logica applicativa, coordinando il flusso di esecuzione tra Boundary ed Entity.
+    \item \textbf{Entity}: Classi che rappresentano gli oggetti del dominio applicativo, contenendo dati e logica di business intrinseca.
+\end{itemize}
+
+\subsection{Design Pattern Implementati}
+L'implementazione dello use case ``Crea Ordine'' fa ampio uso di design pattern consolidati dalla letteratura dell'ingegneria del software:
+
+\begin{enumerate}[leftmargin=2cm]
+    \item \textbf{Facade Pattern}: Per semplificare l'interfaccia verso i controller grafici
+    \item \textbf{Decorator Pattern}: Per la gestione flessibile degli add-on sui prodotti
+    \item \textbf{Strategy Pattern}: Per l'applicazione polimorifico degli sconti tramite voucher
+    \item \textbf{Factory Pattern}: Per la creazione centralizzata di oggetti Food
+    \item \textbf{Lazy Factory Pattern}: Per la gestione efficiente della persistenza con caching
+    \item \textbf{Null Object Pattern}: Per la gestione dell'assenza di voucher
+    \item \textbf{Abstract Factory Pattern}: Per la selezione dinamica del layer di persistenza
+\end{enumerate}
+
+% ==================== CHAPTER 2: BCE PATTERN ====================
+\section{Analisi del Pattern BCE}
+\label{sec:bce}
+
+\subsection{Struttura Architetturale Generale}
+Il pattern BCE (Boundary-Control-Entity) costituisce il fondamento architetturale dell'intero sistema. Questa sezione analizza nel dettaglio come tale pattern sia stato implementato nello use case ``Crea Ordine'', esaminando le relazioni e le interazioni tra le diverse tipologie di classi.
+
+\subsection{Flusso di Esecuzione}
+Il flusso di esecuzione tipico dello use case ``Crea Ordine'' segue il seguente percorso:
+
+\begin{enumerate}[leftmargin=2cm]
+    \item L'utente (Actor) interagisce con una classe \textbf{Boundary} (GUI o CLI Controller)
+    \item Il Boundary inoltra la richiesta alla classe \textbf{Facade} (punto di ingresso semplificato)
+    \item La Facade delega l'elaborazione al \textbf{Controller Applicativo}
+    \item Il Controller manipola le \textbf{Entity} e interagisce con il layer di persistenza
+    \item Il risultato risale la catena fino al Boundary, che lo presenta all'utente
+\end{enumerate}
+
+\subsection{Principio di Separazione delle Responsabilità}
+La separazione delle responsabilità nel sistema è implementata secondo i seguenti criteri:
+
+\begin{table}[H]
+\centering
+\caption{Separazione delle responsabilità nel pattern BCE}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Livello} & \textbf{Responsabilità} \\
+\hline
+Boundary & Gestione dell'interfaccia utente, validazione input di base, presentazione dei dati \\
+\hline
+Control & Orchestrazione della logica applicativa, coordinamento tra componenti, conversione Bean/Entity \\
+\hline
+Entity & Rappresentazione del dominio, logica di business intrinseca, calcoli specifici del dominio \\
+\hline
+\end{tabular}
+\end{table}
+
+% ==================== CHAPTER 3: BOUNDARY CLASSES ====================
+\section{Classi Boundary}
+\label{sec:boundary}
+
+\subsection{Panoramica delle Classi Boundary}
+Le classi Boundary rappresentano il punto di contatto tra il sistema e il mondo esterno, in particolare l'utente finale. Nello use case ``Crea Ordine'' sono presenti due implementazioni distinte della stessa funzionalità:
+
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{CreaOrdineGUIController}: Controller grafico per interfaccia JavaFX
+    \item \texttt{CreaOrdineCLIController}: Controller per interfaccia a linea di comando
+\end{itemize}
+
+\subsection{CreaOrdineGUIController}
+\label{subsec:guicontroller}
+
+\subsubsection{Descrizione Generale}
+La classe \texttt{CreaOrdineGUIController} costituisce il controller grafico per l'interfaccia JavaFX dello use case ``Crea Ordine''. Questa classe estende \texttt{BaseGraphicControl} e implementa l'interfaccia \texttt{Initializable}, seguendo le convenzioni standard di JavaFX per la gestione dei controller FXML.
+
+\subsubsection{Attributi della Classe}
+La classe dichiara numerosi attributi che possono essere categorizzati come segue:
+
+\paragraph{Costanti di Classe}
+\begin{lstlisting}
+private static final Logger logger = Logger.getLogger(CreaOrdineGUIController.class.getName());
+private static final String ERROR_TITLE = "Errore";
+private static final String ADDON_TYPE = "ADDON";
+private static final String ADDON_CIPOLLA = "Cipolla";
+private static final String ADDON_PATATINE = "Patatine";
+private static final String ZERO_CURRENCY = "€0.00";
+\end{lstlisting}
+
+Queste costanti definiscono valori utilizzati frequentemente nel codice, seguendo il principio DRY (Don't Repeat Yourself) e facilitando la manutenzione del codice.
+
+\paragraph{Componenti UI Iniettati via FXML}
+\begin{lstlisting}
+@FXML private RadioButton radioPanino;
+@FXML private RadioButton radioPiadina;
+@FXML private RadioButton radioPiatto;
+@FXML private CheckBox checkCipolla;
+@FXML private CheckBox checkSalsaYogurt;
+@FXML private CheckBox checkPatatine;
+@FXML private CheckBox checkMixVerdure;
+@FXML private TableView<RigaOrdineBean> tabellaOrdine;
+@FXML private TextField textFieldVoucher;
+@FXML private Button btnAggiungiProdotto;
+// ... altri componenti
+\end{lstlisting}
+
+L'annotazione \texttt{@FXML} indica che questi attributi vengono iniettati automaticamente dal framework JavaFX durante il caricamento del file FXML associato.
+
+\paragraph{Attributi di Stato}
+\begin{lstlisting}
+private CreaOrdineFacade facade;
+private List<FoodBean> prodottiBaseDisponibili;
+private List<FoodBean> addOnDisponibili;
+private ObservableList<RigaOrdineBean> righeOrdineObservable;
+\end{lstlisting}
+
+Questi attributi mantengono lo stato corrente della view durante l'interazione dell'utente.
+
+\subsubsection{Metodo initialize()}
+Il metodo \texttt{initialize()} viene invocato automaticamente da JavaFX dopo l'iniezione di tutti i componenti FXML. La sua implementazione segue una sequenza precisa di operazioni:
+
+\begin{lstlisting}
+@Override
+public void initialize(URL location, ResourceBundle resources) {
+    righeOrdineObservable = FXCollections.observableArrayList();
+    try {
+        setupTabella();
+        setupListeners();
+        String tokenKey = PageNavigationController.getInstance().getSessionTokenKey();
+        if (tokenKey == null) {
+            logger.severe("Utente non loggato - token null");
+            mostraErrore("Errore di sessione", "Devi effettuare il login...");
+            return;
+        }
+        facade = new CreaOrdineFacade(tokenKey);
+        caricaDatiIniziali();
+        iniziaNuovoOrdine();
+    } catch (MissingAuthorizationException e) {
+        // Gestione eccezioni...
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Gestione Eventi Utente}
+I metodi annotati con \texttt{@FXML} gestiscono gli eventi generati dall'interazione utente:
+
+\paragraph{onAggiungiProdotto()}
+Questo metodo gestisce l'aggiunta di un prodotto all'ordine:
+\begin{enumerate}
+    \item Recupera il prodotto base selezionato dai RadioButton
+    \item Crea un nuovo \texttt{FoodBean} con i dati del prodotto
+    \item Aggiunge gli add-on selezionati dalle CheckBox
+    \item Delega l'operazione alla Facade
+    \item Aggiorna la vista con il nuovo riepilogo
+\end{enumerate}
+
+\paragraph{onApplicaVoucher()}
+Gestisce l'applicazione di un codice voucher:
+\begin{enumerate}
+    \item Valida il codice inserito
+    \item Verifica che l'ordine non sia vuoto
+    \item Delega l'applicazione alla Facade
+    \item Aggiorna la UI in base al risultato
+\end{enumerate}
+
+\paragraph{onConfermaOrdine()}
+Finalizza l'ordine:
+\begin{enumerate}
+    \item Verifica che l'ordine contenga almeno un prodotto
+    \item Ottiene il riepilogo finale
+    \item Delega la conferma alla Facade
+    \item Naviga alla pagina principale in caso di successo
+\end{enumerate}
+
+\subsection{CreaOrdineCLIController}
+\label{subsec:clicontroller}
+
+\subsubsection{Descrizione Generale}
+La classe \texttt{CreaOrdineCLIController} fornisce un'implementazione alternativa dell'interfaccia utente attraverso una Command Line Interface. Questa classe estende \texttt{BaseCLIGraphicController}, ereditando funzionalità comuni per la gestione dell'input/output testuale.
+
+\subsubsection{Struttura del Metodo start()}
+\begin{lstlisting}
+@Override
+public void start() {
+    try {
+        facade = new CreaOrdineFacade(tokenKey);
+        OrdineBean ordineBean = facade.inizializzaNuovoOrdine();
+        showSuccess("Nuovo ordine #" + ordineBean.getNumeroOrdine() + " inizializzato!");
+        loadProducts();
+        while (!orderCompleted && !exitRequested) {
+            showOrderMenu();
+        }
+    } catch (HabibiException e) {
+        // Gestione errori...
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Pattern di Interazione}
+Il CLI Controller implementa un pattern di interazione basato su menu testuali:
+\begin{enumerate}
+    \item Visualizzazione del menu principale con le opzioni disponibili
+    \item Lettura della scelta dell'utente
+    \item Esecuzione dell'azione corrispondente tramite switch statement
+    \item Ritorno al menu principale fino a completamento o uscita
+\end{enumerate}
+
+% ==================== CHAPTER 4: CONTROL CLASSES ====================
+\section{Classi Control}
+\label{sec:control}
+
+\subsection{Panoramica del Layer Control}
+Il layer Control rappresenta il cuore della logica applicativa del sistema. È composto da due classi principali che operano in sinergia:
+
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{CreaOrdineFacade}: Punto di ingresso semplificato per i Boundary
+    \item \texttt{CreaOrdineController}: Controller applicativo con la logica di business
+\end{itemize}
+
+\subsection{CreaOrdineFacade}
+\label{subsec:facade}
+
+\subsubsection{Ruolo del Pattern Facade}
+La classe \texttt{CreaOrdineFacade} implementa il \textbf{Facade Pattern}, uno dei pattern strutturali del GoF (Gang of Four). Lo scopo principale di questo pattern è fornire un'interfaccia unificata e semplificata a un sottosistema complesso.
+
+Nel contesto dello use case ``Crea Ordine'', la Facade:
+\begin{itemize}
+    \item Nasconde la complessità del sottosistema ai controller grafici
+    \item Gestisce la validazione della sessione utente
+    \item Delega le operazioni al Controller applicativo
+    \item Fornisce un punto di accoppiamento stabile per il layer Boundary
+\end{itemize}
+
+\subsubsection{Struttura della Classe}
+\begin{lstlisting}
+public class CreaOrdineFacade {
+    private final CreaOrdineController controller;
+    private final org.example.model.user.User sessionUser;
+
+    public CreaOrdineFacade(String tokenKey) throws MissingAuthorizationException {
+        this.sessionUser = SessionManager.getInstance().getSessionUserByTokenKey(tokenKey);
+        if (sessionUser == null || sessionUser.getRole() == null || 
+            sessionUser.getRole().getClienteRole() == null) {
+            throw new MissingAuthorizationException("Accesso negato...");
+        }
+        this.controller = new CreaOrdineController();
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Responsabilità della Facade}
+\begin{enumerate}
+    \item \textbf{Validazione Sessione}: Verifica che il token di sessione corrisponda a un cliente autorizzato
+    \item \textbf{Delegazione}: Inoltra tutte le operazioni al Controller applicativo
+    \item \textbf{Estrazione ID Cliente}: Recupera l'ID del cliente dalla sessione per le operazioni
+\end{enumerate}
+
+\subsubsection{Metodi Esposti}
+\begin{table}[H]
+\centering
+\caption{Metodi pubblici di CreaOrdineFacade}
+\begin{tabular}{|l|p{8cm}|}
+\hline
+\textbf{Metodo} & \textbf{Descrizione} \\
+\hline
+\texttt{inizializzaNuovoOrdine()} & Crea un nuovo ordine per il cliente corrente \\
+\hline
+\texttt{getProdottiBaseDisponibili()} & Restituisce la lista dei prodotti base \\
+\hline
+\texttt{getAddOnDisponibili()} & Restituisce la lista degli add-on disponibili \\
+\hline
+\texttt{aggiungiProdottoAOrdine(FoodBean)} & Aggiunge un prodotto all'ordine \\
+\hline
+\texttt{rimuoviProdottoDaOrdine(int)} & Rimuove un prodotto dall'ordine \\
+\hline
+\texttt{applicaVoucher(String)} & Applica un voucher sconto \\
+\hline
+\texttt{rimuoviVoucher()} & Rimuove il voucher applicato \\
+\hline
+\texttt{getRiepilogoOrdine()} & Ottiene il riepilogo completo dell'ordine \\
+\hline
+\texttt{confermaOrdine()} & Conferma e salva l'ordine \\
+\hline
+\texttt{annullaOrdine()} & Annulla l'ordine corrente \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{CreaOrdineController}
+\label{subsec:controller}
+
+\subsubsection{Ruolo del Controller Applicativo}
+La classe \texttt{CreaOrdineController} rappresenta il Controller Applicativo secondo il pattern BCE. Questa classe è responsabile di:
+
+\begin{itemize}
+    \item Orchestrare la logica di business per la creazione dell'ordine
+    \item Convertire i Bean (DTO) in Entity e viceversa
+    \item Applicare il pattern Decorator per gli add-on
+    \item Delegare la gestione voucher a \texttt{UsaVoucherController}
+\end{itemize}
+
+\subsubsection{Principi GRASP Applicati}
+Il Controller rispetta diversi principi GRASP:
+
+\paragraph{Low Coupling}
+La delega della gestione voucher a \texttt{UsaVoucherController} riduce l'accoppiamento:
+\begin{lstlisting}
+private final UsaVoucherController voucherController;
+
+public CreaOrdineController() {
+    this.voucherController = new UsaVoucherController();
+}
+\end{lstlisting}
+
+\paragraph{Information Expert}
+Il calcolo del riepilogo è delegato all'Entity \texttt{Ordine} che possiede le informazioni necessarie:
+\begin{lstlisting}
+riepilogo.setSubtotale(ordineCorrente.getSubtotale());
+riepilogo.setSconto(ordineCorrente.getSconto());
+riepilogo.setTotale(ordineCorrente.getTotale());
+\end{lstlisting}
+
+\paragraph{Creator}
+La creazione dei prodotti è delegata a \texttt{FoodFactory}:
+\begin{lstlisting}
+Food prodotto = FoodFactory.creaProdottoBase(foodBean.getClasse());
+\end{lstlisting}
+
+\subsubsection{Metodo aggiungiProdottoAOrdine()}
+Questo metodo illustra l'applicazione del pattern Decorator:
+
+\begin{lstlisting}
+public boolean aggiungiProdottoAOrdine(FoodBean foodBean) {
+    if (ordineCorrente == null || foodBean == null) {
+        return false;
+    }
+    // Crea il prodotto base usando FoodFactory
+    Food prodotto = FoodFactory.creaProdottoBase(foodBean.getClasse());
+    if (prodotto == null) {
+        return false;
+    }
+    // Applica gli add-on usando il pattern Decorator
+    for (String addOnClasse : foodBean.getAddOnSelezionati()) {
+        prodotto = FoodFactory.applicaDecorator(prodotto, addOnClasse);
+    }
+    // Aggiungi all'ordine
+    ordineCorrente.aggiungiProdotto(prodotto);
+    return true;
+}
+\end{lstlisting}
+
+\subsubsection{Metodo getRiepilogoOrdine()}
+Questo metodo assembla il riepilogo dell'ordine per la presentazione:
+
+\begin{lstlisting}
+public RiepilogoOrdineBean getRiepilogoOrdine() {
+    if (ordineCorrente == null) {
+        return null;
+    }
+    RiepilogoOrdineBean riepilogo = new RiepilogoOrdineBean();
+    riepilogo.setNumeroOrdine(ordineCorrente.getNumeroOrdine());
+    
+    for (Food food : ordineCorrente.getProdotti()) {
+        RigaOrdineBean riga = new RigaOrdineBean(
+            food.getDescrizione(),
+            food.getCosto(),
+            food.getDurata());
+        riepilogo.aggiungiRiga(riga);
+    }
+    
+    riepilogo.setSubtotale(ordineCorrente.getSubtotale());
+    riepilogo.setSconto(ordineCorrente.getSconto());
+    riepilogo.setTotale(ordineCorrente.getTotale());
+    riepilogo.setDurataTotale(ordineCorrente.getDurataTotale());
+    
+    if (voucherController.hasVoucherApplicato(ordineCorrente)) {
+        Voucher v = ordineCorrente.getVoucher();
+        riepilogo.setVoucherApplicato(true);
+        riepilogo.setCodiceVoucher(v.getCodice());
+        riepilogo.setDescrizioneVoucher(v.getDescrizione());
+    }
+    
+    return riepilogo;
+}
+\end{lstlisting}
+
+\subsection{UsaVoucherController}
+\label{subsec:vouchercontroller}
+
+\subsubsection{Principio Single Responsibility}
+La classe \texttt{UsaVoucherController} è dedicata esclusivamente alla gestione dei voucher, rispettando il principio Single Responsibility:
+
+\begin{lstlisting}
+public class UsaVoucherController {
+    public Voucher getVoucherByCodice(String codiceVoucher) {...}
+    public boolean isVoucherValido(Voucher voucher) {...}
+    public VoucherBean applicaVoucherAOrdine(Ordine ordine, String codiceVoucher) {...}
+    public void rimuoviVoucherDaOrdine(Ordine ordine) {...}
+    public double calcolaSconto(Ordine ordine) {...}
+    public boolean hasVoucherApplicato(Ordine ordine) {...}
+    public VoucherBean convertVoucherToBean(Voucher voucher) {...}
+}
+\end{lstlisting}
+
+% ==================== CHAPTER 5: ENTITY CLASSES ====================
+\section{Classi Entity}
+\label{sec:entity}
+
+\subsection{Panoramica del Domain Model}
+Le classi Entity rappresentano gli oggetti del dominio applicativo. Nel contesto dello use case ``Crea Ordine'', le entità principali sono:
+
+\begin{itemize}[leftmargin=2cm]
+    \item \texttt{Ordine}: Rappresenta un ordine del cliente
+    \item \texttt{Food}: Classe astratta base per tutti i prodotti alimentari
+    \item \texttt{Voucher}: Interfaccia per i voucher sconto
+\end{itemize}
+
+\subsection{Classe Ordine}
+\label{subsec:ordine}
+
+\subsubsection{Struttura della Classe}
+\begin{lstlisting}
+public class Ordine {
+    private Long numeroOrdine;
+    private String clienteId;
+    private List<Food> prodotti;
+    private Voucher voucher;
+    private LocalDateTime dataCreazione;
+    private LocalDateTime dataConferma;
+    private StatoOrdine stato;
+    private Double totaleCached;
+}
+\end{lstlisting}
+
+\subsubsection{Costruttori}
+La classe fornisce due costruttori:
+
+\begin{lstlisting}
+// Costruttore per nuovo ordine
+public Ordine(String clienteId) {
+    this.clienteId = clienteId;
+    this.prodotti = new ArrayList<>();
+    this.voucher = new NessunVoucher(); // Null Object Pattern
+    this.dataCreazione = LocalDateTime.now();
+    this.stato = StatoOrdine.IN_CREAZIONE;
+}
+
+// Costruttore per caricamento da DB
+public Ordine(Long numeroOrdine, String clienteId, LocalDateTime dataCreazione,
+              LocalDateTime dataConferma, StatoOrdine stato) {
+    // ... inizializzazione completa
+}
+\end{lstlisting}
+
+\subsubsection{Gestione Prodotti}
+\begin{lstlisting}
+public void aggiungiProdotto(Food food) {
+    if (food != null) {
+        prodotti.add(food);
+    }
+}
+
+public void rimuoviProdotto(Food food) {
+    prodotti.remove(food);
+}
+
+public List<Food> getProdotti() {
+    return new ArrayList<>(prodotti); // Defensive copy
+}
+\end{lstlisting}
+
+\subsubsection{Gestione Voucher}
+\begin{lstlisting}
+public void applicaVoucher(Voucher voucher) {
+    if (voucher != null && voucher.isValido()) {
+        this.voucher = voucher;
+    }
+}
+
+public void rimuoviVoucher() {
+    this.voucher = new NessunVoucher();
+}
+
+public boolean hasVoucher() {
+    return !(voucher instanceof NessunVoucher);
+}
+\end{lstlisting}
+
+\subsubsection{Calcoli}
+\begin{lstlisting}
+public double getSubtotale() {
+    double totale = 0;
+    for (Food f : prodotti) {
+        totale += f.getCosto();
+    }
+    return totale;
+}
+
+public double getSconto() {
+    return voucher.calcolaSconto(getSubtotale());
+}
+
+public double getTotale() {
+    if (totaleCached != null && prodotti.isEmpty()) {
+        return totaleCached;
+    }
+    return getSubtotale() - getSconto();
+}
+
+public int getDurataTotale() {
+    int durata = 0;
+    for (Food f : prodotti) {
+        durata += f.getDurata();
+    }
+    return durata;
+}
+\end{lstlisting}
+
+\subsubsection{Gestione Stato}
+L'enum \texttt{StatoOrdine} definisce gli stati possibili:
+\begin{lstlisting}
+public enum StatoOrdine {
+    IN_CREAZIONE,
+    CONFERMATO,
+    IN_PREPARAZIONE,
+    PRONTO,
+    IN_CONSEGNA,
+    CONSEGNATO,
+    ANNULLATO
+}
+\end{lstlisting}
+
+\subsection{Gerarchia Food}
+\label{subsec:food}
+
+\subsubsection{Classe Astratta Food}
+\begin{lstlisting}
+public abstract class Food {
+    protected Long id;
+    protected String descrizione = "Sconosciuto";
+    protected String tipo; // "BASE" o "ADDON"
+    
+    public abstract double getCosto();
+    public abstract int getDurata();
+    
+    // Getters e setters...
+}
+\end{lstlisting}
+
+\subsubsection{Prodotti Base Concreti}
+\begin{lstlisting}
+public class PaninoDonerKebab extends Food {
+    private static final double COSTO_BASE = 5.50;
+    private static final int DURATA_BASE = 5;
+    
+    public PaninoDonerKebab() {
+        this.descrizione = "Panino Doner Kebab";
+        this.tipo = "BASE";
+    }
+    
+    @Override
+    public double getCosto() { return COSTO_BASE; }
+    
+    @Override
+    public int getDurata() { return DURATA_BASE; }
+}
+\end{lstlisting}
+
+Analogamente sono implementati:
+\begin{itemize}
+    \item \texttt{PiadinaDonerKebab}
+    \item \texttt{KebabAlPiatto}
+\end{itemize}
+
+% ==================== CHAPTER 6: DECORATOR PATTERN ====================
+\section{Pattern Decorator per gli Add-On}
+\label{sec:decorator}
+
+\subsection{Motivazione del Pattern}
+Il \textbf{Decorator Pattern} è stato scelto per gestire gli add-on (ingredienti aggiuntivi) perché:
+
+\begin{itemize}
+    \item Permette di aggiungere funzionalità (costo, descrizione, durata) dinamicamente
+    \item Evita l'esplosione combinatoria di sottoclassi
+    \item Rispetta il principio Open/Closed: aperto all'estensione, chiuso alla modifica
+    \item Consente composizione flessibile di più add-on sullo stesso prodotto
+\end{itemize}
+
+\subsection{Classe Base DecoratorAddON}
+\begin{lstlisting}
+public abstract class DecoratorAddON extends Food {
+    protected Food foodDecorato;
+
+    protected DecoratorAddON(Food food) {
+        this.foodDecorato = food;
+        this.tipo = "ADDON";
+    }
+
+    @Override
+    public abstract String getDescrizione();
+
+    public abstract double getCostoPlus();
+    public abstract int getDurataPlus();
+
+    @Override
+    public double getCosto() {
+        if (foodDecorato == null) {
+            return getCostoPlus();
+        }
+        return foodDecorato.getCosto() + getCostoPlus();
+    }
+
+    @Override
+    public int getDurata() {
+        if (foodDecorato == null) {
+            return getDurataPlus();
+        }
+        return foodDecorato.getDurata() + getDurataPlus();
+    }
+}
+\end{lstlisting}
+
+\subsection{Decorator Concreti}
+
+\subsubsection{Cipolla}
+\begin{lstlisting}
+public class Cipolla extends DecoratorAddON {
+    public Cipolla(Food food) { super(food); }
+    
+    @Override
+    public String getDescrizione() {
+        if (foodDecorato == null) return "Cipolla";
+        return foodDecorato.getDescrizione() + ", Cipolla";
+    }
+    
+    @Override
+    public double getCostoPlus() { return 0.50; }
+    
+    @Override
+    public int getDurataPlus() { return 1; }
+}
+\end{lstlisting}
+
+\subsubsection{Altri Decorator}
+\begin{table}[H]
+\centering
+\caption{Decorator Add-On disponibili}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Add-On} & \textbf{Costo} & \textbf{Durata} \\
+\hline
+Cipolla & €0.50 & +1 min \\
+\hline
+Salsa Yogurt & €0.80 & +0 min \\
+\hline
+Patatine & €2.00 & +3 min \\
+\hline
+Mix Verdure Grigliate & €1.50 & +2 min \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Esempio di Composizione}
+\begin{lstlisting}
+// Creazione prodotto base
+Food prodotto = new PaninoDonerKebab(); // 5.50, 5 min
+
+// Applicazione decorator (add-on)
+prodotto = new Cipolla(prodotto);       // 6.00, 6 min
+prodotto = new SalsaYogurt(prodotto);   // 6.80, 6 min
+prodotto = new Patatine(prodotto);      // 8.80, 9 min
+
+// Risultato finale
+prodotto.getDescrizione(); // "Panino Doner Kebab, Cipolla, Salsa Yogurt, Patatine"
+prodotto.getCosto();       // 8.80
+prodotto.getDurata();      // 9
+\end{lstlisting}
+
+% ==================== CHAPTER 7: STRATEGY PATTERN ====================
+\section{Pattern Strategy per i Voucher}
+\label{sec:strategy}
+
+\subsection{Motivazione del Pattern}
+Il \textbf{Strategy Pattern} è stato utilizzato per la gestione dei voucher sconto perché:
+
+\begin{itemize}
+    \item Permette di definire famiglie di algoritmi di sconto intercambiabili
+    \item Incapsula la logica di calcolo dello sconto in classi separate
+    \item Facilita l'aggiunta di nuovi tipi di voucher senza modificare il codice esistente
+    \item Consente la selezione dell'algoritmo a runtime
+\end{itemize}
+
+\subsection{Interfaccia Voucher}
+\begin{lstlisting}
+public interface Voucher {
+    double calcolaSconto(double totaleOrdine);
+    String getCodice();
+    String getDescrizione();
+    boolean isValido();
+    Long getId();
+    void setId(Long id);
+    String getTipoVoucher();
+    LocalDate getDataScadenza();
+    boolean isAttivo();
+    void setAttivo(boolean attivo);
+}
+\end{lstlisting}
+
+\subsection{VoucherPercentuale}
+\begin{lstlisting}
+public class VoucherPercentuale implements Voucher {
+    private Long id;
+    private String codice;
+    private double percentuale;
+    private LocalDate dataScadenza;
+    private boolean attivo;
+
+    @Override
+    public double calcolaSconto(double totaleOrdine) {
+        if (!isValido()) return 0;
+        return totaleOrdine * (percentuale / 100.0);
+    }
+
+    @Override
+    public String getDescrizione() {
+        return "Sconto del " + percentuale + "%";
+    }
+    
+    @Override
+    public boolean isValido() {
+        return attivo && (dataScadenza == null || 
+               !LocalDate.now().isAfter(dataScadenza));
+    }
+}
+\end{lstlisting}
+
+\subsection{VoucherFisso}
+\begin{lstlisting}
+public class VoucherFisso implements Voucher {
+    private double importoSconto;
+    private double minimoOrdine;
+
+    @Override
+    public double calcolaSconto(double totaleOrdine) {
+        if (!isValido()) return 0;
+        if (totaleOrdine < minimoOrdine) return 0;
+        return Math.min(importoSconto, totaleOrdine);
+    }
+
+    @Override
+    public String getDescrizione() {
+        if (minimoOrdine > 0) {
+            return "Sconto di €" + importoSconto + 
+                   " (minimo ordine €" + minimoOrdine + ")";
+        }
+        return "Sconto di €" + importoSconto;
+    }
+}
+\end{lstlisting}
+
+\subsection{NessunVoucher (Null Object Pattern)}
+\begin{lstlisting}
+public class NessunVoucher implements Voucher {
+    @Override
+    public double calcolaSconto(double totaleOrdine) {
+        return 0; // Nessuno sconto
+    }
+
+    @Override
+    public String getCodice() { return ""; }
+
+    @Override
+    public String getDescrizione() {
+        return "Nessuno sconto applicato";
+    }
+
+    @Override
+    public boolean isValido() { return true; }
+    
+    @Override
+    public String getTipoVoucher() { return "NESSUNO"; }
+}
+\end{lstlisting}
+
+% ==================== CHAPTER 8: FACTORY PATTERN ====================
+\section{Pattern Factory}
+\label{sec:factory}
+
+\subsection{FoodFactory}
+\begin{lstlisting}
+public class FoodFactory {
+    private FoodFactory() {} // Utility class
+
+    public static Food creaProdottoBase(String classe) {
+        if (classe == null) return null;
+        switch (classe) {
+            case "PaninoDonerKebab": return new PaninoDonerKebab();
+            case "PiadinaDonerKebab": return new PiadinaDonerKebab();
+            case "KebabAlPiatto": return new KebabAlPiatto();
+            default: return null;
+        }
+    }
+
+    public static Food applicaDecorator(Food food, String addOnClasse) {
+        if (addOnClasse == null || food == null) return food;
+        switch (addOnClasse) {
+            case "Cipolla": return new Cipolla(food);
+            case "SalsaYogurt": return new SalsaYogurt(food);
+            case "Patatine": return new Patatine(food);
+            case "MixVerdureGrigliate": return new MixVerdureGrigliate(food);
+            default: return food;
+        }
+    }
+}
+\end{lstlisting}
+
+\subsection{OrdineLazyFactory}
+La \texttt{OrdineLazyFactory} implementa il pattern Lazy Initialization con caching:
+
+\begin{lstlisting}
+public class OrdineLazyFactory {
+    private static OrdineLazyFactory instance;
+    private final List<Ordine> ordiniCache;
+
+    private OrdineLazyFactory() {
+        ordiniCache = new ArrayList<>();
+    }
+
+    public static synchronized OrdineLazyFactory getInstance() {
+        if (instance == null) {
+            instance = new OrdineLazyFactory();
+        }
+        return instance;
+    }
+
+    public Ordine newOrdine(String clienteId) throws DAOException {
+        Long numeroOrdine = DAOFactoryAbstract.getInstance()
+            .getOrdineDAO().getNextNumeroOrdine();
+        Ordine ordine = new Ordine(clienteId);
+        ordine.setNumeroOrdine(numeroOrdine);
+        ordiniCache.add(ordine);
+        return ordine;
+    }
+
+    public void salvaOrdine(Ordine ordine) throws DAOException {
+        DAOFactoryAbstract.getInstance().getOrdineDAO().insert(ordine);
+    }
+}
+\end{lstlisting}
+
+% ==================== CHAPTER 9: DAO LAYER ====================
+\section{Layer di Persistenza (DAO)}
+\label{sec:dao}
+
+\subsection{Abstract Factory per DAO}
+\begin{lstlisting}
+public abstract class DAOFactoryAbstract {
+    private static DAOFactoryAbstract me = null;
+
+    public static synchronized DAOFactoryAbstract getInstance() {
+        if (me == null) {
+            PersistenceTypeEnum persistenceType = 
+                PersistenceTypeEnum.getPersistenceTypeByValue(
+                    PropertiesHandler.getInstance().getProperty("persistence_type"));
+            switch (persistenceType) {
+                case DB -> me = new DAOFactoryDB();
+                case DEMO -> me = new DAOFactoryDemo();
+                case FS -> me = new DAOFactoryFS();
+            }
+        }
+        return me;
+    }
+
+    public abstract OrdineDAOInterface getOrdineDAO();
+    public abstract VoucherDAOInterface getVoucherDAO();
+    public abstract FoodDAOInterface getFoodDAO();
+    // ... altri DAO
+}
+\end{lstlisting}
+
+\subsection{OrdineDAOInterface}
+\begin{lstlisting}
+public interface OrdineDAOInterface {
+    void insert(Ordine ordine) throws DAOException;
+    void delete(Ordine ordine) throws DAOException;
+    void update(Ordine ordine) throws DAOException;
+    Ordine getOrdineByNumero(Long numeroOrdine) throws DAOException;
+    List<Ordine> getOrdiniByCliente(String clienteId) throws DAOException;
+    List<Ordine> getOrdiniByStato(StatoOrdine stato) throws DAOException;
+    Long getNextNumeroOrdine() throws DAOException;
+}
+\end{lstlisting}
+
+% ==================== CHAPTER 10: BEANS ====================
+\section{Data Transfer Objects (Beans)}
+\label{sec:beans}
+
+\subsection{FoodBean}
+\begin{lstlisting}
+public class FoodBean implements Serializable {
+    private Long id;
+    private String descrizione;
+    private double costo;
+    private int durata;
+    private String tipo;
+    private String classe;
+    private List<String> addOnSelezionati;
+    
+    // Validazione nei setter (Fail Fast)
+    public void setCosto(double costo) {
+        if (costo < 0) {
+            throw new ValidationException("Il costo non puo essere negativo");
+        }
+        this.costo = costo;
+    }
+}
+\end{lstlisting}
+
+\subsection{OrdineBean}
+\begin{lstlisting}
+public class OrdineBean implements Serializable {
+    private Long numeroOrdine;
+    private String clienteId;
+    private LocalDateTime dataCreazione;
+    private double totale;
+    private String stato;
+}
+\end{lstlisting}
+
+\subsection{RiepilogoOrdineBean}
+\begin{lstlisting}
+public class RiepilogoOrdineBean implements Serializable {
+    private Long numeroOrdine;
+    private List<RigaOrdineBean> righeOrdine;
+    private double subtotale;
+    private double sconto;
+    private double totale;
+    private int durataTotale;
+    private String codiceVoucher;
+    private boolean voucherApplicato;
+
+    public static class RigaOrdineBean implements Serializable {
+        private String descrizione;
+        private double prezzo;
+        private int durata;
+        
+        public String getPrezzoFormattato() {
+            return String.format("€%.2f", prezzo);
+        }
+    }
+}
+\end{lstlisting}
+
+% ==================== CHAPTER 11: SESSION MANAGEMENT ====================
+\section{Gestione della Sessione}
+\label{sec:session}
+
+\subsection{SessionManager}
+\begin{lstlisting}
+public class SessionManager {
+    private static SessionManager instance;
+    private final List<Session> activeSessions;
+    private String currentTokenKey;
+
+    public User getSessionUserByTokenKey(String tokenKey) {
+        Session s = getSession(tokenKey);
+        return s != null ? s.getUser() : null;
+    }
+
+    public boolean hasActiveSession() {
+        return currentTokenKey != null && getSessionUser() != null;
+    }
+}
+\end{lstlisting}
+
+% ==================== CHAPTER 12: CONCLUSIONS ====================
+\section{Conclusioni}
+\label{sec:conclusioni}
+
+\subsection{Riepilogo Architetturale}
+Lo use case ``Crea Ordine'' rappresenta un esempio eccellente di applicazione dei principi dell'ingegneria del software:
+
+\begin{itemize}
+    \item \textbf{Pattern BCE}: Chiara separazione tra interfaccia, logica e dominio
+    \item \textbf{Facade}: Semplificazione dell'accesso al sottosistema
+    \item \textbf{Decorator}: Flessibilità nella composizione dei prodotti
+    \item \textbf{Strategy}: Polimorfismo nella gestione degli sconti
+    \item \textbf{Factory}: Centralizzazione della creazione oggetti
+    \item \textbf{Null Object}: Gestione elegante dell'assenza di voucher
+    \item \textbf{Abstract Factory}: Intercambiabilità del layer di persistenza
+\end{itemize}
+
+\subsection{Principi GRASP Rispettati}
+\begin{itemize}
+    \item \textbf{Information Expert}: Le Entity contengono la logica di calcolo
+    \item \textbf{Creator}: Le Factory creano gli oggetti
+    \item \textbf{Low Coupling}: Delega e interfacce riducono le dipendenze
+    \item \textbf{High Cohesion}: Ogni classe ha responsabilità ben definite
+    \item \textbf{Controller}: La Facade coordina le operazioni
+\end{itemize}
+
+% ==================== BIBLIOGRAPHY ====================
+\newpage
+\begin{thebibliography}{9}
+\bibitem{gof} Gamma, E., Helm, R., Johnson, R., Vlissides, J. (1994). \textit{Design Patterns: Elements of Reusable Object-Oriented Software}. Addison-Wesley.
+\bibitem{larman} Larman, C. (2004). \textit{Applying UML and Patterns}. Prentice Hall.
+\bibitem{martin} Martin, R. C. (2008). \textit{Clean Code: A Handbook of Agile Software Craftsmanship}. Prentice Hall.
+\end{thebibliography}
+
+\end{document}
