@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.example.exceptions.HabibiException;
+import org.example.utils.AlertUtils;
 
 public class VisualizzaOrdiniGUIController {
 
@@ -102,40 +103,28 @@ public class VisualizzaOrdiniGUIController {
             tabellaOrdini.setItems(listaOrdini);
         } catch (HabibiException e) {
             logger.log(Level.SEVERE, "Errore nel caricamento ordini", e);
-            mostraErrore("Errore Caricamento", "Impossibile caricare gli ordini: " + e.getMessage());
+            AlertUtils.mostraErrore("Errore Caricamento", "Impossibile caricare gli ordini: " + e.getMessage());
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore imprevisto nel caricamento ordini", e);
-            mostraErrore("Errore Caricamento", "Impossibile caricare gli ordini: " + e.getMessage());
+            AlertUtils.mostraErrore("Errore Caricamento", "Impossibile caricare gli ordini: " + e.getMessage());
         }
     }
 
     private void handleConsegna(OrdineBean ordine) {
         try {
             facade.impostaInConsegna(ordine);
-            mostraInfo("Successo", "Ordine #" + ordine.getNumeroOrdine() + " passato in consegna!");
+            AlertUtils.mostraInfo("Successo", "Ordine #" + ordine.getNumeroOrdine() + " passato in consegna!");
             caricaOrdini(); // Ricarica la lista
         } catch (HabibiException e) {
             logger.log(Level.SEVERE, "Errore nell'aggiornamento ordine", e);
-            mostraErrore("Errore Aggiornamento", "Impossibile aggiornare l'ordine: " + e.getMessage());
+            AlertUtils.mostraErrore("Errore Aggiornamento", "Impossibile aggiornare l'ordine: " + e.getMessage());
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore imprevisto nell'aggiornamento ordine", e);
-            mostraErrore("Errore Aggiornamento", "Impossibile aggiornare l'ordine: " + e.getMessage());
+            AlertUtils.mostraErrore("Errore Aggiornamento", "Impossibile aggiornare l'ordine: " + e.getMessage());
         }
     }
 
-    private void mostraErrore(String titolo, String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titolo);
-        alert.setContentText(messaggio);
-        alert.showAndWait();
-    }
-
-    private void mostraInfo(String titolo, String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titolo);
-        alert.setContentText(messaggio);
-        alert.showAndWait();
-    }
+    // mostraErrore e mostraInfo ora usano AlertUtils (GRASP: Pure Fabrication)
 
     @FXML
     private void handleIndietro(javafx.event.ActionEvent event) {

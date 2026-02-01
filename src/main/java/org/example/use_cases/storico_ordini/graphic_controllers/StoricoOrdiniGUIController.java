@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.example.exceptions.HabibiException;
+import org.example.utils.AlertUtils;
 
 import java.time.format.DateTimeFormatter;
 
@@ -80,20 +81,14 @@ public class StoricoOrdiniGUIController implements Initializable {
             ordiniList.setAll(ordini);
         } catch (HabibiException e) {
             logger.log(Level.SEVERE, "Errore nel caricamento storico ordini", e);
-            mostraErrore("Errore Caricamento", "Impossibile caricare lo storico ordini: " + e.getMessage());
+            AlertUtils.mostraErrore("Errore Caricamento", "Impossibile caricare lo storico ordini: " + e.getMessage());
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore imprevisto nel caricamento storico ordini", e);
-            mostraErrore("Errore Caricamento", "Impossibile caricare lo storico ordini: " + e.getMessage());
+            AlertUtils.mostraErrore("Errore Caricamento", "Impossibile caricare lo storico ordini: " + e.getMessage());
         }
     }
 
-    private void mostraErrore(String titolo, String messaggio) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-        alert.setTitle(titolo);
-        alert.setHeaderText(null);
-        alert.setContentText(messaggio);
-        alert.showAndWait();
-    }
+    // mostraErrore ora usa AlertUtils (GRASP: Pure Fabrication)
 
     @FXML
     private void handleIndietro(javafx.event.ActionEvent event) {

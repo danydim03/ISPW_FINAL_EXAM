@@ -10,6 +10,8 @@ import org.example.session_manager.SessionManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.example.utils.AlertUtils;
+
 public class ClienteHomepageGraphicController {
 
     private static final Logger logger = Logger.getLogger(ClienteHomepageGraphicController.class.getName());
@@ -34,7 +36,7 @@ public class ClienteHomepageGraphicController {
             ClienteHomepageController.getInstance().apriMappa();
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Impossibile aprire la mappa", e);
-            mostraErrore(ERROR_TITLE, "Impossibile aprire la mappa: " + e.getMessage());
+            AlertUtils.mostraErrore(ERROR_TITLE, "Impossibile aprire la mappa: " + e.getMessage());
         }
     }
 
@@ -56,7 +58,7 @@ public class ClienteHomepageGraphicController {
 
     @FXML
     void handleProfilo(ActionEvent event) {
-        mostraPlaceholder("Profilo Utente", "Funzionalità in arrivo! Presto potrai gestire i tuoi dati.");
+        AlertUtils.mostraPlaceholder("Profilo Utente", "Funzionalità in arrivo! Presto potrai gestire i tuoi dati.");
     }
 
     @FXML
@@ -66,23 +68,10 @@ public class ClienteHomepageGraphicController {
             java.awt.Desktop.getDesktop().browse(new java.net.URI("https://www.yahabibi.it"));
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Impossibile aprire il sito web", e);
-            mostraErrore(ERROR_TITLE, "Impossibile aprire il sito web: " + e.getMessage());
+            AlertUtils.mostraErrore(ERROR_TITLE, "Impossibile aprire il sito web: " + e.getMessage());
         }
     }
 
-    private void mostraPlaceholder(String titolo, String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Funzionalità");
-        alert.setHeaderText(titolo);
-        alert.setContentText(messaggio);
-        alert.showAndWait();
-    }
-
-    private void mostraErrore(String titolo, String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(ERROR_TITLE);
-        alert.setHeaderText(titolo);
-        alert.setContentText(messaggio);
-        alert.showAndWait();
-    }
+    // mostraPlaceholder e mostraErrore ora usano AlertUtils (GRASP: Pure
+    // Fabrication)
 }
