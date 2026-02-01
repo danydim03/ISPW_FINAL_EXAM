@@ -3,6 +3,7 @@ package org.example.use_cases.usa_voucher;
 import org.example.exceptions.*;
 import org.example.model.ordine.Ordine;
 import org.example.model.voucher.*;
+import org.example.mappers.VoucherMapper;
 import org.example.use_cases.crea_ordine.beans.VoucherBean;
 
 /**
@@ -79,8 +80,8 @@ public class UsaVoucherController {
             // Applica il voucher all'ordine
             ordine.applicaVoucher(voucher);
 
-            // Converti in Bean e restituisci
-            return convertVoucherToBean(voucher);
+            // Converti in Bean e restituisci (usando VoucherMapper)
+            return VoucherMapper.toBean(voucher);
 
         } catch (ObjectNotFoundException e) {
             // Voucher non trovato
@@ -132,35 +133,9 @@ public class UsaVoucherController {
         if (ordine == null || !ordine.hasVoucher()) {
             return null;
         }
-        return convertVoucherToBean(ordine.getVoucher());
+        return VoucherMapper.toBean(ordine.getVoucher());
     }
 
-    /**
-     * Converte un Voucher entity in VoucherBean.
-     * 
-     * @param voucher il voucher da convertire
-     * @return VoucherBean con i dati del voucher
-     */
-    public VoucherBean convertVoucherToBean(Voucher voucher) {
-        if (voucher == null) {
-            return null;
-        }
-
-        VoucherBean bean = new VoucherBean();
-        bean.setId(voucher.getId());
-        bean.setCodice(voucher.getCodice());
-        bean.setDescrizione(voucher.getDescrizione());
-        bean.setTipoVoucher(voucher.getTipoVoucher());
-        bean.setDataScadenza(voucher.getDataScadenza());
-        bean.setValido(voucher.isValido());
-
-        if (voucher instanceof VoucherPercentuale voucherPercentuale) {
-            bean.setValore(voucherPercentuale.getPercentuale());
-        } else if (voucher instanceof VoucherFisso voucherFisso) {
-            bean.setValore(voucherFisso.getImportoSconto());
-            bean.setMinimoOrdine(voucherFisso.getMinimoOrdine());
-        }
-
-        return bean;
-    }
+    // Conversione Voucher → VoucherBean ora delegata a VoucherMapper (GRASP: Pure
+    // Fabrication)
 }

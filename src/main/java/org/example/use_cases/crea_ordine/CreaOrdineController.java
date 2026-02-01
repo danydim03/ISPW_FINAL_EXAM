@@ -9,7 +9,6 @@ import org.example.use_cases.crea_ordine.beans.*;
 import org.example.use_cases.crea_ordine.beans.RiepilogoOrdineBean.RigaOrdineBean;
 import org.example.use_cases.usa_voucher.UsaVoucherController;
 import org.example.events.*;
-import java.util.ArrayList;
 import java.util.List;
 import org.example.mappers.*;
 
@@ -59,7 +58,7 @@ public class CreaOrdineController {
             UnrecognizedRoleException {
 
         List<Food> foodBase = FoodLazyFactory.getInstance().getAllFoodBase();
-        return convertFoodListToBeanList(foodBase);
+        return FoodMapper.toBeanList(foodBase);
     }
 
     /**
@@ -72,7 +71,7 @@ public class CreaOrdineController {
             UnrecognizedRoleException {
 
         List<Food> addOns = FoodLazyFactory.getInstance().getAllAddOn();
-        return convertFoodListToBeanList(addOns);
+        return FoodMapper.toBeanList(addOns);
     }
 
     /**
@@ -205,7 +204,7 @@ public class CreaOrdineController {
      */
     public boolean confermaOrdine() throws DAOException, MissingAuthorizationException {
         if (ordineCorrente == null || ordineCorrente.getProdotti().isEmpty()) {
-            return false;//fast fail se ordine non inizializzato o vuoto
+            return false;// fast fail se ordine non inizializzato o vuoto
         }
 
         // Salva l'ordine tramite il DAO
@@ -231,32 +230,6 @@ public class CreaOrdineController {
         ordineCorrente = null;
     }
 
-    // ==================== METODI PRIVATI DI SUPPORTO ====================
-    // Nota: creaProdottoBase e applicaDecorator sono stati spostati in FoodFactory
-    // per rispettare GRASP Low Coupling e Creator
-
-    /**
-     * Converte una lista di Food in lista di FoodBean
-     */
-    private List<FoodBean> convertFoodListToBeanList(List<Food> foodList) {
-        List<FoodBean> beans = new ArrayList<>();
-        for (Food food : foodList) {
-            beans.add(convertFoodToBean(food));
-        }
-        return beans;
-    }
-
-    /**
-     * Converte un Food in FoodBean
-     */
-    private FoodBean convertFoodToBean(Food food) {
-        FoodBean bean = new FoodBean();
-        bean.setId(food.getId());
-        bean.setDescrizione(food.getDescrizione());
-        bean.setCosto(food.getCosto());
-        bean.setDurata(food.getDurata());
-        bean.setTipo(food.getTipo());
-        bean.setClasse(food.getClass().getSimpleName());
-        return bean;
-    }
+    // Conversione Food → FoodBean ora delegata a FoodMapper (GRASP: Pure
+    // Fabrication)
 }
