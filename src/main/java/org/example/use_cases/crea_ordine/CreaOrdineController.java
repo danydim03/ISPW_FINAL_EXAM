@@ -205,7 +205,7 @@ public class CreaOrdineController {
      */
     public boolean confermaOrdine() throws DAOException, MissingAuthorizationException {
         if (ordineCorrente == null || ordineCorrente.getProdotti().isEmpty()) {
-            return false;
+            return false;//fast fail se ordine non inizializzato o vuoto
         }
 
         // Salva l'ordine tramite il DAO
