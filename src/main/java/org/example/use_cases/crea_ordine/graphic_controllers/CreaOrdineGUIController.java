@@ -18,7 +18,6 @@ import org.example.use_cases.crea_ordine.beans.RiepilogoOrdineBean.RigaOrdineBea
 
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -480,36 +479,6 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         }
     }
 
-    private void mostraErrore(String titolo, String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titolo);
-        alert.setHeaderText(null);
-        alert.setContentText(messaggio);
-        alert.showAndWait();
-    }
-
-    private void mostraWarning(String titolo, String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titolo);
-        alert.setHeaderText(null);
-        alert.setContentText(messaggio);
-        alert.showAndWait();
-    }
-
-    private void mostraInfo(String titolo, String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titolo);
-        alert.setHeaderText(null);
-        alert.setContentText(messaggio);
-        alert.showAndWait();
-    }
-
-    private boolean mostraConferma(String titolo, String messaggio) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(titolo);
-        alert.setHeaderText(null);
-        alert.setContentText(messaggio);
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == ButtonType.OK;
-    }
+    // I metodi mostraErrore, mostraWarning, mostraInfo, mostraConferma
+    // sono ora ereditati da BaseGraphicControl (GRASP: High Cohesion)
 }
