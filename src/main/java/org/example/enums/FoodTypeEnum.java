@@ -1,44 +1,23 @@
 package org.example.enums;
 
-import org.example.model.food.*;
-
 /**
  * Enum che rappresenta i tipi di prodotti base (Food) disponibili nel sistema.
- * Elimina le magic strings dalla FoodFactory seguendo best practices.
+ * 
+ * GRASP Compliance:
+ * - High Cohesion: responsabilità unica di identificare i tipi di Food
+ * - La creazione degli oggetti è delegata a FoodFactory (Creator)
  */
 public enum FoodTypeEnum {
 
-    PANINO_DONER_KEBAB("PaninoDonerKebab") {
-        @Override
-        public Food createInstance() {
-            return new PaninoDonerKebab();
-        }
-    },
-    PIADINA_DONER_KEBAB("PiadinaDonerKebab") {
-        @Override
-        public Food createInstance() {
-            return new PiadinaDonerKebab();
-        }
-    },
-    KEBAB_AL_PIATTO("KebabAlPiatto") {
-        @Override
-        public Food createInstance() {
-            return new KebabAlPiatto();
-        }
-    };
+    PANINO_DONER_KEBAB("PaninoDonerKebab"),
+    PIADINA_DONER_KEBAB("PiadinaDonerKebab"),
+    KEBAB_AL_PIATTO("KebabAlPiatto");
 
     private final String className;
 
     FoodTypeEnum(String className) {
         this.className = className;
     }
-
-    /**
-     * Crea una nuova istanza del Food corrispondente.
-     * 
-     * @return nuova istanza di Food
-     */
-    public abstract Food createInstance();
 
     /**
      * Restituisce il nome della classe come stringa.
