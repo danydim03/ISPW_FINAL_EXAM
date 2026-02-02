@@ -22,11 +22,39 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Controller Grafico (Boundary) per lo Use Case "Crea Ordine".
+ * 
+ * <p>
+ * Implementa il <b>Pull Model</b>: la View richiede esplicitamente i dati
+ * al Controller (tramite Facade) solo quando necessario, tipicamente dopo
+ * un'azione dell'utente.
+ * </p>
+ * 
+ * <p>
+ * Flusso Pull Model:
+ * </p>
+ * <ol>
+ * <li>Utente interagisce con la UI (click, input)</li>
+ * <li>View richiede azione al Facade (es. aggiungiProdotto)</li>
+ * <li>View richiede stato aggiornato (es. getRiepilogoOrdine)</li>
+ * <li>View aggiorna la UI con i dati ricevuti</li>
+ * </ol>
+ * 
+ * <p>
+ * Pattern architetturali:
+ * </p>
+ * <ul>
+ * <li><b>BCE/MVC</b>: questa classe è il Boundary (View)</li>
+ * <li><b>Facade</b>: comunica solo con CreaOrdineFacade</li>
+ * <li><b>Bean</b>: scambia dati tramite DTO (FoodBean,
+ * RiepilogoOrdineBean)</li>
+ * </ul>
+ */
 public class CreaOrdineGUIController extends BaseGraphicControl implements Initializable {
 
     private static final Logger logger = Logger.getLogger(CreaOrdineGUIController.class.getName());
     private static final String ERROR_TITLE = "Errore";
-    private static final String ADDON_TYPE = "ADDON";
     private static final String ADDON_CIPOLLA = "Cipolla";
     private static final String ADDON_PATATINE = "Patatine";
     private static final String ZERO_CURRENCY = "€0.00";
@@ -172,6 +200,13 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
 
     /**
      * Carica prodotti base e add-on dal database via Facade.
+     * 
+     * <p>
+     * <b>PULL MODEL</b>: la View richiede esplicitamente i dati iniziali
+     * al Facade. I dati vengono "tirati" (pulled) dalla View quando serve,
+     * non "spinti" (pushed) automaticamente dal Model.
+     * </p>
+     * 
      * Sostituisce i dati hardcoded con dati dinamici dal layer di persistenza.
      */
     private void caricaDatiIniziali() {
@@ -262,12 +297,24 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         }
     }
 
-    // Aggiunge il prodotto selezionato con gli add-on scelti all'ordine
-    // Recupera il prodotto base selezionato e crea un nuovo FoodBean per la
-    // richiesta
-    // Aggiunge gli add-on selezionati al FoodBean della richiesta
-    // Chiama il facade per aggiungere il prodotto all'ordine e aggiorna la vista
-    // Mostra messaggi di errore o conferma in base al risultato
+    /**
+     * Aggiunge il prodotto selezionato con gli add-on scelti all'ordine.
+     * 
+     * <p>
+     * <b>PULL MODEL</b>: dopo l'azione di aggiunta, la View richiede
+     * esplicitamente il riepilogo aggiornato chiamando {@code aggiornaRiepilogo()}.
+     * Non riceve notifiche push dal Model.
+     * </p>
+     * 
+     * Flusso:
+     * <ol>
+     * <li>Recupera il prodotto base selezionato</li>
+     * <li>Crea FoodBean con add-on selezionati</li>
+     * <li>PULL: richiede aggiunta al Facade</li>
+     * <li>PULL: richiede riepilogo aggiornato</li>
+     * <li>Aggiorna la UI</li>
+     * </ol>
+     */
     @FXML
     private void onAggiungiProdotto() {
         FoodBean prodottoSelezionato = getProdottoBaseSelezionato();
@@ -302,12 +349,22 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         }
     }
 
-    // Applica un voucher all'ordine
-    // Recupera il codice voucher dal campo di testo
-    // Verifica che il codice non sia vuoto e che l'ordine non sia vuoto
-    // Chiama il facade per applicare il voucher e aggiorna la vista
-    // Mostra messaggi di errore o conferma in base al risultato
-
+    /**
+     * Applica un voucher all'ordine.
+     * 
+     * <p>
+     * <b>PULL MODEL</b>: la View richiede l'applicazione del voucher
+     * e successivamente richiede il riepilogo aggiornato.
+     * </p>
+     * 
+     * Flusso:
+     * <ol>
+     * <li>Recupera codice voucher dal campo di testo</li>
+     * <li>Valida input</li>
+     * <li>PULL: richiede applicazione al Facade</li>
+     * <li>PULL: richiede riepilogo aggiornato</li>
+     * </ol>
+     */
     @FXML
     private void onApplicaVoucher() {
         try {
@@ -404,6 +461,14 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         }
     }
 
+    /**
+     * Richiede il riepilogo aggiornato dell'ordine e aggiorna la UI.
+     * 
+     * <p>
+     * <b>PULL MODEL</b>: metodo centrale che implementa il "pull" dei dati.
+     * La View richiede esplicitamente lo stato corrente al Facade.
+     * </p>
+     */
     private void aggiornaRiepilogo() {
         RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine();
         aggiornaVistaConRiepilogo(riepilogo);
