@@ -1,19 +1,19 @@
 package org.example.model.food;
 
-import org.example.model.food.decorator.*;
+import org.example.enums.AddOnTypeEnum;
+import org.example.enums.FoodTypeEnum;
 
 /**
  * Factory per la creazione di prodotti Food e applicazione di Decorators.
  * Centralizza la logica di istanziazione per rispettare GRASP (Low Coupling,
  * Creator).
+ * 
+ * Utilizza FoodTypeEnum e AddOnTypeEnum per evitare magic strings.
  */
 public class FoodFactory {
 
     private FoodFactory() {
-        // Utility class
-        // Prevent instantiation
-        // Private constructor
-        // No instances allowed
+        // Utility class - previene istanziazione
     }
 
     /**
@@ -23,23 +23,24 @@ public class FoodFactory {
      * @return il Food creato, o null se classe non riconosciuta
      */
     public static Food creaProdottoBase(String classe) {
-        // Se la classe è null, ritorna null
-        if (classe == null) {
+        FoodTypeEnum foodType = FoodTypeEnum.fromClassName(classe);
+        if (foodType == null) {
             return null;
         }
+        return foodType.createInstance();
+    }
 
-        switch (classe) {
-            // Istanzia il prodotto base corrispondente
-            // e lo ritorna
-            case "PaninoDonerKebab":
-                return new PaninoDonerKebab();
-            case "PiadinaDonerKebab":
-                return new PiadinaDonerKebab();
-            case "KebabAlPiatto":
-                return new KebabAlPiatto();
-            default:
-                return null;
+    /**
+     * Crea un prodotto base dal tipo enum.
+     * 
+     * @param foodType il tipo di prodotto
+     * @return il Food creato
+     */
+    public static Food creaProdottoBase(FoodTypeEnum foodType) {
+        if (foodType == null) {
+            return null;
         }
+        return foodType.createInstance();
     }
 
     /**
@@ -50,25 +51,28 @@ public class FoodFactory {
      * @return il Food decorato
      */
     public static Food applicaDecorator(Food food, String addOnClasse) {
-        // Se food o addOnClasse sono null, ritorna food non modificato
-        if (addOnClasse == null || food == null) {
+        if (food == null) {
+            return null;
+        }
 
+        AddOnTypeEnum addOnType = AddOnTypeEnum.fromClassName(addOnClasse);
+        if (addOnType == null) {
+            return food; // Ritorna food non modificato se add-on non trovato
+        }
+        return addOnType.applyTo(food);
+    }
+
+    /**
+     * Applica un decorator (add-on) al prodotto usando il tipo enum.
+     * 
+     * @param food      il prodotto base da decorare
+     * @param addOnType il tipo di add-on da applicare
+     * @return il Food decorato
+     */
+    public static Food applicaDecorator(Food food, AddOnTypeEnum addOnType) {
+        if (food == null || addOnType == null) {
             return food;
         }
-
-        switch (addOnClasse) {
-            case "Cipolla":
-                //wrapping food with Cipolla decorator
-                //returning the new decorated food
-                return new Cipolla(food);
-            case "SalsaYogurt":
-                return new SalsaYogurt(food);
-            case "Patatine":
-                return new Patatine(food);
-            case "MixVerdureGrigliate":
-                return new MixVerdureGrigliate(food);
-            default:
-                return food;
-        }
+        return addOnType.applyTo(food);
     }
 }

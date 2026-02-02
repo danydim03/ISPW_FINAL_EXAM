@@ -24,9 +24,7 @@ public enum UserErrorMessagesEnum {
     RESOURCE_LOADING_MSG("An error occurred while loading view resource."),
     PROPERTY_VALUE_MSG("Unexpected value of property name. Please check your configuration file."),
     OBJ_NOT_FOUND_MSG("The requested object does not exist."),
-    NO_ENROLLMENTS_MSG("There are no enrollments for this exam."),
-    OUT_OF_BOUND_MSG("Index out of bound")
-    ;
+    OUT_OF_BOUND_MSG("Index out of bound");
 
     public final String message;
 
