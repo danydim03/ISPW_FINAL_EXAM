@@ -61,9 +61,26 @@ public class VoucherLazyFactory {
         }
     }
 
+    /**
+     * Recupera tutti i voucher attivi.
+     * Implementa cache-first: cerca prima nella cache, poi nel DAO.
+     */
     public List<Voucher> getAllVoucherAttivi() throws DAOException, ObjectNotFoundException,
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
             UnrecognizedRoleException {
+
+        // Cerca prima nella cache
+        List<Voucher> cached = new ArrayList<>();
+        for (Voucher v : voucherCache) {
+            if (v.isAttivo()) {
+                cached.add(v);
+            }
+        }
+        if (!cached.isEmpty()) {
+            return cached;
+        }
+
+        // Se non trovato, recupera dal DAO
         try {
             List<Voucher> vouchers = DAOFactoryAbstract.getInstance().getVoucherDAO().getAllVoucherAttivi();
             for (Voucher v : vouchers) {

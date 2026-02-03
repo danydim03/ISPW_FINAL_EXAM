@@ -63,6 +63,7 @@ public class OrdineLazyFactory {
 
     /**
      * Recupera tutti gli ordini di un cliente.
+     * Implementa cache-first: cerca prima nella cache, poi nel DAO.
      *
      * @param clienteId l'ID del cliente
      * @return lista di Ordini del cliente
@@ -72,6 +73,18 @@ public class OrdineLazyFactory {
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
             UnrecognizedRoleException {
 
+        // Cerca prima nella cache
+        List<Ordine> cached = new ArrayList<>();
+        for (Ordine o : ordiniCache) {
+            if (clienteId.equals(o.getClienteId())) {
+                cached.add(o);
+            }
+        }
+        if (!cached.isEmpty()) {
+            return cached;
+        }
+
+        // Se non trovato, recupera dal DAO
         try {
             List<Ordine> ordini = DAOFactoryAbstract.getInstance().getOrdineDAO().getOrdiniByCliente(clienteId);
 
@@ -90,6 +103,7 @@ public class OrdineLazyFactory {
 
     /**
      * Recupera tutti gli ordini con un determinato stato.
+     * Implementa cache-first: cerca prima nella cache, poi nel DAO.
      *
      * @param stato lo stato degli ordini da cercare
      * @return lista di Ordini con lo stato specificato
@@ -99,6 +113,18 @@ public class OrdineLazyFactory {
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
             UnrecognizedRoleException {
 
+        // Cerca prima nella cache
+        List<Ordine> cached = new ArrayList<>();
+        for (Ordine o : ordiniCache) {
+            if (stato.equals(o.getStato())) {
+                cached.add(o);
+            }
+        }
+        if (!cached.isEmpty()) {
+            return cached;
+        }
+
+        // Se non trovato, recupera dal DAO
         try {
             List<Ordine> ordini = DAOFactoryAbstract.getInstance().getOrdineDAO().getOrdiniByStato(stato);
 
