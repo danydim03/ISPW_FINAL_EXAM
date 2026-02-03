@@ -8,12 +8,16 @@ import org.example.model.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * LazyFactory per la gestione dei Clienti.
+ * Implementa il pattern Lazy Initialization con caching locale.
+ */
 public class ClienteLazyFactory {
     private static ClienteLazyFactory instance;
     private final List<Cliente> clients;
 
     private ClienteLazyFactory() {
-        clients = new ArrayList<Cliente>();
+        clients = new ArrayList<>();
     }
 
     public static synchronized ClienteLazyFactory getInstance() {
@@ -23,6 +27,10 @@ public class ClienteLazyFactory {
         return instance;
     }
 
+    /**
+     * Gets a Cliente by its User.
+     * Cerca prima nella cache, poi nel database.
+     */
     public Cliente getClienteByUser(User user) throws DAOException, UserNotFoundException, UnrecognizedRoleException,
             ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         for (Cliente s : clients) {
@@ -37,17 +45,5 @@ public class ClienteLazyFactory {
         } catch (PropertyException | ResourceNotFoundException e) {
             throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
-    }
-
-    public Cliente newCliente(User user, String id) throws DAOException, MissingAuthorizationException {
-        Cliente cliente = new Cliente(user, id);
-        user.setRole(cliente);
-        try {
-            DAOFactoryAbstract.getInstance().getClienteDAO().insert(cliente);
-        } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
-        }
-        clients.add(cliente);
-        return cliente;
     }
 }

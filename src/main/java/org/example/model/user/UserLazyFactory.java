@@ -3,10 +3,13 @@ package org.example.model.user;
 import org.example.dao_manager.DAOFactoryAbstract;
 import org.example.exceptions.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * LazyFactory per la gestione degli User.
+ * Implementa il pattern Lazy Initialization con caching locale.
+ */
 public class UserLazyFactory {
     private static UserLazyFactory instance;
     private final List<User> registeredUsers;
@@ -23,19 +26,8 @@ public class UserLazyFactory {
     }
 
     /**
-     * Gets a User by its email
-     *
-     * @param email the User's email
-     * @return a User object
-     * @throws DAOException              thrown if errors occur while retrieving
-     *                                   data from persistence layer
-     * @throws PropertyException         thrown if errors occur while loading db
-     *                                   connection properties OR thrown if errors
-     *                                   occur while loading properties from
-     *                                   .properties file
-     * @throws ResourceNotFoundException thrown if the properties resource file
-     *                                   cannot be found
-     * @throws UserNotFoundException     thrown if the email does not match any User
+     * Gets a User by its email.
+     * Cerca prima nella cache, poi nel database.
      */
     public User getUserByEmail(String email) throws DAOException, UserNotFoundException, PropertyException,
             ResourceNotFoundException, UnrecognizedRoleException, WrongListQueryIdentifierValue,
@@ -51,27 +43,4 @@ public class UserLazyFactory {
         registeredUsers.add(daoUser);
         return daoUser;
     }
-
-    public User getUserByCodiceFiscale(String codiceFiscale) throws DAOException, UserNotFoundException,
-            PropertyException, ResourceNotFoundException, UnrecognizedRoleException, WrongListQueryIdentifierValue,
-            ObjectNotFoundException, MissingAuthorizationException {
-        for (User u : registeredUsers) {
-            if (u.getCodiceFiscale().equals(codiceFiscale)) {
-                return u;
-            }
-        }
-        User daoUser = DAOFactoryAbstract.getInstance().getUserDAO().getUserByCodiceFiscale(codiceFiscale);
-        registeredUsers.add(daoUser);
-        return daoUser;
-    }
-
-    public User newUser(String name, String surname, String codiceFiscale, String email, String password,
-            LocalDate registrationDate)
-            throws DAOException, PropertyException, ResourceNotFoundException, MissingAuthorizationException {
-        User newUser = new User(name, surname, codiceFiscale, email, password, registrationDate);
-        DAOFactoryAbstract.getInstance().getUserDAO().insert(newUser);
-        registeredUsers.add(newUser);
-        return newUser;
-    }
-
 }

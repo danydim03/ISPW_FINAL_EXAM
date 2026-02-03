@@ -8,6 +8,10 @@ import org.example.model.user.User;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * LazyFactory per la gestione dei Kebabbari.
+ * Implementa il pattern Lazy Initialization con caching locale.
+ */
 public class KebabbaroLazyFactory {
     private static KebabbaroLazyFactory instance;
     private final List<Kebabbaro> kebabbari;
@@ -23,7 +27,13 @@ public class KebabbaroLazyFactory {
         return instance;
     }
 
-    public Kebabbaro getKebabbaroByUser(User user) throws DAOException, UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+    /**
+     * Gets a Kebabbaro by its User.
+     * Cerca prima nella cache, poi nel database.
+     */
+    public Kebabbaro getKebabbaroByUser(User user)
+            throws DAOException, UserNotFoundException, UnrecognizedRoleException,
+            ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
         for (Kebabbaro k : kebabbari) {
             if (k.getUser().equals(user)) {
                 return k;
@@ -36,17 +46,5 @@ public class KebabbaroLazyFactory {
         } catch (PropertyException | ResourceNotFoundException e) {
             throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
-    }
-
-    public Kebabbaro newKebabbaro(User user, List<String> signatureDishes, int maxOrdersPerHour) throws DAOException, MissingAuthorizationException {
-        Kebabbaro kebabbaro = new Kebabbaro(user, signatureDishes, maxOrdersPerHour);
-        user.setRole(kebabbaro);
-        try {
-            DAOFactoryAbstract.getInstance().getKebabbaroDAO().insert(kebabbaro);
-        } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
-        }
-        kebabbari.add(kebabbaro);
-        return kebabbaro;
     }
 }

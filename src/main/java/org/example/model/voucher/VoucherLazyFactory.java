@@ -7,6 +7,10 @@ import org.example.exceptions.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * LazyFactory per la gestione dei Voucher.
+ * Implementa il pattern Lazy Initialization con caching locale.
+ */
 public class VoucherLazyFactory {
 
     private static VoucherLazyFactory instance;
@@ -23,25 +27,10 @@ public class VoucherLazyFactory {
         return instance;
     }
 
-    public Voucher getVoucherById(Long id) throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
-            UnrecognizedRoleException {
-
-        for (Voucher v : voucherCache) {
-            if (v.getId() != null && v.getId().equals(id)) {
-                return v;
-            }
-        }
-
-        try {
-            Voucher daoVoucher = DAOFactoryAbstract.getInstance().getVoucherDAO().getVoucherById(id);
-            voucherCache.add(daoVoucher);
-            return daoVoucher;
-        } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
-        }
-    }
-
+    /**
+     * Recupera un voucher per codice.
+     * Cerca prima nella cache, poi nel database.
+     */
     public Voucher getVoucherByCodice(String codice) throws DAOException, ObjectNotFoundException,
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
             UnrecognizedRoleException {
@@ -62,38 +51,8 @@ public class VoucherLazyFactory {
     }
 
     /**
-     * Recupera tutti i voucher attivi.
-     * Implementa cache-first: cerca prima nella cache, poi nel DAO.
+     * Crea e salva un nuovo voucher.
      */
-    public List<Voucher> getAllVoucherAttivi() throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
-            UnrecognizedRoleException {
-
-        // Cerca prima nella cache
-        List<Voucher> cached = new ArrayList<>();
-        for (Voucher v : voucherCache) {
-            if (v.isAttivo()) {
-                cached.add(v);
-            }
-        }
-        if (!cached.isEmpty()) {
-            return cached;
-        }
-
-        // Se non trovato, recupera dal DAO
-        try {
-            List<Voucher> vouchers = DAOFactoryAbstract.getInstance().getVoucherDAO().getAllVoucherAttivi();
-            for (Voucher v : vouchers) {
-                if (!isVoucherInCache(v.getId())) {
-                    voucherCache.add(v);
-                }
-            }
-            return vouchers;
-        } catch (PropertyException | ResourceNotFoundException e) {
-            throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
-        }
-    }
-
     public Voucher newVoucher(Voucher voucher) throws DAOException, MissingAuthorizationException {
         try {
             DAOFactoryAbstract.getInstance().getVoucherDAO().insert(voucher);
@@ -102,20 +61,5 @@ public class VoucherLazyFactory {
         }
         voucherCache.add(voucher);
         return voucher;
-    }
-
-    private boolean isVoucherInCache(Long id) {
-        if (id == null)
-            return false;
-        for (Voucher v : voucherCache) {
-            if (v.getId() != null && v.getId().equals(id)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void clearCache() {
-        voucherCache.clear();
     }
 }
