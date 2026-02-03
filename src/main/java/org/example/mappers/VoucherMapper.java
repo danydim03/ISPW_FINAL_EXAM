@@ -37,19 +37,15 @@ public class VoucherMapper {
         }
 
         VoucherBean bean = new VoucherBean();
-        bean.setId(voucher.getId());
         bean.setCodice(voucher.getCodice());
         bean.setDescrizione(voucher.getDescrizione());
         bean.setTipoVoucher(voucher.getTipoVoucher());
-        bean.setDataScadenza(voucher.getDataScadenza());
-        bean.setValido(voucher.isValido());
 
         // Gestione sottotipi con pattern matching (Java 16+)
         if (voucher instanceof VoucherPercentuale voucherPercentuale) {
             bean.setValore(voucherPercentuale.getPercentuale());
         } else if (voucher instanceof VoucherFisso voucherFisso) {
             bean.setValore(voucherFisso.getImportoSconto());
-            bean.setMinimoOrdine(voucherFisso.getMinimoOrdine());
         }
 
         return bean;

@@ -37,7 +37,6 @@ public class FoodMapper {
         }
 
         FoodBean bean = new FoodBean();
-        bean.setId(food.getId());
         bean.setDescrizione(food.getDescrizione());
         bean.setCosto(food.getCosto());
         bean.setDurata(food.getDurata());

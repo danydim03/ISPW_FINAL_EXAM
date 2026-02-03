@@ -1,7 +1,6 @@
 package org.example.use_cases.crea_ordine.beans;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Set;
 
 import org.example.exceptions.ValidationException;
@@ -17,14 +16,10 @@ public class VoucherBean implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Set<String> TIPI_VALIDI = Set.of("PERCENTUALE", "FISSO", "NESSUNO");
 
-    private Long id;
     private String codice;
     private String descrizione;
     private String tipoVoucher; // "PERCENTUALE", "FISSO", "NESSUNO"
     private double valore; // percentuale o importo fisso
-    private double minimoOrdine;
-    private LocalDate dataScadenza;
-    private boolean valido;
 
     public VoucherBean() {
     }
@@ -33,27 +28,14 @@ public class VoucherBean implements Serializable {
         setCodice(codice);
     }
 
-    public VoucherBean(Long id, String codice, String descrizione, String tipoVoucher,
-            double valore, double minimoOrdine, LocalDate dataScadenza, boolean valido) {
-        this.id = id;
+    public VoucherBean(String codice, String descrizione, String tipoVoucher, double valore) {
         setCodice(codice);
         this.descrizione = descrizione;
         setTipoVoucher(tipoVoucher);
         setValore(valore);
-        setMinimoOrdine(minimoOrdine);
-        this.dataScadenza = dataScadenza;
-        this.valido = valido;
     }
 
     // Getters e Setters con validazione sintattica
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getCodice() {
         return codice;
@@ -112,42 +94,9 @@ public class VoucherBean implements Serializable {
         this.valore = valore;
     }
 
-    public double getMinimoOrdine() {
-        return minimoOrdine;
-    }
-
-    /**
-     * Imposta il minimo ordine richiesto.
-     * 
-     * @param minimoOrdine il minimo ordine (non può essere negativo)
-     * @throws ValidationException se il minimo è negativo
-     */
-    public void setMinimoOrdine(double minimoOrdine) {
-        if (minimoOrdine < 0) {
-            throw new ValidationException("Il minimo ordine non può essere negativo: " + minimoOrdine);
-        }
-        this.minimoOrdine = minimoOrdine;
-    }
-
-    public LocalDate getDataScadenza() {
-        return dataScadenza;
-    }
-
-    public void setDataScadenza(LocalDate dataScadenza) {
-        this.dataScadenza = dataScadenza;
-    }
-
-    public boolean isValido() {
-        return valido;
-    }
-
-    public void setValido(boolean valido) {
-        this.valido = valido;
-    }
-
     @Override
     public String toString() {
-        return String.format("VoucherBean{codice='%s', tipo='%s', valore=%.2f, valido=%b}",
-                codice, tipoVoucher, valore, valido);
+        return String.format("VoucherBean{codice='%s', tipo='%s', valore=%.2f}",
+                codice, tipoVoucher, valore);
     }
 }

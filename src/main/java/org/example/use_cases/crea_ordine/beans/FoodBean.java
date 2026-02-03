@@ -19,7 +19,6 @@ public class FoodBean implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Set<String> TIPI_VALIDI = Set.of("BASE", "ADDON");
 
-    private Long id;
     private String descrizione;
     private double costo;
     private int durata;
@@ -31,9 +30,8 @@ public class FoodBean implements Serializable {
         this.addOnSelezionati = new ArrayList<>();
     }
 
-    public FoodBean(Long id, String descrizione, double costo, int durata, String tipo, String classe) {
+    public FoodBean(String descrizione, double costo, int durata, String tipo, String classe) {
         this();
-        this.id = id;
         setDescrizione(descrizione);
         setCosto(costo);
         setDurata(durata);
@@ -42,14 +40,6 @@ public class FoodBean implements Serializable {
     }
 
     // Getters e Setters con validazione sintattica
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getDescrizione() {
         return descrizione;
@@ -150,13 +140,9 @@ public class FoodBean implements Serializable {
         }
     }
 
-    public void rimuoviAddOn(String addOnClasse) {
-        this.addOnSelezionati.remove(addOnClasse);
-    }
-
     @Override
     public String toString() {
-        return String.format("FoodBean{id=%d, descrizione='%s', costo=%.2f, tipo='%s', addOns=%s}",
-                id, descrizione, costo, tipo, addOnSelezionati);
+        return String.format("FoodBean{descrizione='%s', costo=%.2f, tipo='%s', addOns=%s}",
+                descrizione, costo, tipo, addOnSelezionati);
     }
 }

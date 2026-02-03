@@ -237,7 +237,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
 
         try {
             VoucherBean voucher = facade.applicaVoucher(codice);
-            if (voucher != null && voucher.isValido()) {
+            if (voucher != null) {
                 showSuccess("Voucher applicato! Sconto: " + voucher.getTipoVoucher() +
                         " - " + voucher.getValore() + (voucher.getTipoVoucher().equals("PERCENTUALE") ? "%" : "€"));
             } else {
