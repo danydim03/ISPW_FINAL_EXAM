@@ -4,8 +4,6 @@ import org.example.model.role.AbstractRole;
 import org.example.model.user.User;
 
 public class Amministratore extends AbstractRole {
-    private static final String DEFAULT_ROLE_NAME = "Amministratore";
-
     private final String department;
     private final int accessLevel;
 
@@ -27,11 +25,6 @@ public class Amministratore extends AbstractRole {
 
     public int getAccessLevel() {
         return accessLevel;
-    }
-
-
-    public boolean hasFullAccess() {
-        return accessLevel >= 5;
     }
 
     @Override
