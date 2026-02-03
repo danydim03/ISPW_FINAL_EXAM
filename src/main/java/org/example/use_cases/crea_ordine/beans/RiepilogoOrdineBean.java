@@ -4,9 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.example.exceptions.ValidationException;
+
 /**
  * Bean per il riepilogo dell'ordine da mostrare nella view.
  * Contiene i dati già calcolati (subtotale, sconto, totale).
+ * 
+ * Include validazione sintattica nei setter (Fail Fast principle).
  */
 public class RiepilogoOrdineBean implements Serializable {
 
@@ -76,7 +80,16 @@ public class RiepilogoOrdineBean implements Serializable {
         }
     }
 
+    /**
+     * Imposta il subtotale dell'ordine.
+     * 
+     * @param subtotale il subtotale (non può essere negativo)
+     * @throws ValidationException se il subtotale è negativo
+     */
     public void setSubtotale(double subtotale) {
+        if (subtotale < 0) {
+            throw new ValidationException("Il subtotale non può essere negativo: " + subtotale);
+        }
         this.subtotale = subtotale;
     }
 
@@ -84,7 +97,16 @@ public class RiepilogoOrdineBean implements Serializable {
         return sconto;
     }
 
+    /**
+     * Imposta lo sconto applicato.
+     * 
+     * @param sconto lo sconto (non può essere negativo)
+     * @throws ValidationException se lo sconto è negativo
+     */
     public void setSconto(double sconto) {
+        if (sconto < 0) {
+            throw new ValidationException("Lo sconto non può essere negativo: " + sconto);
+        }
         this.sconto = sconto;
     }
 
@@ -92,11 +114,29 @@ public class RiepilogoOrdineBean implements Serializable {
         return totale;
     }
 
+    /**
+     * Imposta il totale dell'ordine.
+     * 
+     * @param totale il totale (non può essere negativo)
+     * @throws ValidationException se il totale è negativo
+     */
     public void setTotale(double totale) {
+        if (totale < 0) {
+            throw new ValidationException("Il totale non può essere negativo: " + totale);
+        }
         this.totale = totale;
     }
 
+    /**
+     * Imposta la durata totale di preparazione.
+     * 
+     * @param durataTotale la durata in minuti (non può essere negativa)
+     * @throws ValidationException se la durata è negativa
+     */
     public void setDurataTotale(int durataTotale) {
+        if (durataTotale < 0) {
+            throw new ValidationException("La durata non può essere negativa: " + durataTotale);
+        }
         this.durataTotale = durataTotale;
     }
 
