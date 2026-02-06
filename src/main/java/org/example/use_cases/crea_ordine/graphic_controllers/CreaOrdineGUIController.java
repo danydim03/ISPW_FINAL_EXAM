@@ -118,6 +118,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
     private javafx.scene.layout.HBox panelSconto;
 
     private CreaOrdineFacade facade;
+    private String ordineId; // Stato UI: ID dell'ordine corrente
     private List<FoodBean> prodottiBaseDisponibili;
     private List<FoodBean> addOnDisponibili;
     private ObservableList<RigaOrdineBean> righeOrdineObservable;
@@ -258,19 +259,15 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
 
     private void iniziaNuovoOrdine() throws CreaOrdineException {
         try {
-            // La validazione della sessione è già gestita dal Facade nel costruttore
-            // (rispetta BCE: Boundary non accede direttamente a infrastruttura)
+            // Inizializza ordine e salva l'ID (stato UI)
             OrdineBean ordine = facade.inizializzaNuovoOrdine();
+            this.ordineId = String.valueOf(ordine.getNumeroOrdine());
+
             if (labelNumeroOrdine != null && ordine.getNumeroOrdine() != null) {
                 labelNumeroOrdine.setText(" Numero Ordine: " + ordine.getNumeroOrdine());
             }
             aggiornaRiepilogo();
-            // Log di successo
-            // Non necessario mostrare messaggio all'utente in questa fase
         } catch (DAOException e) {
-            // Gestione eccezioni specifiche
-            // Rilancia come CreaOrdineException per la vista
-            // Log dell'errore già effettuato nel Facade
             throw new CreaOrdineException("Impossibile inizializzare l'ordine: " + e.getMessage(), e);
         }
     }
@@ -289,7 +286,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             return;
         }
 
-        boolean success = facade.rimuoviProdottoDaOrdine(selectedIndex);
+        boolean success = facade.rimuoviProdottoDaOrdine(ordineId, selectedIndex);
         if (success) {
             aggiornaRiepilogo();
         } else {
@@ -339,7 +336,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         if (checkMixVerdure != null && checkMixVerdure.isSelected())
             richiesta.aggiungiAddOn("MixVerdureGrigliate");
 
-        boolean success = facade.aggiungiProdottoAOrdine(richiesta);
+        boolean success = facade.aggiungiProdottoAOrdine(ordineId, richiesta);
         if (success) {
             aggiornaRiepilogo();
             resetSelezioniAddOn();
@@ -378,7 +375,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 return;
             }
 
-            var voucherBean = facade.applicaVoucher(codiceVoucher);
+            var voucherBean = facade.applicaVoucher(ordineId, codiceVoucher);
             if (voucherBean != null) {
                 aggiornaRiepilogo();
                 textFieldVoucher.setDisable(true);
@@ -406,7 +403,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             return;
         }
 
-        facade.rimuoviVoucher();
+        facade.rimuoviVoucher(ordineId);
         aggiornaRiepilogo();
 
         textFieldVoucher.setDisable(false);
@@ -427,9 +424,9 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             // Costruisce il riepilogo dell'ordine e mostra la conferma
             // Se l'utente conferma, chiama il facade per confermare l'ordine
             // Mostra messaggi di conferma o errore in base al risultato
-            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine();
+            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine(ordineId);
 
-            boolean success = facade.confermaOrdine();
+            boolean success = facade.confermaOrdine(ordineId);
             if (success) {
                 mostraInfo("Ordine confermato",
                         "Il tuo ordine #" + riepilogo.getNumeroOrdine() + " è stato confermato!\n\n" +
@@ -455,7 +452,8 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         if (mostraConferma("Annulla Ordine",
                 "Sei sicuro di voler annullare l'ordine?\nTutti i prodotti selezionati verranno rimossi.")) {
 
-            facade.annullaOrdine();
+            facade.annullaOrdine(ordineId);
+            ordineId = null; // Reset dopo annullamento
             resetVistaCompleta();
             org.example.PageNavigationController.getInstance().returnToMainPage();
         }
@@ -470,7 +468,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
      * </p>
      */
     private void aggiornaRiepilogo() {
-        RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine();
+        RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine(ordineId);
         aggiornaVistaConRiepilogo(riepilogo);
     }
 

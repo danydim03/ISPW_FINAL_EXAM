@@ -65,4 +65,31 @@ public class OrdineLazyFactory {
             throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
     }
+
+    // ==================== METODI DI RICERCA (Identity Map) ====================
+
+    /**
+     * Recupera un ordine in corso tramite il suo ID.
+     * Usa la List esistente per semplicità (pattern Identity Map semplificato).
+     *
+     * @param ordineId il numero dell'ordine da cercare
+     * @return l'Ordine se trovato, null altrimenti
+     */
+    public Ordine getOrdineById(String ordineId) {
+        for (Ordine o : ordiniCache) {
+            if (String.valueOf(o.getNumeroOrdine()).equals(ordineId)) {
+                return o;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Rimuove un ordine dalla cache (dopo conferma/annullamento).
+     *
+     * @param ordineId il numero dell'ordine da rimuovere
+     */
+    public void rimuoviOrdineInCorso(String ordineId) {
+        ordiniCache.removeIf(o -> String.valueOf(o.getNumeroOrdine()).equals(ordineId));
+    }
 }

@@ -4,9 +4,7 @@ import org.example.exceptions.*;
 import org.example.model.food.*;
 import org.example.model.ordine.Ordine;
 import org.example.model.ordine.OrdineLazyFactory;
-import org.example.model.voucher.Voucher;
 import org.example.use_cases.crea_ordine.beans.*;
-import org.example.use_cases.crea_ordine.beans.RiepilogoOrdineBean.RigaOrdineBean;
 import org.example.use_cases.usa_voucher.UsaVoucherController;
 import org.example.events.*;
 import java.util.List;
@@ -14,6 +12,11 @@ import org.example.mappers.*;
 
 /**
  * Controller Applicativo per lo Use Case "Crea Ordine".
+ * 
+ * <p>
+ * <b>STATELESS</b>: questo controller non mantiene stato interno.
+ * Recupera l'Entity Ordine tramite ID dal Singleton Factory.
+ * </p>
  * 
  * Responsabilità:
  * - Orchestrare la logica di business per la creazione dell'ordine
@@ -25,27 +28,26 @@ import org.example.mappers.*;
  */
 public class CreaOrdineController {
 
-    private Ordine ordineCorrente;
+    // ═══════════════════════════════════════════════════════════════════════
+    // NESSUN CAMPO DI TIPO ENTITY - CONTROLLER STATELESS
+    // ═══════════════════════════════════════════════════════════════════════
+
     private final UsaVoucherController voucherController;
 
     public CreaOrdineController() {
-        // Il controller viene istanziato dal Facade o dal Controller Grafico
         this.voucherController = new UsaVoucherController();
     }
 
     /**
-     * Inizializza un nuovo ordine per il cliente
+     * Crea un nuovo ordine per il cliente.
+     * L'ordine viene registrato nel Factory e il suo ID viene restituito nel Bean.
      * 
      * @param clienteId ID del cliente
-     * @return OrdineBean con i dati dell'ordine creato
+     * @return OrdineBean con i dati dell'ordine creato (incluso numeroOrdine)
      */
-    public OrdineBean inizializzaNuovoOrdine(String clienteId) throws DAOException {
-        // Crea un nuovo ordine tramite la LazyFactory
-        ordineCorrente = OrdineLazyFactory.getInstance().newOrdine(clienteId);
-
-        // Converti in Bean e restituisci
-        // Converti in Bean e restituisci
-        return OrdineMapper.toBean(ordineCorrente);
+    public OrdineBean creaNuovoOrdine(String clienteId) throws DAOException {
+        Ordine ordine = OrdineLazyFactory.getInstance().newOrdine(clienteId);
+        return OrdineMapper.toBean(ordine);
     }
 
     /**
@@ -75,14 +77,17 @@ public class CreaOrdineController {
     }
 
     /**
-     * Aggiunge un prodotto all'ordine corrente con gli add-on selezionati.
+     * Aggiunge un prodotto all'ordine con gli add-on selezionati.
      * Applica il pattern Decorator per gli add-on.
      * 
+     * @param ordineId ID dell'ordine (recuperato dal Factory)
      * @param foodBean il prodotto da aggiungere con gli add-on selezionati
      * @return true se l'aggiunta è andata a buon fine
      */
-    public boolean aggiungiProdottoAOrdine(FoodBean foodBean) {
-        if (ordineCorrente == null || foodBean == null) {
+    public boolean aggiungiProdottoAOrdine(String ordineId, FoodBean foodBean) {
+        Ordine ordine = OrdineLazyFactory.getInstance().getOrdineById(ordineId);
+
+        if (ordine == null || foodBean == null) {
             return false;
         }
 
@@ -98,93 +103,76 @@ public class CreaOrdineController {
         }
 
         // Aggiungi all'ordine
-        ordineCorrente.aggiungiProdotto(prodotto);
+        ordine.aggiungiProdotto(prodotto);
         return true;
     }
 
     /**
      * Rimuove un prodotto dall'ordine
      * 
-     * @param index indice del prodotto da rimuovere
+     * @param ordineId ID dell'ordine
+     * @param index    indice del prodotto da rimuovere
      * @return true se la rimozione è andata a buon fine
      */
-    public boolean rimuoviProdottoDaOrdine(int index) {
-        if (ordineCorrente == null) {
+    public boolean rimuoviProdottoDaOrdine(String ordineId, int index) {
+        Ordine ordine = OrdineLazyFactory.getInstance().getOrdineById(ordineId);
+
+        if (ordine == null) {
             return false;
         }
 
-        List<Food> prodotti = ordineCorrente.getProdotti();
+        List<Food> prodotti = ordine.getProdotti();
         if (index >= 0 && index < prodotti.size()) {
-            ordineCorrente.rimuoviProdotto(prodotti.get(index));
+            ordine.rimuoviProdotto(prodotti.get(index));
             return true;
         }
         return false;
     }
 
     /**
-     * Applica un voucher all'ordine corrente.
+     * Applica un voucher all'ordine.
      * DELEGA a UsaVoucherController (GRASP: Single Responsibility).
      * 
+     * @param ordineId      ID dell'ordine
      * @param codiceVoucher il codice del voucher da applicare
      * @return VoucherBean con i dati del voucher applicato, null se non valido
      */
-    public VoucherBean applicaVoucher(String codiceVoucher) throws DAOException, ObjectNotFoundException,
+    public VoucherBean applicaVoucher(String ordineId, String codiceVoucher)
+            throws DAOException, ObjectNotFoundException,
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
             UnrecognizedRoleException {
 
-        if (ordineCorrente == null) {
+        Ordine ordine = OrdineLazyFactory.getInstance().getOrdineById(ordineId);
+
+        if (ordine == null) {
             return null;
         }
-        return voucherController.applicaVoucherAOrdine(ordineCorrente, codiceVoucher);
+        return voucherController.applicaVoucherAOrdine(ordine, codiceVoucher);
     }
 
     /**
-     * Rimuove il voucher dall'ordine corrente.
+     * Rimuove il voucher dall'ordine.
      * DELEGA a UsaVoucherController.
+     * 
+     * @param ordineId ID dell'ordine
      */
-    public void rimuoviVoucher() {
-        voucherController.rimuoviVoucherDaOrdine(ordineCorrente);
+    public void rimuoviVoucher(String ordineId) {
+        Ordine ordine = OrdineLazyFactory.getInstance().getOrdineById(ordineId);
+        if (ordine != null) {
+            voucherController.rimuoviVoucherDaOrdine(ordine);
+        }
     }
 
     /**
-     * Calcola e restituisce il riepilogo dell'ordine corrente.
+     * Calcola e restituisce il riepilogo dell'ordine.
+     * Delega la conversione a RiepilogoMapper (GRASP: High Cohesion).
      * 
+     * @param ordineId ID dell'ordine
      * @return RiepilogoOrdineBean con tutti i dati calcolati
      */
-    public RiepilogoOrdineBean getRiepilogoOrdine() {
-        if (ordineCorrente == null) {
-            return null;
-        }
-
-        RiepilogoOrdineBean riepilogo = new RiepilogoOrdineBean();
-        riepilogo.setNumeroOrdine(ordineCorrente.getNumeroOrdine());
-
-        // Aggiungi le righe dei prodotti
-        for (Food food : ordineCorrente.getProdotti()) {
-            RigaOrdineBean riga = new RigaOrdineBean(
-                    food.getDescrizione(),
-                    food.getCosto(),
-                    food.getDurata());
-            riepilogo.aggiungiRiga(riga);
-        }
-
-        // Calcola i totali
-        riepilogo.setSubtotale(ordineCorrente.getSubtotale());
-        riepilogo.setSconto(ordineCorrente.getSconto());
-        riepilogo.setTotale(ordineCorrente.getTotale());
-        riepilogo.setDurataTotale(ordineCorrente.getDurataTotale());
-
-        // Info voucher - delega a UsaVoucherController per la conversione
-        if (voucherController.hasVoucherApplicato(ordineCorrente)) {
-            Voucher v = ordineCorrente.getVoucher();
-            riepilogo.setVoucherApplicato(true);
-            riepilogo.setCodiceVoucher(v.getCodice());
-            riepilogo.setDescrizioneVoucher(v.getDescrizione());
-        } else {
-            riepilogo.setVoucherApplicato(false);
-        }
-
-        return riepilogo;
+    public RiepilogoOrdineBean getRiepilogoOrdine(String ordineId) {
+        Ordine ordine = OrdineLazyFactory.getInstance().getOrdineById(ordineId);
+        return RiepilogoMapper.toBean(ordine);
     }
 
     /**
@@ -193,43 +181,44 @@ public class CreaOrdineController {
      * <p>
      * Dopo il salvataggio, pubblica un evento {@link OrdineEvent} per notificare
      * attivamente l'Amministratore (A2) che un nuovo ordine è stato confermato.
-     * Questo implementa il requisito della traccia d'esame che richiede una
-     * "notifica attiva" verso A2.
      * </p>
      * 
+     * @param ordineId ID dell'ordine
      * @return true se l'ordine è stato confermato con successo
      * @throws DAOException                  se si verifica un errore durante il
      *                                       salvataggio
      * @throws MissingAuthorizationException se mancano le autorizzazioni
      */
-    public boolean confermaOrdine() throws DAOException, MissingAuthorizationException {
-        if (ordineCorrente == null || ordineCorrente.getProdotti().isEmpty()) {
-            return false;// fast fail se ordine non inizializzato o vuoto
+    public boolean confermaOrdine(String ordineId) throws DAOException, MissingAuthorizationException {
+        Ordine ordine = OrdineLazyFactory.getInstance().getOrdineById(ordineId);
+
+        if (ordine == null || ordine.getProdotti().isEmpty()) {
+            return false;
         }
 
         // Salva l'ordine tramite il DAO
-        OrdineLazyFactory.getInstance().salvaOrdine(ordineCorrente);
+        OrdineLazyFactory.getInstance().salvaOrdine(ordine);
 
         // ==================== NOTIFICA ATTIVA (Pattern Observer) ====================
-        // Pubblica l'evento per notificare l'Amministratore (A2) che un ordine
-        // "UC1 notifica A2 che qualcosa nel sistema si è evoluto"
         OrdineEvent event = new OrdineEvent(
-                ordineCorrente.getNumeroOrdine(),
-                ordineCorrente.getClienteId(),
-                ordineCorrente.getTotale());
-        OrdineEventPublisher.getInstance().notifyOrdineConfermato(event); // Notifica l'evento all'amministratore
+                ordine.getNumeroOrdine(),
+                ordine.getClienteId(),
+                ordine.getTotale());
+        OrdineEventPublisher.getInstance().notifyOrdineConfermato(event);
         // =============================================================================
+
+        // Rimuovi dalla cache dopo conferma
+        OrdineLazyFactory.getInstance().rimuoviOrdineInCorso(ordineId);
 
         return true;
     }
 
     /**
-     * Annulla l'ordine corrente
+     * Annulla l'ordine corrente.
+     * 
+     * @param ordineId ID dell'ordine da annullare
      */
-    public void annullaOrdine() {
-        ordineCorrente = null;
+    public void annullaOrdine(String ordineId) {
+        OrdineLazyFactory.getInstance().rimuoviOrdineInCorso(ordineId);
     }
-
-    // Conversione Food → FoodBean ora delegata a FoodMapper (GRASP: Pure
-    // Fabrication)
 }

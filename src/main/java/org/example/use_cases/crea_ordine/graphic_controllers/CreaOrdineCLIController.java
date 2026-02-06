@@ -24,6 +24,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
     private static final String TABLE_ROW_SEPARATOR = "  ├─────────────────────────────────────────────────┤";
 
     private CreaOrdineFacade facade;
+    private String ordineId; // Stato UI
     private List<FoodBean> prodottiBase;
     private List<FoodBean> addOns;
     private boolean orderCompleted = false;
@@ -41,6 +42,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
 
             // Initialize a new order
             OrdineBean ordineBean = facade.inizializzaNuovoOrdine();
+            this.ordineId = String.valueOf(ordineBean.getNumeroOrdine());
             showSuccess("Nuovo ordine #" + ordineBean.getNumeroOrdine() + " inizializzato!");
 
             // Load available products
@@ -102,7 +104,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
 
     private void showCurrentOrderSummary() {
         try {
-            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine();
+            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine(ordineId);
             if (riepilogo != null && !riepilogo.getRigheOrdine().isEmpty()) {
                 System.out.println("  📦 Prodotti nel carrello: " + riepilogo.getRigheOrdine().size());
                 System.out.println("  💰 Totale corrente: " + riepilogo.getTotaleFormattato());
@@ -169,7 +171,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
 
         // Add to order
         try {
-            boolean success = facade.aggiungiProdottoAOrdine(selectedProduct);
+            boolean success = facade.aggiungiProdottoAOrdine(ordineId, selectedProduct);
             if (success) {
                 showSuccess("Prodotto aggiunto all'ordine!");
             } else {
@@ -236,7 +238,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
         }
 
         try {
-            VoucherBean voucher = facade.applicaVoucher(codice);
+            VoucherBean voucher = facade.applicaVoucher(ordineId, codice);
             if (voucher != null) {
                 showSuccess("Voucher applicato! Sconto: " + voucher.getTipoVoucher() +
                         " - " + voucher.getValore() + (voucher.getTipoVoucher().equals("PERCENTUALE") ? "%" : "€"));
@@ -258,7 +260,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
         printHeader("RIEPILOGO ORDINE");
 
         try {
-            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine();
+            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine(ordineId);
 
             if (riepilogo == null || riepilogo.getRigheOrdine().isEmpty()) {
                 showWarning("L'ordine è vuoto. Aggiungi qualche prodotto!");
@@ -304,7 +306,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
         printHeader("CONFERMA ORDINE");
 
         try {
-            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine();
+            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine(ordineId);
 
             if (riepilogo == null || riepilogo.getRigheOrdine().isEmpty()) {
                 showWarning("L'ordine è vuoto. Aggiungi qualche prodotto prima di confermare!");
@@ -320,7 +322,7 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
             String confirm = scanner.nextLine().trim().toLowerCase();
 
             if (confirm.equals("s") || confirm.equals("si") || confirm.equals("sì")) {
-                boolean success = facade.confermaOrdine();
+                boolean success = facade.confermaOrdine(ordineId);
                 if (success) {
                     showSuccess("🎉 Ordine #" + riepilogo.getNumeroOrdine() + " confermato con successo!");
                     System.out.println("\n  Il tuo ordine è stato inviato alla cucina.");
@@ -350,7 +352,8 @@ public class CreaOrdineCLIController extends BaseCLIGraphicController {
 
         if (confirm.equals("s") || confirm.equals("si") || confirm.equals("sì")) {
             try {
-                facade.annullaOrdine();
+                facade.annullaOrdine(ordineId);
+                ordineId = null;
                 showInfo("Ordine annullato.");
                 exitRequested = true;
             } catch (Exception e) {

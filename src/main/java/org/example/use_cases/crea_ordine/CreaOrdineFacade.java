@@ -7,7 +7,24 @@ import org.example.use_cases.crea_ordine.beans.*;
 
 import java.util.List;
 
+/**
+ * Facade per lo Use Case "Crea Ordine".
+ * 
+ * <p>
+ * <b>STATELESS</b>: non mantiene stato di business.
+ * Riceve ordineId come parametro e lo passa al Controller.
+ * </p>
+ * 
+ * Responsabilità:
+ * - Esporre un'interfaccia semplificata al layer Boundary (GUI)
+ * - Verificare autorizzazioni tramite SessionManager
+ * - Delegare la logica al Controller
+ */
 public class CreaOrdineFacade {
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // NESSUN CAMPO DI STATO - FACADE STATELESS
+    // ═══════════════════════════════════════════════════════════════════════
 
     private final CreaOrdineController controller;
     private final org.example.model.user.User sessionUser;
@@ -20,11 +37,13 @@ public class CreaOrdineFacade {
         this.controller = new CreaOrdineController();
     }
 
-    public OrdineBean inizializzaNuovoOrdine()
-            throws DAOException {
-        // Use actual client ID from session user (database ID)
-        String actualClienteId = sessionUser.getId();
-        return controller.inizializzaNuovoOrdine(actualClienteId);
+    /**
+     * Inizializza un nuovo ordine per il cliente.
+     * 
+     * @return OrdineBean con numeroOrdine che sarà usato come ID
+     */
+    public OrdineBean inizializzaNuovoOrdine() throws DAOException {
+        return controller.creaNuovoOrdine(sessionUser.getId());
     }
 
     public List<FoodBean> getProdottiBaseDisponibili() throws DAOException, ObjectNotFoundException,
@@ -39,33 +58,71 @@ public class CreaOrdineFacade {
         return controller.getAddOnDisponibili();
     }
 
-    public boolean aggiungiProdottoAOrdine(FoodBean foodBean) {
-        return controller.aggiungiProdottoAOrdine(foodBean);
+    /**
+     * Aggiunge un prodotto all'ordine.
+     * 
+     * @param ordineId ID dell'ordine (passato dal GUI Controller)
+     * @param foodBean il prodotto da aggiungere
+     */
+    public boolean aggiungiProdottoAOrdine(String ordineId, FoodBean foodBean) {
+        return controller.aggiungiProdottoAOrdine(ordineId, foodBean);
     }
 
-    public boolean rimuoviProdottoDaOrdine(int index) {
-        return controller.rimuoviProdottoDaOrdine(index);
+    /**
+     * Rimuove un prodotto dall'ordine.
+     * 
+     * @param ordineId ID dell'ordine
+     * @param index    indice del prodotto da rimuovere
+     */
+    public boolean rimuoviProdottoDaOrdine(String ordineId, int index) {
+        return controller.rimuoviProdottoDaOrdine(ordineId, index);
     }
 
-    public VoucherBean applicaVoucher(String codiceVoucher)
+    /**
+     * Applica un voucher all'ordine.
+     * 
+     * @param ordineId      ID dell'ordine
+     * @param codiceVoucher codice del voucher
+     */
+    public VoucherBean applicaVoucher(String ordineId, String codiceVoucher)
             throws DAOException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue,
             UserNotFoundException, UnrecognizedRoleException {
-        return controller.applicaVoucher(codiceVoucher);
+        return controller.applicaVoucher(ordineId, codiceVoucher);
     }
 
-    public void rimuoviVoucher() {
-        controller.rimuoviVoucher();
+    /**
+     * Rimuove il voucher dall'ordine.
+     * 
+     * @param ordineId ID dell'ordine
+     */
+    public void rimuoviVoucher(String ordineId) {
+        controller.rimuoviVoucher(ordineId);
     }
 
-    public RiepilogoOrdineBean getRiepilogoOrdine() {
-        return controller.getRiepilogoOrdine();
+    /**
+     * Ottiene il riepilogo dell'ordine.
+     * 
+     * @param ordineId ID dell'ordine
+     */
+    public RiepilogoOrdineBean getRiepilogoOrdine(String ordineId) {
+        return controller.getRiepilogoOrdine(ordineId);
     }
 
-    public boolean confermaOrdine() throws DAOException, MissingAuthorizationException {
-        return controller.confermaOrdine();
+    /**
+     * Conferma l'ordine.
+     * 
+     * @param ordineId ID dell'ordine
+     */
+    public boolean confermaOrdine(String ordineId) throws DAOException, MissingAuthorizationException {
+        return controller.confermaOrdine(ordineId);
     }
 
-    public void annullaOrdine() {
-        controller.annullaOrdine();
+    /**
+     * Annulla l'ordine.
+     * 
+     * @param ordineId ID dell'ordine
+     */
+    public void annullaOrdine(String ordineId) {
+        controller.annullaOrdine(ordineId);
     }
 }
