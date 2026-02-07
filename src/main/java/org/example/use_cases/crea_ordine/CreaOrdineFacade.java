@@ -2,6 +2,7 @@
 package org.example.use_cases.crea_ordine;
 
 import org.example.exceptions.*;
+import org.example.model.user.User;
 import org.example.session_manager.SessionManager;
 import org.example.use_cases.crea_ordine.beans.*;
 
@@ -22,107 +23,138 @@ import java.util.List;
  */
 public class CreaOrdineFacade {
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // NESSUN CAMPO DI STATO - FACADE STATELESS
-    // ═══════════════════════════════════════════════════════════════════════
+    /**
+     * Metodo helper per ottenere un'istanza di CreaOrdineController.
+     * Creato on-demand per mantenere il facade stateless.
+     * 
+     * @return nuova istanza di CreaOrdineController
+     */
+    private CreaOrdineController getController() {
+        return new CreaOrdineController();
+    }
 
-    private final CreaOrdineController controller;
-    private final org.example.model.user.User sessionUser;
-
-    public CreaOrdineFacade(String tokenKey) throws MissingAuthorizationException {
-        this.sessionUser = SessionManager.getInstance().getSessionUserByTokenKey(tokenKey);
-        if (sessionUser == null || sessionUser.getRole() == null || sessionUser.getRole().getClienteRole() == null) {
+    /**
+     * Recupera e valida l'utente dalla sessione.
+     * 
+     * @param tokenKey chiave del token di sessione
+     * @return l'utente autenticato
+     * @throws MissingAuthorizationException se l'utente non è autorizzato
+     */
+    private User getSessionUser(String tokenKey) throws MissingAuthorizationException {
+        User user = SessionManager.getInstance().getSessionUserByTokenKey(tokenKey);
+        if (user == null || user.getRole() == null || user.getRole().getClienteRole() == null) {
             throw new MissingAuthorizationException("Accesso negato: token non autorizzato per ruolo cliente");
         }
-        this.controller = new CreaOrdineController();
+        return user;
     }
 
     /**
      * Inizializza un nuovo ordine per il cliente.
      * 
+     * @param tokenKey chiave del token di sessione
      * @return OrdineBean con numeroOrdine che sarà usato come ID
      */
-    public OrdineBean inizializzaNuovoOrdine() throws DAOException {
-        return controller.creaNuovoOrdine(sessionUser.getId());
+    public OrdineBean inizializzaNuovoOrdine(String tokenKey) throws DAOException, MissingAuthorizationException {
+        User sessionUser = getSessionUser(tokenKey);
+        return getController().creaNuovoOrdine(sessionUser.getId());
     }
 
-    public List<FoodBean> getProdottiBaseDisponibili() throws DAOException, ObjectNotFoundException,
+    public List<FoodBean> getProdottiBaseDisponibili(String tokenKey) throws DAOException, ObjectNotFoundException,
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
             UnrecognizedRoleException {
-        return controller.getProdottiBaseDisponibili();
+        getSessionUser(tokenKey); // Verifica autorizzazione
+        return getController().getProdottiBaseDisponibili();
     }
 
-    public List<FoodBean> getAddOnDisponibili() throws DAOException, ObjectNotFoundException,
+    public List<FoodBean> getAddOnDisponibili(String tokenKey) throws DAOException, ObjectNotFoundException,
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
             UnrecognizedRoleException {
-        return controller.getAddOnDisponibili();
+        getSessionUser(tokenKey); // Verifica autorizzazione
+        return getController().getAddOnDisponibili();
     }
 
     /**
      * Aggiunge un prodotto all'ordine.
      * 
+     * @param tokenKey chiave del token di sessione
      * @param ordineId ID dell'ordine (passato dal GUI Controller)
      * @param foodBean il prodotto da aggiungere
      */
-    public boolean aggiungiProdottoAOrdine(String ordineId, FoodBean foodBean) {
-        return controller.aggiungiProdottoAOrdine(ordineId, foodBean);
+    public boolean aggiungiProdottoAOrdine(String tokenKey, String ordineId, FoodBean foodBean)
+            throws MissingAuthorizationException {
+        getSessionUser(tokenKey); // Verifica autorizzazione
+        return getController().aggiungiProdottoAOrdine(ordineId, foodBean);
     }
 
     /**
      * Rimuove un prodotto dall'ordine.
      * 
+     * @param tokenKey chiave del token di sessione
      * @param ordineId ID dell'ordine
      * @param index    indice del prodotto da rimuovere
      */
-    public boolean rimuoviProdottoDaOrdine(String ordineId, int index) {
-        return controller.rimuoviProdottoDaOrdine(ordineId, index);
+    public boolean rimuoviProdottoDaOrdine(String tokenKey, String ordineId, int index)
+            throws MissingAuthorizationException {
+        getSessionUser(tokenKey); // Verifica autorizzazione
+        return getController().rimuoviProdottoDaOrdine(ordineId, index);
     }
 
     /**
      * Applica un voucher all'ordine.
      * 
+     * @param tokenKey      chiave del token di sessione
      * @param ordineId      ID dell'ordine
      * @param codiceVoucher codice del voucher
      */
-    public VoucherBean applicaVoucher(String ordineId, String codiceVoucher)
+    public VoucherBean applicaVoucher(String tokenKey, String ordineId, String codiceVoucher)
             throws DAOException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue,
             UserNotFoundException, UnrecognizedRoleException {
-        return controller.applicaVoucher(ordineId, codiceVoucher);
+        getSessionUser(tokenKey); // Verifica autorizzazione
+        return getController().applicaVoucher(ordineId, codiceVoucher);
     }
 
     /**
      * Rimuove il voucher dall'ordine.
      * 
+     * @param tokenKey chiave del token di sessione
      * @param ordineId ID dell'ordine
      */
-    public void rimuoviVoucher(String ordineId) {
-        controller.rimuoviVoucher(ordineId);
+    public void rimuoviVoucher(String tokenKey, String ordineId) throws MissingAuthorizationException {
+        getSessionUser(tokenKey); // Verifica autorizzazione
+        getController().rimuoviVoucher(ordineId);
     }
 
     /**
      * Ottiene il riepilogo dell'ordine.
      * 
+     * @param tokenKey chiave del token di sessione
      * @param ordineId ID dell'ordine
      */
-    public RiepilogoOrdineBean getRiepilogoOrdine(String ordineId) {
-        return controller.getRiepilogoOrdine(ordineId);
+    public RiepilogoOrdineBean getRiepilogoOrdine(String tokenKey, String ordineId)
+            throws MissingAuthorizationException {
+        getSessionUser(tokenKey); // Verifica autorizzazione
+        return getController().getRiepilogoOrdine(ordineId);
     }
 
     /**
      * Conferma l'ordine.
      * 
+     * @param tokenKey chiave del token di sessione
      * @param ordineId ID dell'ordine
      */
-    public boolean confermaOrdine(String ordineId) throws DAOException, MissingAuthorizationException {
-        return controller.confermaOrdine(ordineId);
+    public boolean confermaOrdine(String tokenKey, String ordineId) throws DAOException, MissingAuthorizationException {
+        getSessionUser(tokenKey); // Verifica autorizzazione
+        return getController().confermaOrdine(ordineId);
     }
 
     /**
      * Annulla l'ordine.
      * 
+     * @param tokenKey chiave del token di sessione
      * @param ordineId ID dell'ordine
      */
-    public void annullaOrdine(String ordineId) {
-        controller.annullaOrdine(ordineId);
+    public void annullaOrdine(String tokenKey, String ordineId) throws MissingAuthorizationException {
+        getSessionUser(tokenKey); // Verifica autorizzazione
+        getController().annullaOrdine(ordineId);
     }
 }

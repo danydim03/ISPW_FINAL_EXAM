@@ -55,9 +55,10 @@ public class RiepilogoMapper {
         riepilogo.setTotale(ordine.getTotale());
         riepilogo.setDurataTotale(ordine.getDurataTotale());
 
-        // Info voucher
-        Voucher v = ordine.getVoucher();
-        if (v != null) {
+        // Info voucher - usa hasVoucher() perché getVoucher() non è mai null
+        // (restituisce NessunVoucher come default)
+        if (ordine.hasVoucher()) {
+            Voucher v = ordine.getVoucher();
             riepilogo.setVoucherApplicato(true);
             riepilogo.setCodiceVoucher(v.getCodice());
             riepilogo.setDescrizioneVoucher(v.getDescrizione());

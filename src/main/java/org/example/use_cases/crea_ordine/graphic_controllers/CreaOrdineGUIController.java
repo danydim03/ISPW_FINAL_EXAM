@@ -15,6 +15,8 @@ import org.example.use_cases.crea_ordine.beans.FoodBean;
 import org.example.use_cases.crea_ordine.beans.OrdineBean;
 import org.example.use_cases.crea_ordine.beans.RiepilogoOrdineBean;
 import org.example.use_cases.crea_ordine.beans.RiepilogoOrdineBean.RigaOrdineBean;
+import org.example.enums.FoodTypeEnum;
+import org.example.enums.AddOnTypeEnum;
 
 import java.net.URL;
 import java.util.List;
@@ -55,8 +57,6 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
 
     private static final Logger logger = Logger.getLogger(CreaOrdineGUIController.class.getName());
     private static final String ERROR_TITLE = "Errore";
-    private static final String ADDON_CIPOLLA = "Cipolla";
-    private static final String ADDON_PATATINE = "Patatine";
     private static final String ZERO_CURRENCY = "€0.00";
 
     @FXML
@@ -118,6 +118,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
     private javafx.scene.layout.HBox panelSconto;
 
     private CreaOrdineFacade facade;
+    private String tokenKey; // Token di sessione per l'autorizzazione
     private String ordineId; // Stato UI: ID dell'ordine corrente
     private List<FoodBean> prodottiBaseDisponibili;
     private List<FoodBean> addOnDisponibili;
@@ -132,29 +133,26 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             setupListeners();
 
             // Verifica che l'utente sia loggato
-            String tokenKey = PageNavigationController.getInstance().getSessionTokenKey();
-            if (tokenKey == null) {
+            this.tokenKey = PageNavigationController.getInstance().getSessionTokenKey();
+            if (this.tokenKey == null) {
                 logger.severe("Utente non loggato - token null");
                 mostraErrore("Errore di sessione", "Devi effettuare il login per creare un ordine.");
                 return;
             }
 
-            // 1. Prima crea Facade (richiesto per caricamento dati)
-            facade = new CreaOrdineFacade(tokenKey);
+            // 1. Crea Facade stateless (senza costruttore con parametro)
+            facade = new CreaOrdineFacade();
 
-            // 2. Poi carica dati via Facade (richiede Facade inizializzato)
+            // 2. Poi carica dati via Facade (richiede tokenKey)
             caricaDatiIniziali();
 
             // 3. Inizializza nuovo ordine
             iniziaNuovoOrdine();
 
-        } catch (MissingAuthorizationException e) {
-            logger.log(Level.SEVERE, "Errore di autorizzazione", e);
-            mostraErrore("Errore di autorizzazione", e.getMessage());
         } catch (CreaOrdineException e) {
             logger.log(Level.SEVERE, "Errore di inizializzazione ordine", e);
             mostraErrore("Errore di inizializzazione", e.getMessage());
-        } catch (HabibiException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore imprevisto", e);
             mostraErrore(ERROR_TITLE, "Si è verificato un errore: " + e.getMessage());
         }
@@ -212,8 +210,8 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
      */
     private void caricaDatiIniziali() {
         try {
-            prodottiBaseDisponibili = facade.getProdottiBaseDisponibili();
-            addOnDisponibili = facade.getAddOnDisponibili();
+            prodottiBaseDisponibili = facade.getProdottiBaseDisponibili(tokenKey);
+            addOnDisponibili = facade.getAddOnDisponibili(tokenKey);
 
             logger.log(Level.INFO, () -> "Caricati " + prodottiBaseDisponibili.size()
                     + " prodotti base e " + addOnDisponibili.size() + " add-on");
@@ -242,32 +240,36 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
 
         String classeRichiesta;
         if (selected == radioPanino) {
-            classeRichiesta = "PaninoDonerKebab";
+            classeRichiesta = FoodTypeEnum.PANINO_DONER_KEBAB.getClassName();
         } else if (selected == radioPiadina) {
-            classeRichiesta = "PiadinaDonerKebab";
+            classeRichiesta = FoodTypeEnum.PIADINA_DONER_KEBAB.getClassName();
         } else if (selected == radioPiatto) {
-            classeRichiesta = "KebabAlPiatto";
+            classeRichiesta = FoodTypeEnum.KEBAB_AL_PIATTO.getClassName();
         } else {
             return null;
         }
 
-        return prodottiBaseDisponibili.stream()
-                .filter(f -> classeRichiesta.equals(f.getClasse()))
-                .findFirst()
-                .orElse(null);
+        // Equivalente classico (più verboso)
+        for (FoodBean f : prodottiBaseDisponibili) {
+            if (classeRichiesta.equals(f.getClasse())) {
+                return f;
+            }
+        }
+        return null;
+
     }
 
     private void iniziaNuovoOrdine() throws CreaOrdineException {
         try {
             // Inizializza ordine e salva l'ID (stato UI)
-            OrdineBean ordine = facade.inizializzaNuovoOrdine();
+            OrdineBean ordine = facade.inizializzaNuovoOrdine(tokenKey);
             this.ordineId = String.valueOf(ordine.getNumeroOrdine());
 
             if (labelNumeroOrdine != null && ordine.getNumeroOrdine() != null) {
                 labelNumeroOrdine.setText(" Numero Ordine: " + ordine.getNumeroOrdine());
             }
             aggiornaRiepilogo();
-        } catch (DAOException e) {
+        } catch (DAOException | MissingAuthorizationException e) {
             throw new CreaOrdineException("Impossibile inizializzare l'ordine: " + e.getMessage(), e);
         }
     }
@@ -286,11 +288,15 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             return;
         }
 
-        boolean success = facade.rimuoviProdottoDaOrdine(ordineId, selectedIndex);
-        if (success) {
-            aggiornaRiepilogo();
-        } else {
-            mostraErrore(ERROR_TITLE, "Impossibile rimuovere il prodotto.");
+        try {
+            boolean success = facade.rimuoviProdottoDaOrdine(tokenKey, ordineId, selectedIndex);
+            if (success) {
+                aggiornaRiepilogo();
+            } else {
+                mostraErrore(ERROR_TITLE, "Impossibile rimuovere il prodotto.");
+            }
+        } catch (MissingAuthorizationException e) {
+            mostraErrore("Errore di autorizzazione", e.getMessage());
         }
     }
 
@@ -328,21 +334,25 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         richiesta.setTipo(prodottoSelezionato.getTipo());
 
         if (checkCipolla != null && checkCipolla.isSelected())
-            richiesta.aggiungiAddOn(ADDON_CIPOLLA);
+            richiesta.aggiungiAddOn(AddOnTypeEnum.CIPOLLA.getClassName());
         if (checkSalsaYogurt != null && checkSalsaYogurt.isSelected())
-            richiesta.aggiungiAddOn("SalsaYogurt");
+            richiesta.aggiungiAddOn(AddOnTypeEnum.SALSA_YOGURT.getClassName());
         if (checkPatatine != null && checkPatatine.isSelected())
-            richiesta.aggiungiAddOn(ADDON_PATATINE);
+            richiesta.aggiungiAddOn(AddOnTypeEnum.PATATINE.getClassName());
         if (checkMixVerdure != null && checkMixVerdure.isSelected())
-            richiesta.aggiungiAddOn("MixVerdureGrigliate");
+            richiesta.aggiungiAddOn(AddOnTypeEnum.MIX_VERDURE_GRIGLIATE.getClassName());
 
-        boolean success = facade.aggiungiProdottoAOrdine(ordineId, richiesta);
-        if (success) {
-            aggiornaRiepilogo();
-            resetSelezioniAddOn();
-            mostraInfo("Prodotto aggiunto", "Prodotto aggiunto all'ordine con successo!");
-        } else {
-            mostraErrore(ERROR_TITLE, "Impossibile aggiungere il prodotto.");
+        try {
+            boolean success = facade.aggiungiProdottoAOrdine(tokenKey, ordineId, richiesta);
+            if (success) {
+                aggiornaRiepilogo();
+                resetSelezioniAddOn();
+                mostraInfo("Prodotto aggiunto", "Prodotto aggiunto all'ordine con successo!");
+            } else {
+                mostraErrore(ERROR_TITLE, "Impossibile aggiungere il prodotto.");
+            }
+        } catch (MissingAuthorizationException e) {
+            mostraErrore("Errore di autorizzazione", e.getMessage());
         }
     }
 
@@ -375,7 +385,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 return;
             }
 
-            var voucherBean = facade.applicaVoucher(ordineId, codiceVoucher);
+            var voucherBean = facade.applicaVoucher(tokenKey, ordineId, codiceVoucher);
             if (voucherBean != null) {
                 aggiornaRiepilogo();
                 textFieldVoucher.setDisable(true);
@@ -403,14 +413,17 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             return;
         }
 
-        facade.rimuoviVoucher(ordineId);
-        aggiornaRiepilogo();
+        try {
+            facade.rimuoviVoucher(tokenKey, ordineId);
+            aggiornaRiepilogo();
 
-        textFieldVoucher.setDisable(false);
-        textFieldVoucher.clear();
-        btnApplicaVoucher.setDisable(true);
-        btnRimuoviVoucher.setDisable(true);
-
+            textFieldVoucher.setDisable(false);
+            textFieldVoucher.clear();
+            btnApplicaVoucher.setDisable(true);
+            btnRimuoviVoucher.setDisable(true);
+        } catch (MissingAuthorizationException e) {
+            mostraErrore("Errore di autorizzazione", e.getMessage());
+        }
     }
 
     @FXML
@@ -424,9 +437,9 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             // Costruisce il riepilogo dell'ordine e mostra la conferma
             // Se l'utente conferma, chiama il facade per confermare l'ordine
             // Mostra messaggi di conferma o errore in base al risultato
-            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine(ordineId);
+            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine(tokenKey, ordineId);
 
-            boolean success = facade.confermaOrdine(ordineId);
+            boolean success = facade.confermaOrdine(tokenKey, ordineId);
             if (success) {
                 mostraInfo("Ordine confermato",
                         "Il tuo ordine #" + riepilogo.getNumeroOrdine() + " è stato confermato!\n\n" +
@@ -452,10 +465,14 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
         if (mostraConferma("Annulla Ordine",
                 "Sei sicuro di voler annullare l'ordine?\nTutti i prodotti selezionati verranno rimossi.")) {
 
-            facade.annullaOrdine(ordineId);
-            ordineId = null; // Reset dopo annullamento
-            resetVistaCompleta();
-            org.example.PageNavigationController.getInstance().returnToMainPage();
+            try {
+                facade.annullaOrdine(tokenKey, ordineId);
+                ordineId = null; // Reset dopo annullamento
+                resetVistaCompleta();
+                org.example.PageNavigationController.getInstance().returnToMainPage();
+            } catch (MissingAuthorizationException e) {
+                mostraErrore("Errore di autorizzazione", e.getMessage());
+            }
         }
     }
 
@@ -468,8 +485,12 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
      * </p>
      */
     private void aggiornaRiepilogo() {
-        RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine(ordineId);
-        aggiornaVistaConRiepilogo(riepilogo);
+        try {
+            RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine(tokenKey, ordineId);
+            aggiornaVistaConRiepilogo(riepilogo);
+        } catch (MissingAuthorizationException e) {
+            mostraErrore("Errore di autorizzazione", e.getMessage());
+        }
     }
 
     private void aggiornaVistaConRiepilogo(RiepilogoOrdineBean riepilogo) {
