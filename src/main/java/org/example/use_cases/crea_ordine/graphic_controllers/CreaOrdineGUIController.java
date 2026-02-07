@@ -57,6 +57,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
 
     private static final Logger logger = Logger.getLogger(CreaOrdineGUIController.class.getName());
     private static final String ERROR_TITLE = "Errore";
+    private static final String AUTH_ERROR_TITLE = "Errore di autorizzazione";
     private static final String ZERO_CURRENCY = "€0.00";
 
     @FXML
@@ -296,7 +297,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 mostraErrore(ERROR_TITLE, "Impossibile rimuovere il prodotto.");
             }
         } catch (MissingAuthorizationException e) {
-            mostraErrore("Errore di autorizzazione", e.getMessage());
+            mostraErrore(AUTH_ERROR_TITLE, e.getMessage());
         }
     }
 
@@ -352,7 +353,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 mostraErrore(ERROR_TITLE, "Impossibile aggiungere il prodotto.");
             }
         } catch (MissingAuthorizationException e) {
-            mostraErrore("Errore di autorizzazione", e.getMessage());
+            mostraErrore(AUTH_ERROR_TITLE, e.getMessage());
         }
     }
 
@@ -422,7 +423,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             btnApplicaVoucher.setDisable(true);
             btnRimuoviVoucher.setDisable(true);
         } catch (MissingAuthorizationException e) {
-            mostraErrore("Errore di autorizzazione", e.getMessage());
+            mostraErrore(AUTH_ERROR_TITLE, e.getMessage());
         }
     }
 
@@ -471,7 +472,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
                 resetVistaCompleta();
                 org.example.PageNavigationController.getInstance().returnToMainPage();
             } catch (MissingAuthorizationException e) {
-                mostraErrore("Errore di autorizzazione", e.getMessage());
+                mostraErrore(AUTH_ERROR_TITLE, e.getMessage());
             }
         }
     }
@@ -489,7 +490,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl implements Initi
             RiepilogoOrdineBean riepilogo = facade.getRiepilogoOrdine(tokenKey, ordineId);
             aggiornaVistaConRiepilogo(riepilogo);
         } catch (MissingAuthorizationException e) {
-            mostraErrore("Errore di autorizzazione", e.getMessage());
+            mostraErrore(AUTH_ERROR_TITLE, e.getMessage());
         }
     }
 
