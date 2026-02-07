@@ -60,8 +60,8 @@ public class UsaVoucherController {
      * @param codiceVoucher il codice del voucher da applicare
      * @return VoucherBean con i dati del voucher applicato, null se non valido
      */
-    public VoucherBean applicaVoucherAOrdine(Ordine ordine, String codiceVoucher) throws DAOException,
-            ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue,
+    public VoucherBean applicaVoucherAOrdine(Ordine ordine, String codiceVoucher) throws DAOException
+            , MissingAuthorizationException, WrongListQueryIdentifierValue,
             UserNotFoundException, UnrecognizedRoleException {
 
         if (ordine == null || codiceVoucher == null || codiceVoucher.trim().isEmpty()) {
@@ -106,12 +106,7 @@ public class UsaVoucherController {
      * @param ordine l'ordine su cui calcolare lo sconto
      * @return l'importo dello sconto
      */
-    public double calcolaSconto(Ordine ordine) {
-        if (ordine == null) {
-            return 0.0;
-        }
-        return ordine.getSconto();
-    }
+
 
     /**
      * Verifica se l'ordine ha un voucher applicato.

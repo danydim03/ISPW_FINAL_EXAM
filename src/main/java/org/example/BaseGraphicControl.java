@@ -54,11 +54,7 @@ public class BaseGraphicControl implements Initializable {
             backButton.setVisible(false);
     }
 
-    public void switchTo(Node node) {
-        content.getChildren().add(node);
-        if (content.getChildren().size() >= 2)
-            backButton.setVisible(true);
-    }
+
 
     void openMainPage(Node node, String name) {
         content.getChildren().clear();

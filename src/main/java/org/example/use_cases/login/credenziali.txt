@@ -8,14 +8,14 @@ email : mario.rossi@example.com
 pass: hash-password
 
 amministratore : 
-email :
+email :admin@ispw.it
 pass: admin
 
 -----------------
 admin@ispw.it
 //DAO DEMO 
 // cliente 
-cliente@gmail.com, cliente;
+cliente@gmail.com, cliente
         
 // Admin User
 admin@gmail.com, admin;

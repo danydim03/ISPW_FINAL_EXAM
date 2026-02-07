@@ -1,4 +1,4 @@
-package org.example.use_cases.crea_ordine;
+package org.example;
 
 import org.example.use_cases.crea_ordine.beans.FoodBean;
 import org.junit.jupiter.api.*;

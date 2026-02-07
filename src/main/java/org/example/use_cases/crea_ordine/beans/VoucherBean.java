@@ -24,18 +24,8 @@ public class VoucherBean implements Serializable {
     public VoucherBean() {
     }
 
-    public VoucherBean(String codice) {
-        setCodice(codice);
-    }
 
-    public VoucherBean(String codice, String descrizione, String tipoVoucher, double valore) {
-        setCodice(codice);
-        this.descrizione = descrizione;
-        setTipoVoucher(tipoVoucher);
-        setValore(valore);
-    }
 
-    // Getters e Setters con validazione sintattica
 
     public String getCodice() {
         return codice;

@@ -93,28 +93,28 @@ public abstract class BaseCLIGraphicController {
      * Displays an error message
      */
     protected void showError(String message) {
-        System.out.println("\n  ❌ ERRORE: " + message);
+        System.out.println("\n   ERRORE: " + message);
     }
 
     /**
      * Displays a success message
      */
     protected void showSuccess(String message) {
-        System.out.println("\n  ✅ " + message);
+        System.out.println("\n   " + message);
     }
 
     /**
      * Displays an info message
      */
     protected void showInfo(String message) {
-        System.out.println("\n  ℹ️  " + message);
+        System.out.println("\n  ️  " + message);
     }
 
     /**
      * Displays a warning message
      */
     protected void showWarning(String message) {
-        System.out.println("\n  ⚠️  " + message);
+        System.out.println("\n    " + message);
     }
 
     /**
