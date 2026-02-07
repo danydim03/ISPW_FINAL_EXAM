@@ -4,7 +4,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.BaseGraphicControl;
@@ -53,7 +52,7 @@ import java.util.logging.Logger;
  * RiepilogoOrdineBean)</li>
  * </ul>
  */
-public class CreaOrdineGUIController extends BaseGraphicControl implements Initializable {
+public class CreaOrdineGUIController extends BaseGraphicControl {
 
     private static final Logger logger = Logger.getLogger(CreaOrdineGUIController.class.getName());
     private static final String ERROR_TITLE = "Errore";
