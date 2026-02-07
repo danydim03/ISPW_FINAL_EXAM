@@ -65,68 +65,6 @@ public final class PageNavigationController {
         }
     }
 
-    /**
-     * Naviga a una vista FXML specifica usando il contentPane (percorso relativo a
-     * /org/example/)
-     */
-    public void navigateToFXML(String fxmlPath) {
-        String pathToLoad = fxmlPath;
-        if (!pathToLoad.endsWith(FILE_EXTENSION)) {
-            pathToLoad = pathToLoad.concat(FILE_EXTENSION);
-        }
-
-        final String finalPath = pathToLoad;
-        String fullPath = RESOURCE_BASE_PATH + finalPath;
-        logger.log(Level.INFO, () -> ">>> Tentativo caricamento: " + fullPath);
-        logger.log(Level.INFO, () -> ">>> contentPane è null? " + (contentPane == null));
-
-        try {
-            URL resource = PageNavigationController.class.getResource(fullPath);
-            logger.log(Level.INFO, () -> ">>> Risorsa trovata? " + (resource != null));
-
-            if (resource == null) {
-                logger.log(Level.SEVERE, () -> ">>> RISORSA NON TROVATA: " + fullPath);
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(resource);
-            Parent view = loader.load();
-            logger.log(Level.INFO, ">>> View caricata con successo");
-
-            setContent(view);
-            logger.log(Level.INFO, ">>> Contenuto impostato");
-
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, () -> "Errore caricamento FXML: " + finalPath);
-            e.printStackTrace(); // Stampa lo stack trace completo
-            showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message,
-                    UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
-        }
-    }
-
-    /**
-     * Naviga a una vista FXML, imposta il contenuto e restituisce il controller
-     * associato
-     */
-    public <T> T navigateToAndGetControllerFXML(String fxmlPath) {
-        if (!fxmlPath.endsWith(FILE_EXTENSION)) {
-            fxmlPath = fxmlPath.concat(FILE_EXTENSION);
-        }
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    Objects.requireNonNull(PageNavigationController.class.getResource(RESOURCE_BASE_PATH + fxmlPath)));
-            Parent view = loader.load();
-            setContent(view);
-            return loader.getController();
-        } catch (IOException e) {
-            final String pathForLog = fxmlPath;
-            logger.log(Level.SEVERE, () -> "Errore caricamento FXML: " + pathForLog);
-            showAlert(Alert.AlertType.ERROR, UserErrorMessagesEnum.RESOURCE_LOADING_TITLE.message,
-                    UserErrorMessagesEnum.RESOURCE_LOADING_MSG.message, e);
-            return null;
-        }
-    }
-
     public void openMainPage(String sessionTokenKey, UserBean userBean) {
         setUserData(userBean, sessionTokenKey);
         String viewName = "";
@@ -169,13 +107,6 @@ public final class PageNavigationController {
             logger.log(Level.SEVERE, () -> "Errore caricando la pagina: " + pageForLog + " -> " + e.getMessage());
             showAlert(Alert.AlertType.ERROR, "Errore di navigazione", "Impossibile aprire la pagina: " + pageName);
         }
-    }
-
-    /**
-     * Navigates to under construction page
-     */
-    public void navigateToUnderConstructionPage() {
-        navigateTo("under_construction");
     }
 
     public void setBaseGraphicController(BaseGraphicControl baseGraphicController) {
@@ -230,10 +161,6 @@ public final class PageNavigationController {
 
     }
 
-    public void setSessionTokenKey(String sessionTokenKey) {
-        this.userData.setSessionTokenKey(sessionTokenKey);
-    }
-
     public UserData getUserData() {
         return this.userData;
     }
@@ -249,7 +176,6 @@ public final class PageNavigationController {
                 userBean.getSurname(),
                 userBean.getEmail(),
                 userBean.getCodiceFiscale(),
-                // userBean.getMatricola(),
                 userBean.getRole(),
                 tokenKey);
         // IMPORTANT: Also set the current token key in SessionManager for session

@@ -3,6 +3,7 @@ package org.example.use_cases.login;
 import org.example.BaseCLIGraphicController;
 import org.example.beans_general.LoginBean;
 import org.example.exceptions.HabibiException;
+import org.example.session_manager.SessionManager;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,13 +72,10 @@ public class LoginCLIGraphicController extends BaseCLIGraphicController {
         try {
             // Validate email format first
             loginControl.emailMatches(email);
-
             // Attempt authentication
             loginBean = loginControl.login(email, password);
-
             // Set the current session token for session-based features
-            org.example.session_manager.SessionManager.getInstance()
-                    .setCurrentTokenKey(loginBean.getTokenKey());
+            SessionManager.getInstance().setCurrentTokenKey(loginBean.getTokenKey());
 
             showSuccess("Login effettuato con successo!");
             System.out.println("  Benvenuto, " + loginBean.getUserBean().getName() + " " +
