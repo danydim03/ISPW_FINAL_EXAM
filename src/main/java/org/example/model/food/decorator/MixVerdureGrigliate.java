@@ -16,6 +16,7 @@ public class MixVerdureGrigliate extends FoodDecorator {
 
     public MixVerdureGrigliate(Food food) {
         super(food);
+        this.descrizione = "Mix Verdure Grigliate";
     }
 
     @Override

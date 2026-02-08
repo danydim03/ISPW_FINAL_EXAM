@@ -16,6 +16,7 @@ public class SalsaYogurt extends FoodDecorator {
 
     public SalsaYogurt(Food food) {
         super(food);
+        this.descrizione = "Salsa Yogurt";
     }
 
     @Override

@@ -3,7 +3,6 @@ package org.example.model.food.DAO;
 import org.example.exceptions.*;
 import org.example.instances_management_abstracts.DAODBAbstract;
 import org.example.model.food.*;
-import org.example.model.food.decorator.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -108,53 +107,16 @@ public class FoodDAODB extends DAODBAbstract<Food> implements FoodDAOInterface {
             ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
 
         Long foodId = rs.getLong(ID);
-        String descrizione = rs.getString(DESCRIZIONE);
+
         String classe = rs.getString(CLASSE);
 
         // Factory method per creare l'istanza corretta in base alla classe salvata
-        return createFoodInstance(foodId, descrizione, classe);
+        return FoodRegistry.create(classe, foodId);
     }
 
     /**
      * Factory method per creare l'istanza corretta di Food
      */
-    private Food createFoodInstance(Long id, String descrizione, String classe) {
-        Food food;
-
-        switch (classe) {
-            case "PaninoDonerKebab":
-                food = new PaninoDonerKebab(id);
-                break;
-            case "PiadinaDonerKebab":
-                food = new PiadinaDonerKebab(id);
-                break;
-            case "KebabAlPiatto":
-                food = new KebabAlPiatto(id);
-                break;
-            case "Cipolla":
-                food = new Cipolla(null); // Il food decorato verrà impostato dopo
-                food.setId(id);
-                break;
-            case "SalsaYogurt":
-                food = new SalsaYogurt(null);
-                food.setId(id);
-                break;
-            case "Patatine":
-                food = new Patatine(null);
-                food.setId(id);
-                break;
-            case "MixVerdureGrigliate":
-                food = new MixVerdureGrigliate(null);
-                food.setId(id);
-                break;
-            default:
-                // Fallback generico
-                food = new PaninoDonerKebab(id);
-                food.setDescrizione(descrizione);
-        }
-
-        return food;
-    }
 
     @Override
     protected String setGetListQueryIdentifiersValue(Food food, int valueNumber) throws DAOException {

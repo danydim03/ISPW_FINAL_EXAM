@@ -16,6 +16,7 @@ public class Patatine extends FoodDecorator {
 
     public Patatine(Food food) {
         super(food);
+        this.descrizione = "Patatine";
     }
 
     @Override

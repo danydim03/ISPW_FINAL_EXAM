@@ -1,7 +1,7 @@
 package org.example.model.food.decorator;
 
 import org.example.model.food.Food;
-import java.util.Objects;
+import org.example.model.food.NullFood;
 
 /**
  * Decorator astratto per aggiungere funzionalità ai Food.
@@ -15,20 +15,28 @@ import java.util.Objects;
  * GRASP Compliance:
  * - Polymorphism: tutti i Food (decorati e non) hanno la stessa interfaccia
  * - Low Coupling: il decorator dipende solo dall'interfaccia Food
+ * 
+ * NOTA: Utilizza Null Object Pattern (NullFood) per gestire casi info-only
+ * (caricati dal DAO), evitando NullPointerException e check null sparsi.
  */
 public abstract class FoodDecorator extends Food {
 
     protected Food foodDecorato;
 
     /**
-     * Costruttore che richiede obbligatoriamente un componente da decorare.
+     * Costruttore che accetta un componente da decorare.
+     * Se food è null (es. info-only dal DAO), utilizza un NullFood.
      * 
-     * @param food il componente da decorare (non può essere null)
-     * @throws NullPointerException se food è null
+     * @param food il componente da decorare (o null per info-only)
      */
     protected FoodDecorator(Food food) {
-        Objects.requireNonNull(food, "Il componente Food non può essere null");
-        this.foodDecorato = food;
+        if (food == null) {
+            this.foodDecorato = new NullFood(); // Null Object Pattern
+        } else {
+            this.foodDecorato = food;
+        }
+        // Tutti i decorator sono di tipo ADDON
+        this.tipo = "ADDON";
     }
 
     /**

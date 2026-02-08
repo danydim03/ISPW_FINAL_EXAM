@@ -16,6 +16,7 @@ public class Cipolla extends FoodDecorator {
 
     public Cipolla(Food food) {
         super(food);
+        this.descrizione = "Cipolla";
     }
 
     @Override
