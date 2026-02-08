@@ -159,6 +159,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl {
     }
 
     // Imposta le colonne della tabella e il placeholder
+
     private void setupTabella() {
         colonnaDescrizione.setCellValueFactory(new PropertyValueFactory<>("descrizione"));
         colonnaPrezzo.setCellValueFactory(new PropertyValueFactory<>("prezzoFormattato"));

@@ -2,7 +2,17 @@ package org.example.model.food.decorator;
 
 import org.example.model.food.Food;
 
-public class MixVerdureGrigliate extends DecoratorAddON {
+/**
+ * ConcreteDecorator: aggiunge mix verdure grigliate al Food decorato.
+ * 
+ * Pattern GoF: Decorator
+ * - Estende FoodDecorator
+ * - Chiama super.metodo() e aggiunge il proprio contributo
+ */
+public class MixVerdureGrigliate extends FoodDecorator {
+
+    private static final double COSTO_ADDON = 1.50;
+    private static final int DURATA_ADDON = 2;
 
     public MixVerdureGrigliate(Food food) {
         super(food);
@@ -10,19 +20,16 @@ public class MixVerdureGrigliate extends DecoratorAddON {
 
     @Override
     public String getDescrizione() {
-        if (foodDecorato == null) {
-            return "Mix Verdure Grigliate";
-        }
-        return foodDecorato.getDescrizione() + ", Mix Verdure Grigliate";
+        return super.getDescrizione() + ", Mix Verdure Grigliate";
     }
 
     @Override
-    public double getCostoPlus() {
-        return 1.50;
+    public double getCosto() {
+        return super.getCosto() + COSTO_ADDON;
     }
 
     @Override
-    public int getDurataPlus() {
-        return 2;
+    public int getDurata() {
+        return super.getDurata() + DURATA_ADDON;
     }
 }

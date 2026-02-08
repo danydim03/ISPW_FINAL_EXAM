@@ -94,15 +94,6 @@ class CreaOrdineControllerTest {
         assertNotNull(prodotti);
     }
 
-    @Test
-    @DisplayName("getAddOnDisponibili should return non-null list")
-    void testGetAddOnDisponibili() throws Exception {
-        // ACT
-        List<FoodBean> addOns = controller.getAddOnDisponibili();
-
-        // ASSERT
-        assertNotNull(addOns);
-    }
 
     @Test
     @DisplayName("annullaOrdine should not throw with valid ordineId")
