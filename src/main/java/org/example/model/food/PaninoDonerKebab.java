@@ -1,4 +1,4 @@
-package org.example.model. food;
+package org.example.model.food;
 
 public class PaninoDonerKebab extends Food {
 
