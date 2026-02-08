@@ -160,9 +160,8 @@ public class CreaOrdineController {
      * @return VoucherBean con i dati del voucher applicato, null se non valido
      */
     public VoucherBean applicaVoucher(String ordineId, String codiceVoucher)
-            throws DAOException, ObjectNotFoundException,
-            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
-            UnrecognizedRoleException {
+            throws DAOException, ObjectNotFoundException, MissingAuthorizationException,
+            WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
 
         Ordine ordine = getOrdineFactory().getOrdineById(ordineId);
 

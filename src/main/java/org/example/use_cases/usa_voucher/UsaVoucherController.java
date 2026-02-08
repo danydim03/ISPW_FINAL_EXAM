@@ -58,35 +58,32 @@ public class UsaVoucherController {
      * 
      * @param ordine        l'ordine a cui applicare il voucher
      * @param codiceVoucher il codice del voucher da applicare
-     * @return VoucherBean con i dati del voucher applicato, null se non valido
+     * @return VoucherBean con i dati del voucher applicato, null se ordine/codice
+     *         null o voucher non valido
+     * @throws ObjectNotFoundException se il voucher con il codice specificato non
+     *                                 esiste
      */
-    public VoucherBean applicaVoucherAOrdine(Ordine ordine, String codiceVoucher) throws DAOException
-            , MissingAuthorizationException, WrongListQueryIdentifierValue,
+    public VoucherBean applicaVoucherAOrdine(Ordine ordine, String codiceVoucher) throws DAOException,
+            ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue,
             UserNotFoundException, UnrecognizedRoleException {
 
         if (ordine == null || codiceVoucher == null || codiceVoucher.trim().isEmpty()) {
             return null;
         }
 
-        try {
-            // Cerca il voucher nel sistema
-            Voucher voucher = getVoucherByCodice(codiceVoucher);
+        // Cerca il voucher nel sistema - propaga ObjectNotFoundException se non trovato
+        Voucher voucher = getVoucherByCodice(codiceVoucher);
 
-            // Verifica validità
-            if (!isVoucherValido(voucher)) {
-                return null;
-            }
-
-            // Applica il voucher all'ordine
-            ordine.applicaVoucher(voucher);
-
-            // Converti in Bean e restituisci (usando VoucherMapper)
-            return VoucherMapper.toBean(voucher);
-
-        } catch (ObjectNotFoundException e) {
-            // Voucher non trovato
+        // Verifica validità
+        if (!isVoucherValido(voucher)) {
             return null;
         }
+
+        // Applica il voucher all'ordine
+        ordine.applicaVoucher(voucher);
+
+        // Converti in Bean e restituisci (usando VoucherMapper)
+        return VoucherMapper.toBean(voucher);
     }
 
     /**
@@ -106,7 +103,6 @@ public class UsaVoucherController {
      * @param ordine l'ordine su cui calcolare lo sconto
      * @return l'importo dello sconto
      */
-
 
     /**
      * Verifica se l'ordine ha un voucher applicato.

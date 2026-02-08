@@ -9,7 +9,6 @@ import org.example.model.ordine.Ordine;
 import org.example.model.ordine.OrdineLazyFactory;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

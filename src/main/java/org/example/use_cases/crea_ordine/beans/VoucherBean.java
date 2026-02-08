@@ -21,11 +21,13 @@ public class VoucherBean implements Serializable {
     private String tipoVoucher; // "PERCENTUALE", "FISSO", "NESSUNO"
     private double valore; // percentuale o importo fisso
 
+    /**
+     * Default constructor required for JavaBean pattern.
+     * Properties are set via setters after instantiation.
+     */
     public VoucherBean() {
+        // Empty constructor intentional - JavaBean pattern
     }
-
-
-
 
     public String getCodice() {
         return codice;

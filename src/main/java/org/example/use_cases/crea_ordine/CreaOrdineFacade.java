@@ -107,8 +107,8 @@ public class CreaOrdineFacade {
      * @param codiceVoucher codice del voucher
      */
     public VoucherBean applicaVoucher(String tokenKey, String ordineId, String codiceVoucher)
-            throws DAOException, ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue,
-            UserNotFoundException, UnrecognizedRoleException {
+            throws DAOException, ObjectNotFoundException, MissingAuthorizationException,
+            WrongListQueryIdentifierValue, UserNotFoundException, UnrecognizedRoleException {
         getSessionUser(tokenKey); // Verifica autorizzazione
         return getController().applicaVoucher(ordineId, codiceVoucher);
     }
