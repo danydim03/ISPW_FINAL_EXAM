@@ -12,9 +12,8 @@ public class FoodLazyFactory {
     private static FoodLazyFactory instance;
     private final List<Food> foodCache;
 
-    // Flag per tracciare se i dati sono già stati caricati dal DAO
+    // Flag per tracciare se i dati dei food base sono già stati caricati dal DAO
     private boolean foodBaseLoaded = false;
-    private boolean addOnLoaded = false;
 
     private FoodLazyFactory() {
         foodCache = new ArrayList<>();
@@ -58,30 +57,34 @@ public class FoodLazyFactory {
     }
 
     /**
-     * Recupera tutti gli addon (tipo = ADDON).
-     * Implementa il pattern Lazy Loading: prima controlla la cache,
-     * solo se vuota carica dal DAO.
+     * @deprecated Usa getAllAddOnDescriptors() per i metadati degli add-on.
+     *             I Decorator vengono istanziati solo tramite
+     *             FoodFactory.applicaDecorator().
      */
+    @Deprecated
     public List<Food> getAllAddOn() throws DAOException, ObjectNotFoundException,
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
             UnrecognizedRoleException {
+        throw new UnsupportedOperationException(
+                "GoF Compliance: usare getAllAddOnDescriptors() per i metadati degli add-on.");
+    }
 
-        // LAZY LOADING: Se già caricati, restituisci dalla cache
-        if (addOnLoaded) {
-            return getFoodFromCacheByTipo("ADDON");
-        }
+    /**
+     * Recupera i metadati di tutti gli add-on come AddOnDescriptor.
+     * Implementa Lazy Loading per migliorare le performance.
+     * 
+     * <p>
+     * <b>GoF Compliance:</b> NON istanzia Decorator, ma restituisce Value Objects
+     * con i metadati letti direttamente dal DB/CSV.
+     * </p>
+     */
+    public List<AddOnDescriptor> getAllAddOnDescriptors() throws DAOException, ObjectNotFoundException,
+            MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
+            UnrecognizedRoleException {
 
         // Prima volta: carica dal DAO
         try {
-            List<Food> addons = DAOFactoryAbstract.getInstance().getFoodDAO().getAllAddOn();
-            // Aggiorna cache
-            for (Food f : addons) {
-                if (!isFoodInCache(f.getId())) {
-                    foodCache.add(f);
-                }
-            }
-            addOnLoaded = true; // Marca come caricati
-            return addons;
+            return DAOFactoryAbstract.getInstance().getFoodDAO().getAllAddOnDescriptors();
         } catch (PropertyException | ResourceNotFoundException e) {
             throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
@@ -120,6 +123,5 @@ public class FoodLazyFactory {
     public void clearCache() {
         foodCache.clear();
         foodBaseLoaded = false;
-        addOnLoaded = false;
     }
 }

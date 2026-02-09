@@ -1,6 +1,7 @@
 package org.example.model.food.DAO;
 
 import org.example.exceptions.*;
+import org.example.model.food.AddOnDescriptor;
 import org.example.model.food.Food;
 
 import java.util.List;
@@ -81,6 +82,26 @@ public interface FoodDAOInterface {
          * @throws ResourceNotFoundException risorsa properties non trovata
          */
         List<Food> getAllAddOn() throws DAOException, PropertyException, ResourceNotFoundException,
+                        UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
+                        MissingAuthorizationException, WrongListQueryIdentifierValue;
+
+        /**
+         * Recupera i metadati di tutti gli add-on come AddOnDescriptor.
+         * 
+         * <p>
+         * <b>GoF Compliance:</b> Questo metodo legge i metadati direttamente dal DB
+         * senza istanziare Decorator. I Decorator vengono usati esclusivamente
+         * per decorare prodotti reali tramite FoodFactory.applicaDecorator().
+         * </p>
+         * 
+         * @return lista di AddOnDescriptor (Value Objects)
+         * @throws DAOException              errori durante l'accesso al persistence
+         *                                   layer
+         * @throws PropertyException         errori nel caricamento delle properties
+         * @throws ResourceNotFoundException risorsa properties non trovata
+         */
+        List<AddOnDescriptor> getAllAddOnDescriptors()
+                        throws DAOException, PropertyException, ResourceNotFoundException,
                         UserNotFoundException, UnrecognizedRoleException, ObjectNotFoundException,
                         MissingAuthorizationException, WrongListQueryIdentifierValue;
 }

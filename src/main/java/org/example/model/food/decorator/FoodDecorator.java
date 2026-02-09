@@ -1,13 +1,12 @@
 package org.example.model.food.decorator;
 
 import org.example.model.food.Food;
-import org.example.model.food.NullFood;
 
 /**
  * Decorator astratto per aggiungere funzionalità ai Food.
  * 
- * Pattern GoF: Decorator
- * - Mantiene riferimento al componente decorato
+ * Pattern GoF: Decorator (PURO)
+ * - Mantiene riferimento al componente decorato (MAI null)
  * - Delega di default tutte le operazioni al componente wrappato
  * - I ConcreteDecorator (Cipolla, Patatine, etc.) estendono questa classe
  * e aggiungono comportamento chiamando super.metodo() + proprio contributo
@@ -15,9 +14,11 @@ import org.example.model.food.NullFood;
  * GRASP Compliance:
  * - Polymorphism: tutti i Food (decorati e non) hanno la stessa interfaccia
  * - Low Coupling: il decorator dipende solo dall'interfaccia Food
+ * - High Cohesion: responsabilità UNICA di decorare un componente
  * 
- * NOTA: Utilizza Null Object Pattern (NullFood) per gestire casi info-only
- * (caricati dal DAO), evitando NullPointerException e check null sparsi.
+ * NOTA: Per i metadati degli add-on (GUI), usare AddOnDescriptor (Value
+ * Object).
+ * I Decorator vengono usati ESCLUSIVAMENTE per decorare prodotti reali.
  */
 public abstract class FoodDecorator extends Food {
 
@@ -25,16 +26,20 @@ public abstract class FoodDecorator extends Food {
 
     /**
      * Costruttore che accetta un componente da decorare.
-     * Se food è null (es. info-only dal DAO), utilizza un NullFood.
      * 
-     * @param food il componente da decorare (o null per info-only)
+     * GoF Compliance: il componente NON può essere null.
+     * I Decorator devono SEMPRE wrappare un componente reale.
+     * 
+     * @param food il componente da decorare (obbligatorio, non null)
+     * @throws IllegalArgumentException se food è null
      */
     protected FoodDecorator(Food food) {
         if (food == null) {
-            this.foodDecorato = new NullFood(); // Null Object Pattern
-        } else {
-            this.foodDecorato = food;
+            throw new IllegalArgumentException(
+                    "GoF Decorator: il componente decorato non può essere null. " +
+                            "Per i metadati degli add-on, usare AddOnDescriptor.");
         }
+        this.foodDecorato = food;
         // Tutti i decorator sono di tipo ADDON
         this.tipo = "ADDON";
     }

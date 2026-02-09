@@ -96,17 +96,45 @@ public class FoodDAOFS implements FoodDAOInterface {
         }
     }
 
+    /**
+     * @deprecated Usa getAllAddOnDescriptors() per i metadati degli add-on.
+     *             Questo metodo esiste solo per retrocompatibilità.
+     */
     @Override
+    @Deprecated
     public List<Food> getAllAddOn() throws DAOException {
+        throw new UnsupportedOperationException(
+                "GoF Compliance: usare getAllAddOnDescriptors() per i metadati degli add-on. " +
+                        "I Decorator vengono istanziati solo tramite FoodFactory.applicaDecorator().");
+    }
+
+    /**
+     * Recupera i metadati degli add-on come AddOnDescriptor (Value Objects).
+     * Legge direttamente dal CSV senza istanziare Decorator (GoF compliance).
+     */
+    @Override
+    public List<AddOnDescriptor> getAllAddOnDescriptors() throws DAOException {
         try {
             List<String[]> allFood = csvManager.readAllWithoutHeader(FILENAME);
             return allFood.stream()
                     .filter(row -> row.length > 2 && ADDON_TYPE.equalsIgnoreCase(row[2]))
-                    .map(this::buildFoodFromRow)
+                    .map(this::buildDescriptorFromRow)
                     .toList();
         } catch (DAOException e) {
             throw new DAOException(ExceptionMessagesEnum.DAO.message, e);
         }
+    }
+
+    /**
+     * Builds an AddOnDescriptor from CSV row.
+     */
+    private AddOnDescriptor buildDescriptorFromRow(String[] row) {
+        Long id = Long.parseLong(row[0]);
+        String nome = row[1];
+        double costo = Double.parseDouble(row[3]);
+        int durata = Integer.parseInt(row[4]);
+        String className = row.length > 5 ? row[5] : "";
+        return new AddOnDescriptor(id, nome, costo, durata, className);
     }
 
     @Override

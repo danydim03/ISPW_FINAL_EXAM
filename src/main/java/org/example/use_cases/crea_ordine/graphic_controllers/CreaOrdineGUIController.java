@@ -250,7 +250,7 @@ public class CreaOrdineGUIController extends BaseGraphicControl {
             return null;
         }
 
-        // Equivalente classico (più verboso)
+
         for (FoodBean f : prodottiBaseDisponibili) {
             if (classeRichiesta.equals(f.getClasse())) {
                 return f;

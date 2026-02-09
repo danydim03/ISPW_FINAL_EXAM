@@ -125,4 +125,36 @@ public class FoodDAODB extends DAODBAbstract<Food> implements FoodDAOInterface {
         }
         return null;
     }
+
+    /**
+     * Recupera i metadati di tutti gli add-on come AddOnDescriptor.
+     * Legge direttamente dal DB senza istanziare Decorator (GoF compliance).
+     */
+    @Override
+    public List<AddOnDescriptor> getAllAddOnDescriptors() throws DAOException, PropertyException,
+            ResourceNotFoundException, UserNotFoundException, UnrecognizedRoleException,
+            ObjectNotFoundException, MissingAuthorizationException, WrongListQueryIdentifierValue {
+
+        List<AddOnDescriptor> descriptors = new java.util.ArrayList<>();
+
+        try (java.sql.Connection conn = org.example.dao_manager.DBConnection.getInstance().getConnection();
+                java.sql.PreparedStatement stmt = conn.prepareStatement(
+                        "SELECT id, descrizione, costo, durata, classe FROM FOOD WHERE tipo = 'ADDON'");
+                java.sql.ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Long id = rs.getLong(ID);
+                String nome = rs.getString(DESCRIZIONE);
+                double costo = rs.getDouble(COSTO);
+                int durata = rs.getInt(DURATA);
+                String className = rs.getString(CLASSE);
+
+                descriptors.add(new AddOnDescriptor(id, nome, costo, durata, className));
+            }
+        } catch (java.sql.SQLException e) {
+            throw new DAOException("Errore durante il recupero degli AddOnDescriptor", e);
+        }
+
+        return descriptors;
+    }
 }

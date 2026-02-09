@@ -86,16 +86,24 @@ public class CreaOrdineController {
     }
 
     /**
-     * Recupera tutti gli add-on disponibili
+     * Recupera tutti gli add-on disponibili.
      * 
-     * @return Lista di FoodBean degli add-on
+     * <p>
+     * <b>GoF Compliance:</b> Utilizza AddOnDescriptor (Value Objects) per i
+     * metadati
+     * degli add-on, senza mai istanziare Decorator. I Decorator vengono usati
+     * esclusivamente in aggiungiProdottoAOrdine() tramite
+     * FoodFactory.applicaDecorator().
+     * </p>
+     * 
+     * @return Lista di FoodBean degli add-on (metadati)
      */
     public List<FoodBean> getAddOnDisponibili() throws DAOException, ObjectNotFoundException,
             MissingAuthorizationException, WrongListQueryIdentifierValue, UserNotFoundException,
             UnrecognizedRoleException {
 
-        List<Food> addOns = getFoodFactory().getAllAddOn();
-        return FoodMapper.toBeanList(addOns);
+        List<AddOnDescriptor> addOns = getFoodFactory().getAllAddOnDescriptors();
+        return FoodMapper.descriptorsToBeanList(addOns);
     }
 
     /**

@@ -1,17 +1,23 @@
 package org.example.model.food;
 
-import org.example.model.food.decorator.*;
-
 import java.util.HashMap;
 import java.util.Map;
+
 import java.util.function.Supplier;
 
 /**
- * Registry per la creazione dinamica delle istanze di Food.
+ * Registry per la creazione dinamica delle istanze di Food BASE.
  * 
  * GRASP: Pure Fabrication
  * - Disaccoppia il DAO dalle classi concrete di Food.
  * - Centralizza la logica di creazione "by name" (Factory).
+ * 
+ * NOTA: I Decorator (add-on) NON sono registrati qui.
+ * - Per i METADATI degli add-on: usare AddOnDescriptor (Value Object)
+ * - Per DECORARE un prodotto: usare FoodFactory.applicaDecorator()
+ * 
+ * Questo garantisce che i Decorator siano usati SOLO come veri decoratori
+ * (GoF compliance), mai come contenitori standalone di metadati.
  */
 public class FoodRegistry {
 
@@ -19,16 +25,14 @@ public class FoodRegistry {
     private static final Map<String, Supplier<Food>> registry = new HashMap<>();
 
     static {
-        // Registrazione dei Food Base
+        // Registrazione SOLO dei Food Base
         registry.put("PaninoDonerKebab", PaninoDonerKebab::new);
         registry.put("PiadinaDonerKebab", PiadinaDonerKebab::new);
         registry.put("KebabAlPiatto", KebabAlPiatto::new);
 
-        // Registrazione dei Decorator (istanziati come componenti base per il DAO)
-        registry.put("Cipolla", () -> new Cipolla(null));
-        registry.put("SalsaYogurt", () -> new SalsaYogurt(null));
-        registry.put("Patatine", () -> new Patatine(null));
-        registry.put("MixVerdureGrigliate", () -> new MixVerdureGrigliate(null));
+        // I Decorator NON sono più registrati qui.
+        // Per i metadati: DAO.getAllAddOnDescriptors() -> AddOnDescriptor
+        // Per decorare: FoodFactory.applicaDecorator(food, addOnType)
     }
 
     private FoodRegistry() {

@@ -18,15 +18,30 @@ public class FoodDAODemo implements FoodDAOInterface {
         return foods;
     }
 
+    /**
+     * @deprecated Usa getAllAddOnDescriptors() per i metadati degli add-on.
+     *             Questo metodo esiste solo per retrocompatibilità.
+     */
     @Override
+    @Deprecated
     public List<Food> getAllAddOn() throws DAOException {
-        List<Food> addons = new ArrayList<>();
-        // Using null as inner food for info-only objects
-        addons.add(new org.example.model.food.decorator.Cipolla(null));
-        addons.add(new org.example.model.food.decorator.Patatine(null));
-        addons.add(new org.example.model.food.decorator.SalsaYogurt(null));
-        addons.add(new org.example.model.food.decorator.MixVerdureGrigliate(null));
-        return addons;
+        throw new UnsupportedOperationException(
+                "GoF Compliance: usare getAllAddOnDescriptors() per i metadati degli add-on. " +
+                        "I Decorator vengono istanziati solo tramite FoodFactory.applicaDecorator().");
+    }
+
+    /**
+     * Recupera i metadati degli add-on come AddOnDescriptor (Value Objects).
+     * Non istanzia alcun Decorator, garantendo GoF compliance.
+     */
+    @Override
+    public List<AddOnDescriptor> getAllAddOnDescriptors() throws DAOException {
+        List<AddOnDescriptor> descriptors = new ArrayList<>();
+        descriptors.add(new AddOnDescriptor(4L, "Cipolla", 0.50, 1, "Cipolla"));
+        descriptors.add(new AddOnDescriptor(5L, "Patatine", 1.50, 3, "Patatine"));
+        descriptors.add(new AddOnDescriptor(6L, "Salsa Yogurt", 0.50, 1, "SalsaYogurt"));
+        descriptors.add(new AddOnDescriptor(7L, "Mix Verdure Grigliate", 1.00, 2, "MixVerdureGrigliate"));
+        return descriptors;
     }
 
     @Override
