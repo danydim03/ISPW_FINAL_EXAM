@@ -45,7 +45,7 @@ public class FoodFactory {
             return null;
         }
 
-        // Switch expression su enum - type-safe, no magic strings
+        // Switch expression su enum - type-safe
         return switch (foodType) {
             case PANINO_DONER_KEBAB -> new PaninoDonerKebab();
             case PIADINA_DONER_KEBAB -> new PiadinaDonerKebab();
