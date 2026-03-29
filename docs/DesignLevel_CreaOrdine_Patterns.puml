@@ -1,0 +1,535 @@
+@startuml DesignLevel_CreaOrdine
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam classBorderColor black
+skinparam classBackgroundColor white
+skinparam stereotypeCBackgroundColor lightyellow
+skinparam packageBackgroundColor transparent
+skinparam packageBorderColor #888888
+skinparam linetype ortho
+
+title **DESIGN-LEVEL CLASS DIAGRAM**\n**Use Case: Crea Ordine**\n\nHabibi Shawarma - Design Patterns & Engineering Solutions\n(BCE + MVC Architecture with GoF Patterns)
+
+' ================================================================================
+' LEGEND
+' ================================================================================
+legend top left
+|= Pattern |= Descrizione |
+| **BCE** | Boundary-Control-Entity (Architettura) |
+| **Facade** | Semplifica accesso al sottosistema |
+| **Decorator** | Aggiunge comportamento dinamicamente |
+| **Strategy** | Algoritmi intercambiabili |
+| **Null Object** | Evita null checks |
+| **Lazy Factory** | Singleton + Lazy Init + Cache |
+| **Factory Method** | Creazione oggetti delegata |
+| **Template Method** | Struttura in superclasse |
+endlegend
+
+' ================================================================================
+' PATTERN 1: BCE - BOUNDARY CONTROL ENTITY
+' ================================================================================
+package "BCE Architecture" as bce {
+    
+    package "<<Boundary>>\nPresentation Layer" as boundary #DBEAFE {
+        
+        abstract class "BaseGraphicControl" as BaseGraphicControl {
+            # content: StackPane
+            --
+            + switchTo(node: Node): void
+            + returnToMainPage(): void
+        }
+        
+        abstract class "BaseCLIGraphicController" as BaseCLIGraphicController {
+            # tokenKey: String
+            # scanner: Scanner
+            --
+            + {abstract} start(): void
+            + printHeader(title: String): void
+            + readChoice(): int
+            + showError(msg: String): void
+            + showSuccess(msg: String): void
+        }
+        
+        class "CreaOrdineGUIController" as CreaOrdineGUIController #lightblue {
+            - facade: CreaOrdineFacade
+            - prodottiBaseDisponibili: List<FoodBean>
+            - addOnDisponibili: List<FoodBean>
+            --
+            + initialize(): void
+            + onAggiungiProdotto(): void
+            + onApplicaVoucher(): void
+            + onConfermaOrdine(): void
+            - aggiornaRiepilogo(): void
+        }
+        
+        class "CreaOrdineCLIController" as CreaOrdineCLIController #lightblue {
+            - facade: CreaOrdineFacade
+            --
+            + start(): void
+            - handleAggiungiProdotto(): void
+            - handleApplicaVoucher(): void
+            - handleConfermaOrdine(): void
+        }
+        
+        CreaOrdineGUIController --|> BaseGraphicControl
+        CreaOrdineCLIController --|> BaseCLIGraphicController
+    }
+    
+    package "<<Control>>\nApplication Logic" as control #DCFCE7 {
+        
+        class "CreaOrdineFacade" as CreaOrdineFacade #lightgreen {
+            - controller: CreaOrdineController
+            - sessionUser: User
+            ==
+            <<Facade Pattern>>
+            ==
+            + inizializzaNuovoOrdine(): OrdineBean
+            + getProdottiBaseDisponibili(): List<FoodBean>
+            + aggiungiProdottoAOrdine(fb: FoodBean): boolean
+            + applicaVoucher(codice: String): VoucherBean
+            + getRiepilogoOrdine(): RiepilogoOrdineBean
+            + confermaOrdine(): boolean
+        }
+        
+        class "CreaOrdineController" as CreaOrdineController #lightgreen {
+            - ordineCorrente: Ordine
+            - voucherController: UsaVoucherController
+            ==
+            <<BCE: Control>>
+            <<GRASP: Controller, Creator>>
+            ==
+            + inizializzaNuovoOrdine(clienteId: String): OrdineBean
+            + aggiungiProdottoAOrdine(fb: FoodBean): boolean
+            + getRiepilogoOrdine(): RiepilogoOrdineBean
+            + confermaOrdine(): boolean
+            - creaProdottoBase(classe: String): Food
+            - applicaDecorator(food: Food, addon: String): Food
+        }
+        
+        class "UsaVoucherController" as UsaVoucherController #lightgreen {
+            ==
+            <<GRASP: Single Responsibility>>
+            <<GRASP: Information Expert>>
+            ==
+            + applicaVoucherAOrdine(o: Ordine, cod: String): VoucherBean
+            + rimuoviVoucherDaOrdine(o: Ordine): void
+            + hasVoucherApplicato(o: Ordine): boolean
+            + convertVoucherToBean(v: Voucher): VoucherBean
+        }
+    }
+    
+    package "<<Entity>>\nDomain Model" as entity #FEE2E2 {
+        
+        class "Ordine" as Ordine #lightyellow {
+            - numeroOrdine: Long
+            - clienteId: String
+            - prodotti: List<Food>
+            - voucher: Voucher
+            - stato: StatoOrdine
+            ==
+            <<GRASP: Information Expert>>
+            ==
+            + aggiungiProdotto(f: Food): void
+            + rimuoviProdotto(f: Food): void
+            + getSubtotale(): double
+            + getSconto(): double
+            + getTotale(): double
+            + conferma(): void
+        }
+        
+        class "User" as User #lightyellow {
+            - id: String
+            - name: String
+            - role: AbstractRole
+        }
+    }
+}
+
+' ================================================================================
+' PATTERN 2: DECORATOR PATTERN (GoF Structural)
+' ================================================================================
+package "Decorator Pattern (Food Add-ons)" as decorator_pkg #fff2cc {
+    
+    abstract class "Food" as Food #pink {
+        # id: Long
+        # descrizione: String
+        # tipo: String
+        ==
+        <<Component>>
+        ==
+        + {abstract} getCosto(): double
+        + {abstract} getDurata(): int
+        + getDescrizione(): String
+    }
+    
+    class "PaninoDonerKebab" as PaninoDonerKebab {
+        - COSTO_BASE: double = 5.50
+        - DURATA_BASE: int = 5
+        ==
+        <<ConcreteComponent>>
+        ==
+        + getCosto(): double
+        + getDurata(): int
+    }
+    
+    class "PiadinaDonerKebab" as PiadinaDonerKebab {
+        - COSTO_BASE: double = 5.00
+        - DURATA_BASE: int = 4
+        ==
+        <<ConcreteComponent>>
+        ==
+        + getCosto(): double
+        + getDurata(): int
+    }
+    
+    class "KebabAlPiatto" as KebabAlPiatto {
+        - COSTO_BASE: double = 8.00
+        - DURATA_BASE: int = 8
+        ==
+        <<ConcreteComponent>>
+        ==
+        + getCosto(): double
+        + getDurata(): int
+    }
+    
+    abstract class "DecoratorAddON" as DecoratorAddON #orange {
+        # foodDecorato: Food
+        ==
+        <<Decorator>>
+        ==
+        + {abstract} getCostoPlus(): double
+        + {abstract} getDurataPlus(): int
+        + getCosto(): double
+        + getDurata(): int
+    }
+    
+    class "Cipolla" as Cipolla {
+        ==
+        <<ConcreteDecorator>>
+        ==
+        + getDescrizione(): String
+        + getCostoPlus(): double {return 0.50}
+        + getDurataPlus(): int {return 1}
+    }
+    
+    class "SalsaYogurt" as SalsaYogurt {
+        ==
+        <<ConcreteDecorator>>
+        ==
+        + getDescrizione(): String
+        + getCostoPlus(): double {return 0.80}
+        + getDurataPlus(): int {return 0}
+    }
+    
+    class "Patatine" as Patatine {
+        ==
+        <<ConcreteDecorator>>
+        ==
+        + getDescrizione(): String
+        + getCostoPlus(): double {return 2.00}
+        + getDurataPlus(): int {return 3}
+    }
+    
+    class "MixVerdureGrigliate" as MixVerdureGrigliate {
+        ==
+        <<ConcreteDecorator>>
+        ==
+        + getDescrizione(): String
+        + getCostoPlus(): double {return 1.50}
+        + getDurataPlus(): int {return 2}
+    }
+    
+    PaninoDonerKebab --|> Food
+    PiadinaDonerKebab --|> Food
+    KebabAlPiatto --|> Food
+    DecoratorAddON --|> Food
+    DecoratorAddON o-- Food : decorates
+    Cipolla --|> DecoratorAddON
+    SalsaYogurt --|> DecoratorAddON
+    Patatine --|> DecoratorAddON
+    MixVerdureGrigliate --|> DecoratorAddON
+}
+
+' ================================================================================
+' PATTERN 3: STRATEGY PATTERN (GoF Behavioral) + NULL OBJECT
+' ================================================================================
+package "Strategy Pattern (Voucher Discounts)" as strategy_pkg #e1d5e7 {
+    
+    interface "Voucher" as Voucher #plum {
+        ==
+        <<Strategy Interface>>
+        ==
+        + calcolaSconto(totale: double): double
+        + getCodice(): String
+        + getDescrizione(): String
+        + isValido(): boolean
+        + getTipoVoucher(): String
+        + getDataScadenza(): LocalDate
+    }
+    
+    class "VoucherPercentuale" as VoucherPercentuale {
+        - id: Long
+        - codice: String
+        - percentuale: double
+        - dataScadenza: LocalDate
+        - attivo: boolean
+        ==
+        <<ConcreteStrategy A>>
+        ==
+        + calcolaSconto(totale: double): double
+        .. return totale * (percentuale / 100) ..
+        + isValido(): boolean
+    }
+    
+    class "VoucherFisso" as VoucherFisso {
+        - id: Long
+        - codice: String
+        - importoSconto: double
+        - minimoOrdine: double
+        - dataScadenza: LocalDate
+        - attivo: boolean
+        ==
+        <<ConcreteStrategy B>>
+        ==
+        + calcolaSconto(totale: double): double
+        .. if totale >= minimoOrdine ..
+        ..   return importoSconto ..
+        + isValido(): boolean
+    }
+    
+    class "NessunVoucher" as NessunVoucher #lightgray {
+        ==
+        <<Null Object Pattern>>
+        <<ConcreteStrategy C>>
+        ==
+        + calcolaSconto(totale: double): double
+        .. return 0 ..
+        + getCodice(): String
+        .. return "" ..
+        + isValido(): boolean
+        .. return true ..
+    }
+    
+    VoucherPercentuale ..|> Voucher
+    VoucherFisso ..|> Voucher
+    NessunVoucher ..|> Voucher
+}
+
+' ================================================================================
+' PATTERN 4: LAZY FACTORY + SINGLETON + CACHE
+' ================================================================================
+package "Lazy Factory Pattern (Persistence)" as factory_pkg #d5e8d4 {
+    
+    class "OrdineLazyFactory" as OrdineLazyFactory {
+        - {static} instance: OrdineLazyFactory
+        - ordiniCache: List<Ordine>
+        ==
+        <<Singleton>>
+        <<Lazy Initialization>>
+        <<Cache Pattern>>
+        ==
+        + {static} getInstance(): OrdineLazyFactory
+        + newOrdine(clienteId: String): Ordine
+        + salvaOrdine(ordine: Ordine): void
+        + getOrdineByNumero(num: Long): Ordine
+        + getOrdiniByCliente(id: String): List<Ordine>
+        + clearCache(): void
+        - isOrdineInCache(num: Long): boolean
+    }
+    
+    class "FoodLazyFactory" as FoodLazyFactory {
+        - {static} instance: FoodLazyFactory
+        - foodCache: List<Food>
+        ==
+        <<Singleton>>
+        <<Lazy Initialization>>
+        <<Cache Pattern>>
+        ==
+        + {static} getInstance(): FoodLazyFactory
+        + getAllFoodBase(): List<Food>
+        + getAllAddOn(): List<Food>
+        + getFoodById(id: Long): Food
+        + clearCache(): void
+    }
+    
+    class "VoucherLazyFactory" as VoucherLazyFactory {
+        - {static} instance: VoucherLazyFactory
+        - voucherCache: List<Voucher>
+        ==
+        <<Singleton>>
+        <<Lazy Initialization>>
+        <<Cache Pattern>>
+        ==
+        + {static} getInstance(): VoucherLazyFactory
+        + getVoucherByCodice(codice: String): Voucher
+        + clearCache(): void
+    }
+    
+    abstract class "DAOFactoryAbstract" as DAOFactoryAbstract {
+        ==
+        <<Abstract Factory>>
+        ==
+        + {static} getInstance(): DAOFactoryAbstract
+        + {abstract} getOrdineDAO(): OrdineDAOInterface
+        + {abstract} getFoodDAO(): FoodDAOInterface
+        + {abstract} getVoucherDAO(): VoucherDAOInterface
+    }
+}
+
+' ================================================================================
+' PATTERN 5: SESSION MANAGEMENT (Singleton)
+' ================================================================================
+package "Session Management" as session_pkg #dbeafe {
+    
+    class "SessionManager" as SessionManager {
+        - {static} instance: SessionManager
+        - activeSessions: List<Session>
+        - currentTokenKey: String
+        ==
+        <<Singleton>>
+        ==
+        + {static} getInstance(): SessionManager
+        + getSessionUserByTokenKey(key: String): User
+        + getSessionTokenKeyByUser(user: User): String
+        + hasActiveSession(): boolean
+        + logout(): void
+    }
+    
+    class "Session" as Session {
+        - user: User
+        - token: Token
+        - frontEndType: FrontEndTypeEnum
+    }
+    
+    class "Token" as Token {
+        - key: String
+        - creationTime: LocalDateTime
+    }
+    
+    SessionManager *-- "*" Session
+    Session o-- "1" Token
+    Session o-- "1" User
+}
+
+' ================================================================================
+' RELATIONSHIPS - BCE Flow
+' ================================================================================
+CreaOrdineGUIController --> CreaOrdineFacade : uses
+CreaOrdineCLIController --> CreaOrdineFacade : uses
+CreaOrdineFacade --> CreaOrdineController : delegates
+CreaOrdineFacade --> SessionManager : validates\nsession
+CreaOrdineController --> UsaVoucherController : delegates\nvoucher ops
+CreaOrdineController --> Ordine : manages
+
+' ================================================================================
+' RELATIONSHIPS - Controller to Factories
+' ================================================================================
+CreaOrdineController --> OrdineLazyFactory : creates/saves\nordini
+CreaOrdineController --> FoodLazyFactory : loads\nproducts
+UsaVoucherController --> VoucherLazyFactory : loads\nvouchers
+
+' ================================================================================
+' RELATIONSHIPS - Factories to Entities
+' ================================================================================
+OrdineLazyFactory ..> Ordine : creates
+FoodLazyFactory ..> Food : loads
+VoucherLazyFactory ..> Voucher : loads
+OrdineLazyFactory --> DAOFactoryAbstract : uses
+FoodLazyFactory --> DAOFactoryAbstract : uses
+VoucherLazyFactory --> DAOFactoryAbstract : uses
+
+' ================================================================================
+' RELATIONSHIPS - Entity Composition/Aggregation
+' ================================================================================
+Ordine *-- "0..*" Food : contains
+Ordine o-- "1" Voucher : uses\n(strategy)
+
+' ================================================================================
+' NOTES - Pattern Explanations
+' ================================================================================
+note right of CreaOrdineFacade
+    **Facade Pattern (GoF Structural)**
+    
+    **Intent:** Fornire un'interfaccia unificata
+    per un insieme di interfacce in un sottosistema.
+    
+    **Applicazione:**
+    - Nasconde la complessità del controller
+    - Semplifica l'accesso dalla view
+    - Gestisce autorizzazione (Protected Variations)
+    
+    **GRASP Compliance:**
+    - Low Coupling: View non dipende da Controller
+    - Protected Variations: Isola cambiamenti interni
+end note
+
+note bottom of DecoratorAddON
+    **Decorator Pattern (GoF Structural)**
+    
+    **Intent:** Aggiungere responsabilità 
+    a un oggetto dinamicamente.
+    
+    **Applicazione:**
+    - Food base + Add-on (Cipolla, Patatine...)
+    - Costo e durata calcolati ricorsivamente
+    
+    **Vantaggi:**
+    - Open/Closed Principle (OCP)
+    - Composizione > Ereditarietà
+    - Combinazioni infinite di add-on
+    
+    **Esempio:**
+    new Patatine(new Cipolla(new PaninoDonerKebab()))
+    -> "Panino Doner Kebab, Cipolla, Patatine"
+    -> Costo: 5.50 + 0.50 + 2.00 = 8.00€
+end note
+
+note right of Voucher
+    **Strategy Pattern (GoF Behavioral)**
+    
+    **Intent:** Definire una famiglia di algoritmi,
+    incapsularli e renderli intercambiabili.
+    
+    **Applicazione:**
+    - VoucherPercentuale: sconto %
+    - VoucherFisso: sconto fisso €
+    - NessunVoucher: Null Object
+    
+    **GRASP: Polymorphism**
+    Ordine.getSconto() delega a voucher.calcolaSconto()
+end note
+
+note left of NessunVoucher
+    **Null Object Pattern**
+    
+    **Intent:** Evitare null checks
+    fornendo un oggetto "vuoto".
+    
+    **Applicazione:**
+    - Ordine usa sempre un Voucher
+    - NessunVoucher restituisce 0 sconto
+    - Mai controlli "if voucher != null"
+end note
+
+note bottom of OrdineLazyFactory
+    **Lazy Factory Pattern**
+    (Singleton + Lazy Init + Cache)
+    
+    **Intent:** Gestione centralizzata
+    della creazione e recupero oggetti.
+    
+    **Applicazione:**
+    - Singleton per accesso globale
+    - Cache locale per performance
+    - Lazy loading dal DAO
+    
+    **GRASP: Creator**
+    Factory crea Ordine perché:
+    - Ha dati necessari
+    - Registra istanze create
+    - Gestisce ciclo di vita
+end note
+
+@enduml

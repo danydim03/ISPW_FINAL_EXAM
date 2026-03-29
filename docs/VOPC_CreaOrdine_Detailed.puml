@@ -1,0 +1,441 @@
+@startuml VOPC_CreaOrdine
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam classBorderColor black
+skinparam classBackgroundColor white
+skinparam stereotypeCBackgroundColor lightyellow
+skinparam packageBackgroundColor transparent
+skinparam packageBorderColor #888888
+
+title **VOPC - VIEW OF PARTICIPATING CLASSES**\n**Use Case: Crea Ordine**\n\nHabibi Shawarma - Sistema di Ordinazione\n(BCE + MVC Architecture)
+
+' ================================================================================
+' LEGEND
+' ================================================================================
+legend top right
+|= Colore |= Stereotipo |
+|<#DBEAFE> Blue | <<Boundary>> View/UI |
+|<#DCFCE7> Green | <<Control>> Controller |
+|<#FEF3C7> Yellow | <<Bean>> DTO |
+|<#FEE2E2> Red | <<Entity>> Domain Model |
+|<#E9D5FF> Purple | <<Factory>> Lazy Factory |
+endlegend
+
+' ================================================================================
+' ACTOR
+' ================================================================================
+actor "Cliente" as Cliente #white
+
+' ================================================================================
+' BOUNDARY LAYER (View)
+' ================================================================================
+package "<<Boundary>> View Layer" as boundary #DBEAFE {
+    
+    class "<<Boundary>>\nCreaOrdineGUIController" as CreaOrdineGUIController {
+        --Attributes--
+        - facade: CreaOrdineFacade
+        - prodottiBaseDisponibili: List<FoodBean>
+        - addOnDisponibili: List<FoodBean>
+        - righeOrdineObservable: ObservableList
+        --Operations--
+        + initialize(): void
+        + onAggiungiProdotto(): void
+        + onRimuoviProdotto(): void
+        + onApplicaVoucher(): void
+        + onRimuoviVoucher(): void
+        + onConfermaOrdine(): void
+        + onAnnullaOrdine(): void
+        - aggiornaRiepilogo(): void
+        - caricaDatiIniziali(): void
+        - setupTabella(): void
+        - setupListeners(): void
+    }
+    
+    class "<<Boundary>>\nCreaOrdineCLIController" as CreaOrdineCLIController {
+        --Attributes--
+        - facade: CreaOrdineFacade
+        - prodottiBase: List<FoodBean>
+        - addOns: List<FoodBean>
+        - orderCompleted: boolean
+        --Operations--
+        + start(): void
+        - showOrderMenu(): void
+        - handleAggiungiProdotto(): void
+        - handleApplicaVoucher(): void
+        - handleVisualizzaRiepilogo(): void
+        - handleConfermaOrdine(): void
+        - handleAnnullaOrdine(): void
+        - selectAddOns(): List<String>
+    }
+}
+
+' ================================================================================
+' CONTROL LAYER
+' ================================================================================
+package "<<Control>> Application Logic" as control #DCFCE7 {
+    
+    class "<<Control/Facade>>\nCreaOrdineFacade" as CreaOrdineFacade {
+        --Attributes--
+        - controller: CreaOrdineController
+        - sessionUser: User
+        --Operations--
+        + CreaOrdineFacade(tokenKey: String)
+        + inizializzaNuovoOrdine(): OrdineBean
+        + getProdottiBaseDisponibili(): List<FoodBean>
+        + getAddOnDisponibili(): List<FoodBean>
+        + aggiungiProdottoAOrdine(food: FoodBean): boolean
+        + rimuoviProdottoDaOrdine(index: int): boolean
+        + applicaVoucher(codice: String): VoucherBean
+        + rimuoviVoucher(): void
+        + getRiepilogoOrdine(): RiepilogoOrdineBean
+        + confermaOrdine(): boolean
+        + annullaOrdine(): void
+        --Notes--
+        // GRASP: Protected Variations
+        // Facade Pattern
+        // Validazione autorizzazione sessione
+    }
+    
+    class "<<Control>>\nCreaOrdineController" as CreaOrdineController {
+        --Attributes--
+        - ordineCorrente: Ordine
+        - voucherController: UsaVoucherController
+        --Operations--
+        + inizializzaNuovoOrdine(clienteId: String): OrdineBean
+        + getProdottiBaseDisponibili(): List<FoodBean>
+        + getAddOnDisponibili(): List<FoodBean>
+        + aggiungiProdottoAOrdine(food: FoodBean): boolean
+        + rimuoviProdottoDaOrdine(index: int): boolean
+        + applicaVoucher(codice: String): VoucherBean
+        + rimuoviVoucher(): void
+        + getRiepilogoOrdine(): RiepilogoOrdineBean
+        + confermaOrdine(): boolean
+        + annullaOrdine(): void
+        - creaProdottoBase(classe: String): Food
+        - applicaDecorator(food: Food, addOn: String): Food
+        - convertFoodToBean(food: Food): FoodBean
+        - convertFoodListToBeanList(list: List<Food>): List<FoodBean>
+        --Notes--
+        // BCE: Orchestratore del caso d'uso
+        // GRASP: Controller, Creator
+        // Factory Method per prodotti base
+        // Decorator application
+    }
+    
+    class "<<Control>>\nUsaVoucherController" as UsaVoucherController {
+        --Operations--
+        + getVoucherByCodice(codice: String): Voucher
+        + isVoucherValido(voucher: Voucher): boolean
+        + applicaVoucherAOrdine(ordine: Ordine, codice: String): VoucherBean
+        + rimuoviVoucherDaOrdine(ordine: Ordine): void
+        + calcolaSconto(ordine: Ordine): double
+        + hasVoucherApplicato(ordine: Ordine): boolean
+        + getVoucherApplicato(ordine: Ordine): VoucherBean
+        + convertVoucherToBean(voucher: Voucher): VoucherBean
+        --Notes--
+        // GRASP: Single Responsibility
+        // GRASP: Information Expert (voucher logic)
+        // Low Coupling: separato da CreaOrdineController
+    }
+}
+
+' ================================================================================
+' BEANS (DTO)
+' ================================================================================
+package "<<Bean>> Data Transfer Objects" as beans #FEF3C7 {
+    
+    class "<<Bean>>\nOrdineBean" as OrdineBean {
+        --Attributes--
+        - numeroOrdine: Long
+        - clienteId: String
+        - dataCreazione: LocalDateTime
+        - totale: double
+        - stato: String
+        --Operations--
+        + setClienteId(clienteId: String): void <<throws ValidationException>>
+        + setTotale(totale: double): void <<throws ValidationException>>
+        --Notes--
+        // Fail Fast: validation in setter
+    }
+    
+    class "<<Bean>>\nFoodBean" as FoodBean {
+        --Attributes--
+        - id: Long
+        - descrizione: String
+        - costo: double
+        - durata: int
+        - tipo: String {"BASE", "ADDON"}
+        - classe: String
+        - addOnSelezionati: List<String>
+        --Operations--
+        + setDescrizione(desc: String): void <<throws ValidationException>>
+        + setCosto(costo: double): void <<throws ValidationException>>
+        + setDurata(durata: int): void <<throws ValidationException>>
+        + setTipo(tipo: String): void <<throws ValidationException>>
+        + aggiungiAddOn(addOn: String): void
+        + rimuoviAddOn(addOn: String): void
+    }
+    
+    class "<<Bean>>\nVoucherBean" as VoucherBean {
+        --Attributes--
+        - id: Long
+        - codice: String
+        - descrizione: String
+        - tipoVoucher: String {"PERCENTUALE", "FISSO", "NESSUNO"}
+        - valore: double
+        - minimoOrdine: double
+        - dataScadenza: LocalDate
+        - valido: boolean
+        --Operations--
+        + setTipoVoucher(tipo: String): void <<throws ValidationException>>
+        + setValore(valore: double): void <<throws ValidationException>>
+        + setMinimoOrdine(min: double): void <<throws ValidationException>>
+    }
+    
+    class "<<Bean>>\nRiepilogoOrdineBean" as RiepilogoOrdineBean {
+        --Attributes--
+        - numeroOrdine: Long
+        - righeOrdine: List<RigaOrdineBean>
+        - subtotale: double
+        - sconto: double
+        - totale: double
+        - durataTotale: int
+        - codiceVoucher: String
+        - descrizioneVoucher: String
+        - voucherApplicato: boolean
+        --Operations--
+        + aggiungiRiga(riga: RigaOrdineBean): void
+        + getSubtotaleFormattato(): String
+        + getScontoFormattato(): String
+        + getTotaleFormattato(): String
+        + getDurataFormattata(): String
+    }
+    
+    class "<<Bean>>\nRigaOrdineBean" as RigaOrdineBean {
+        --Attributes--
+        - descrizione: String
+        - prezzo: double
+        - durata: int
+        --Operations--
+        + getPrezzoFormattato(): String
+    }
+}
+
+' ================================================================================
+' ENTITY LAYER
+' ================================================================================
+package "<<Entity>> Domain Model" as entity #FEE2E2 {
+    
+    class "<<Entity>>\nOrdine" as Ordine {
+        --Attributes--
+        - numeroOrdine: Long
+        - clienteId: String
+        - prodotti: List<Food>
+        - voucher: Voucher
+        - dataCreazione: LocalDateTime
+        - dataConferma: LocalDateTime
+        - stato: StatoOrdine
+        - totaleCached: Double
+        --Operations--
+        + aggiungiProdotto(food: Food): void
+        + rimuoviProdotto(food: Food): void
+        + rimuoviProdotto(index: int): void
+        + getProdotti(): List<Food>
+        + applicaVoucher(voucher: Voucher): void
+        + rimuoviVoucher(): void
+        + getSubtotale(): double
+        + getSconto(): double
+        + getTotale(): double
+        + getDurataTotale(): int
+        + conferma(): void
+        + annulla(): void
+        + isModificabile(): boolean
+        --Notes--
+        // GRASP: Information Expert
+        // Calcoli delegati all'ordine stesso
+    }
+    
+    abstract class "<<Entity/Abstract>>\nFood" as Food {
+        --Attributes--
+        # id: Long
+        # descrizione: String
+        # tipo: String
+        --Operations--
+        + {abstract} getCosto(): double
+        + {abstract} getDurata(): int
+        + getDescrizione(): String
+        + getTipo(): String
+    }
+    
+    interface "<<Entity/Interface>>\nVoucher" as Voucher {
+        --Operations--
+        + calcolaSconto(totale: double): double
+        + getCodice(): String
+        + getDescrizione(): String
+        + isValido(): boolean
+        + getId(): Long
+        + getTipoVoucher(): String
+        + getDataScadenza(): LocalDate
+        + isAttivo(): boolean
+        --Notes--
+        // Strategy Pattern
+        // Definisce contratto per sconti
+    }
+    
+    class "<<Entity>>\nUser" as User {
+        --Attributes--
+        - id: String
+        - name: String
+        - surname: String
+        - email: String
+        - role: AbstractRole
+        --Operations--
+        + checkPassword(pwd: String): Boolean
+    }
+}
+
+' ================================================================================
+' INFRASTRUCTURE / FACTORIES
+' ================================================================================
+package "<<Factory>> Persistence Layer" as factories #E9D5FF {
+    
+    class "<<Factory/Singleton>>\nOrdineLazyFactory" as OrdineLazyFactory {
+        --Attributes--
+        - {static} instance: OrdineLazyFactory
+        - ordiniCache: List<Ordine>
+        --Operations--
+        + {static} getInstance(): OrdineLazyFactory
+        + newOrdine(clienteId: String): Ordine
+        + salvaOrdine(ordine: Ordine): void
+        + getOrdineByNumero(numero: Long): Ordine
+        + clearCache(): void
+        --Notes--
+        // Lazy Initialization Pattern
+        // Singleton Pattern
+        // Caching per performance
+    }
+    
+    class "<<Factory/Singleton>>\nFoodLazyFactory" as FoodLazyFactory {
+        --Attributes--
+        - {static} instance: FoodLazyFactory
+        - foodCache: List<Food>
+        --Operations--
+        + {static} getInstance(): FoodLazyFactory
+        + getAllFoodBase(): List<Food>
+        + getAllAddOn(): List<Food>
+        + getFoodById(id: Long): Food
+        + clearCache(): void
+    }
+    
+    class "<<Factory/Singleton>>\nVoucherLazyFactory" as VoucherLazyFactory {
+        --Attributes--
+        - {static} instance: VoucherLazyFactory
+        - voucherCache: List<Voucher>
+        --Operations--
+        + {static} getInstance(): VoucherLazyFactory
+        + getVoucherByCodice(codice: String): Voucher
+    }
+    
+    class "<<Singleton>>\nSessionManager" as SessionManager {
+        --Attributes--
+        - {static} instance: SessionManager
+        - activeSessions: List<Session>
+        - currentTokenKey: String
+        --Operations--
+        + {static} getInstance(): SessionManager
+        + getSessionUserByTokenKey(key: String): User
+        + hasActiveSession(): boolean
+    }
+}
+
+' ================================================================================
+' RELATIONSHIPS - Actor to Boundary
+' ================================================================================
+Cliente --> CreaOrdineGUIController : interacts\n(GUI)
+Cliente --> CreaOrdineCLIController : interacts\n(CLI)
+
+' ================================================================================
+' RELATIONSHIPS - Boundary to Control
+' ================================================================================
+CreaOrdineGUIController --> CreaOrdineFacade : uses
+CreaOrdineCLIController --> CreaOrdineFacade : uses
+
+' ================================================================================
+' RELATIONSHIPS - Control Layer
+' ================================================================================
+CreaOrdineFacade --> CreaOrdineController : delegates
+CreaOrdineFacade --> SessionManager : validates\nsession
+CreaOrdineFacade ..> User : accesses
+
+CreaOrdineController --> UsaVoucherController : delegates\nvoucher logic
+CreaOrdineController --> Ordine : manages
+CreaOrdineController --> OrdineLazyFactory : uses
+CreaOrdineController --> FoodLazyFactory : uses
+
+UsaVoucherController --> VoucherLazyFactory : uses
+UsaVoucherController --> Voucher : validates
+
+' ================================================================================
+' RELATIONSHIPS - Control to Beans (creates/uses)
+' ================================================================================
+CreaOrdineController ..> OrdineBean : creates
+CreaOrdineController ..> FoodBean : creates/uses
+CreaOrdineController ..> RiepilogoOrdineBean : creates
+UsaVoucherController ..> VoucherBean : creates
+
+CreaOrdineFacade ..> OrdineBean : returns
+CreaOrdineFacade ..> FoodBean : returns
+CreaOrdineFacade ..> VoucherBean : returns
+CreaOrdineFacade ..> RiepilogoOrdineBean : returns
+
+' ================================================================================
+' RELATIONSHIPS - Bean Composition
+' ================================================================================
+RiepilogoOrdineBean *-- "0..*" RigaOrdineBean : contains
+
+' ================================================================================
+' RELATIONSHIPS - Entity Layer
+' ================================================================================
+Ordine *-- "0..*" Food : contains\n(composition)
+Ordine o-- "1" Voucher : has\n(aggregation)
+OrdineLazyFactory ..> Ordine : creates
+FoodLazyFactory ..> Food : loads
+VoucherLazyFactory ..> Voucher : loads
+
+' ================================================================================
+' NOTES
+' ================================================================================
+note right of CreaOrdineFacade
+    **Pattern: Facade**
+    Semplifica l'accesso al sottosistema
+    di gestione ordini.
+    
+    **GRASP: Protected Variations**
+    Isola la view dalla complessità
+    del layer di controllo.
+end note
+
+note right of CreaOrdineController
+    **BCE: Control**
+    Orchestratore principale del caso d'uso.
+    
+    **GRASP: Controller**
+    Riceve e gestisce gli eventi di sistema.
+    
+    **GRASP: Creator**
+    Crea gli oggetti Food tramite Factory Method.
+end note
+
+note bottom of Ordine
+    **GRASP: Information Expert**
+    Calcola subtotale, sconto e totale
+    perché possiede i dati necessari.
+    
+    **Aggregazione/Composizione:**
+    - Food: composition (non esiste senza ordine)
+    - Voucher: aggregation (può esistere indipendentemente)
+end note
+
+@enduml
