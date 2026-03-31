@@ -1,0 +1,418 @@
+@startuml sequence_diagram_crea_ordine
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam sequenceParticipant underline
+skinparam BoxPadding 10
+
+title **SEQUENCE DIAGRAM - USE CASE: CREA ORDINE**
+
+actor "👤 Cliente" as C #LightGreen
+participant "🖥️ CreaOrdineGUIController\n<<Boundary>>" as GUI #LightBlue
+participant "🔌 CreaOrdineFacade\n<<Facade>>" as F #Plum
+participant "🔐 SessionManager\n<<Singleton>>" as SM #LightYellow
+participant "⚙️ CreaOrdineController\n<<Control>>" as CTRL #LightGreen
+participant "🏭 OrdineLazyFactory\n<<Lazy Factory>>" as OLF #LightCoral
+participant "🏭 FoodLazyFactory\n<<Lazy Factory>>" as FLF #LightCoral
+participant "🔧 FoodFactory\n<<Factory>>" as FF #Moccasin
+participant "🎫 UsaVoucherController\n<<Control>>" as VC #LightGreen
+participant "🏭 VoucherLazyFactory\n<<Lazy Factory>>" as VLF #LightCoral
+participant "📦 Ordine\n<<Entity>>" as ORD #WhiteSmoke
+participant "🍔 Food\n<<Entity>>" as FOOD #WhiteSmoke
+participant "🧅 DecoratorAddOn\n<<Decorator>>" as DEC #Moccasin
+participant "🎟️ Voucher\n<<Strategy>>" as V #Plum
+participant "💾 OrdineDAO\n<<DAO>>" as DAO #LightBlue
+database "🗄️ Database" as DB #WhiteSmoke
+
+== FASE 1: INIZIALIZZAZIONE ORDINE ==
+
+C -> GUI: 1. Accede alla pagina "Crea Ordine"
+activate GUI #LightBlue
+
+GUI -> GUI: 2. initialize()
+GUI -> SM: 3. getSessionTokenKey()
+activate SM #LightYellow
+SM --> GUI: 4. tokenKey
+deactivate SM
+
+alt tokenKey == null
+    GUI --> C: ❌ mostraErrore("Devi effettuare il login")
+else tokenKey valido
+    GUI -> F: 5. new CreaOrdineFacade(tokenKey)
+    activate F #Plum
+    
+    F -> SM: 6. getSessionUserByTokenKey(tokenKey)
+    activate SM #LightYellow
+    SM --> F: 7. User (con ruolo Cliente)
+    deactivate SM
+    
+    alt User null o ruolo non valido
+        F --> GUI: ❌ throw MissingAuthorizationException
+        GUI --> C: mostraErrore("Accesso negato")
+    else Autorizzazione OK
+        F -> CTRL: 8. new CreaOrdineController()
+        activate CTRL #LightGreen
+        
+        CTRL -> VC: 9. new UsaVoucherController()
+        activate VC #LightGreen
+        VC --> CTRL: 10. UsaVoucherController
+        deactivate VC
+        
+        CTRL --> F: 11. CreaOrdineController
+        deactivate CTRL
+        
+        F --> GUI: 12. CreaOrdineFacade
+        deactivate F
+    end
+end
+
+== FASE 2: CARICAMENTO PRODOTTI DISPONIBILI ==
+
+GUI -> F: 13. getProdottiBaseDisponibili()
+activate F #Plum
+
+F -> CTRL: 14. getProdottiBaseDisponibili()
+activate CTRL #LightGreen
+
+CTRL -> FLF: 15. getInstance().getAllFoodBase()
+activate FLF #LightCoral
+
+FLF -> DAO: 16. getAllFoodBase()
+activate DAO #LightBlue
+
+DAO -> DB: 17. SELECT * FROM food WHERE tipo='BASE'
+activate DB #WhiteSmoke
+DB --> DAO: 18. ResultSet
+deactivate DB
+
+DAO --> FLF: 19. List<Food>
+deactivate DAO
+
+FLF --> CTRL: 20. List<Food>
+deactivate FLF
+
+CTRL -> CTRL: 21. convertFoodListToBeanList()
+
+CTRL --> F: 22. List<FoodBean>
+deactivate CTRL
+
+F --> GUI: 23. prodottiBaseDisponibili
+deactivate F
+
+GUI -> F: 24. getAddOnDisponibili()
+activate F #Plum
+
+F -> CTRL: 25. getAddOnDisponibili()
+activate CTRL #LightGreen
+
+CTRL -> FLF: 26. getInstance().getAllAddOn()
+activate FLF #LightCoral
+FLF --> CTRL: 27. List<Food> addOns
+deactivate FLF
+
+CTRL --> F: 28. List<FoodBean>
+deactivate CTRL
+
+F --> GUI: 29. addOnDisponibili
+deactivate F
+
+GUI -> GUI: 30. Popola UI con prodotti e add-on
+
+== FASE 3: CREAZIONE NUOVO ORDINE ==
+
+GUI -> F: 31. inizializzaNuovoOrdine()
+activate F #Plum
+
+F -> CTRL: 32. inizializzaNuovoOrdine(clienteId)
+activate CTRL #LightGreen
+
+CTRL -> OLF: 33. getInstance().newOrdine(clienteId)
+activate OLF #LightCoral
+
+OLF -> DAO: 34. getNextNumeroOrdine()
+activate DAO #LightBlue
+
+DAO -> DB: 35. SELECT MAX(numero_ordine) + 1
+activate DB #WhiteSmoke
+DB --> DAO: 36. nextNumero
+deactivate DB
+
+DAO --> OLF: 37. Long numeroOrdine
+deactivate DAO
+
+OLF -> ORD: 38. new Ordine(clienteId)
+activate ORD #WhiteSmoke
+note right of ORD
+  Inizializza:
+  - prodotti = ArrayList vuoto
+  - voucher = NessunVoucher
+  - stato = IN_CREAZIONE
+  - dataCreazione = now()
+end note
+ORD --> OLF: 39. Ordine
+deactivate ORD
+
+OLF -> OLF: 40. ordiniCache.add(ordine)
+OLF --> CTRL: 41. Ordine
+deactivate OLF
+
+CTRL -> CTRL: 42. OrdineMapper.toBean(ordine)
+
+CTRL --> F: 43. OrdineBean
+deactivate CTRL
+
+F --> GUI: 44. OrdineBean
+deactivate F
+
+GUI -> GUI: 45. aggiornaRiepilogo()
+
+== FASE 4: AGGIUNTA PRODOTTO CON ADD-ON (Pattern Decorator) ==
+
+C -> GUI: 46. Seleziona prodotto base e add-on
+C -> GUI: 47. Click "Aggiungi Prodotto"
+
+GUI -> F: 48. aggiungiProdottoAOrdine(foodBean)
+activate F #Plum
+
+F -> CTRL: 49. aggiungiProdottoAOrdine(foodBean)
+activate CTRL #LightGreen
+
+note over CTRL,FF: **PATTERN FACTORY** - Creazione prodotto base
+
+CTRL -> FF: 50. creaProdottoBase("PaninoDonerKebab")
+activate FF #Moccasin
+
+FF -> FOOD: 51. new PaninoDonerKebab()
+activate FOOD #WhiteSmoke
+note right of FOOD
+  PaninoDonerKebab:
+  costo = 5.00€
+  durata = 8 min
+end note
+FOOD --> FF: 52. Food prodotto
+deactivate FOOD
+
+FF --> CTRL: 53. Food prodotto
+deactivate FF
+
+note over CTRL,DEC: **PATTERN DECORATOR** - Applicazione add-on
+
+loop Per ogni addOn in foodBean.getAddOnSelezionati()
+    CTRL -> FF: 54. applicaDecorator(prodotto, "Cipolla")
+    activate FF #Moccasin
+    
+    FF -> DEC: 55. new Cipolla(prodotto)
+    activate DEC #Moccasin
+    note right of DEC
+      Cipolla wrappa Food:
+      +0.50€, +1 min
+    end note
+    DEC --> FF: 56. Food decorato
+    deactivate DEC
+    
+    FF --> CTRL: 57. Food decorato
+    deactivate FF
+end
+
+CTRL -> ORD: 58. aggiungiProdotto(prodottoDecorato)
+activate ORD #WhiteSmoke
+ORD -> ORD: 59. prodotti.add(food)
+ORD --> CTRL: 60. void
+deactivate ORD
+
+CTRL --> F: 61. true (success)
+deactivate CTRL
+
+F --> GUI: 62. true
+deactivate F
+
+GUI -> GUI: 63. aggiornaRiepilogo()
+GUI -> GUI: 64. resetSelezioniAddOn()
+GUI --> C: 65. mostraInfo("Prodotto aggiunto!")
+
+== FASE 5: VISUALIZZAZIONE RIEPILOGO ==
+
+GUI -> F: 66. getRiepilogoOrdine()
+activate F #Plum
+
+F -> CTRL: 67. getRiepilogoOrdine()
+activate CTRL #LightGreen
+
+CTRL -> ORD: 68. getProdotti()
+activate ORD #WhiteSmoke
+ORD --> CTRL: 69. List<Food>
+deactivate ORD
+
+loop Per ogni Food in ordine.getProdotti()
+    CTRL -> FOOD: 70. getDescrizione()
+    activate FOOD #WhiteSmoke
+    note right of FOOD
+      Decorator chiama:
+      base.getDescrizione() +
+      " + Cipolla + Patatine"
+    end note
+    FOOD --> CTRL: 71. "Panino Döner Kebab + Cipolla + Patatine"
+    deactivate FOOD
+    
+    CTRL -> FOOD: 72. getCosto()
+    activate FOOD #WhiteSmoke
+    note right of FOOD
+      Decorator calcola:
+      5.00 + 0.50 + 1.50 = 7.00€
+    end note
+    FOOD --> CTRL: 73. 7.00
+    deactivate FOOD
+end
+
+CTRL -> ORD: 74. getSubtotale()
+activate ORD #WhiteSmoke
+ORD --> CTRL: 75. 7.00
+deactivate ORD
+
+CTRL -> ORD: 76. getSconto()
+activate ORD #WhiteSmoke
+ORD -> V: 77. calcolaSconto(subtotale)
+activate V #Plum
+note right of V: NessunVoucher: return 0.0
+V --> ORD: 78. 0.0
+deactivate V
+ORD --> CTRL: 79. 0.0
+deactivate ORD
+
+CTRL --> F: 80. RiepilogoOrdineBean
+deactivate CTRL
+
+F --> GUI: 81. RiepilogoOrdineBean
+deactivate F
+
+GUI -> GUI: 82. aggiornaVistaConRiepilogo()
+
+== FASE 6: APPLICAZIONE VOUCHER (Pattern Strategy) ==
+
+C -> GUI: 83. Inserisce codice voucher "SCONTO10"
+C -> GUI: 84. Click "Applica Voucher"
+
+GUI -> F: 85. applicaVoucher("SCONTO10")
+activate F #Plum
+
+F -> CTRL: 86. applicaVoucher("SCONTO10")
+activate CTRL #LightGreen
+
+CTRL -> VC: 87. applicaVoucherAOrdine(ordine, "SCONTO10")
+activate VC #LightGreen
+
+VC -> VLF: 88. getInstance().getVoucherByCodice("SCONTO10")
+activate VLF #LightCoral
+
+VLF -> DAO: 89. getVoucherByCodice("SCONTO10")
+activate DAO #LightBlue
+
+DAO -> DB: 90. SELECT * FROM voucher WHERE codice='SCONTO10'
+activate DB #WhiteSmoke
+DB --> DAO: 91. ResultSet
+deactivate DB
+
+DAO --> VLF: 92. Voucher
+deactivate DAO
+
+VLF --> VC: 93. VoucherPercentuale (10%)
+deactivate VLF
+
+VC -> V: 94. isValido()
+activate V #Plum
+note right of V
+  Verifica:
+  - Non scaduto
+  - Non già usato
+end note
+V --> VC: 95. true
+deactivate V
+
+VC -> ORD: 96. applicaVoucher(voucher)
+activate ORD #WhiteSmoke
+ORD -> ORD: 97. this.voucher = voucher
+ORD --> VC: 98. void
+deactivate ORD
+
+VC -> VC: 99. convertVoucherToBean()
+VC --> CTRL: 100. VoucherBean
+deactivate VC
+
+CTRL --> F: 101. VoucherBean
+deactivate CTRL
+
+F --> GUI: 102. VoucherBean
+deactivate F
+
+GUI -> GUI: 103. aggiornaRiepilogo()
+GUI --> C: 104. mostraInfo("Voucher SCONTO10 applicato!")
+
+== FASE 7: CONFERMA E SALVATAGGIO ORDINE ==
+
+C -> GUI: 105. Click "Conferma Ordine"
+
+GUI -> F: 106. confermaOrdine()
+activate F #Plum
+
+F -> CTRL: 107. confermaOrdine()
+activate CTRL #LightGreen
+
+CTRL -> OLF: 108. salvaOrdine(ordineCorrente)
+activate OLF #LightCoral
+
+OLF -> DAO: 109. insert(ordine)
+activate DAO #LightBlue
+
+DAO -> DB: 110. INSERT INTO ordine
+activate DB #WhiteSmoke
+note right of DB: Salva ordine con stato CONFERMATO
+DB --> DAO: 111. void
+deactivate DB
+
+DAO -> DB: 112. INSERT INTO ordine_prodotto
+activate DB #WhiteSmoke
+note right of DB: Salva ogni prodotto dell'ordine
+DB --> DAO: 113. void
+deactivate DB
+
+DAO --> OLF: 114. void
+deactivate DAO
+
+OLF --> CTRL: 115. void
+deactivate OLF
+
+CTRL --> F: 116. true (success)
+deactivate CTRL
+
+F --> GUI: 117. true
+deactivate F
+
+GUI --> C: 118. mostraInfo("Ordine confermato!")
+GUI -> GUI: 119. returnToMainPage()
+deactivate GUI
+
+== SCENARIO ALTERNATIVO: ANNULLAMENTO ORDINE ==
+
+C -> GUI: [ALT] Click "Annulla Ordine"
+activate GUI #LightBlue
+
+GUI -> F: annullaOrdine()
+activate F #Plum
+
+F -> CTRL: annullaOrdine()
+activate CTRL #LightGreen
+
+CTRL -> CTRL: ordineCorrente = null
+
+CTRL --> F: void
+deactivate CTRL
+
+F --> GUI: void
+deactivate F
+
+GUI -> GUI: resetVistaCompleta()
+GUI -> GUI: returnToMainPage()
+deactivate GUI
+
+@enduml

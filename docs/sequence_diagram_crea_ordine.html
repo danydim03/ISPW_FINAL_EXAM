@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequence Diagram - Crea Ordine Use Case</title>
+    <style>
+        :root {
+            --primary-color: #4a90d9;
+            --secondary-color: #82b366;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3a7bc0;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .diagram-container {
+            background: white;
+            margin: 20px auto;
+            max-width: 95%;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+            padding: 20px;
+        }
+        
+        .mermaid {
+            text-align: center;
+        }
+        
+        .legend {
+            background: white;
+            margin: 20px auto;
+            max-width: 95%;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .legend h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .legend-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .legend-text strong {
+            color: var(--primary-color);
+        }
+        
+        .phases {
+            background: white;
+            margin: 20px auto;
+            max-width: 95%;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .phases h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .phase-list {
+            list-style: none;
+        }
+        
+        .phase-list li {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .phase-number {
+            background: var(--secondary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: white;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>📋 Sequence Diagram: Use Case "Crea Ordine"</h1>
+        <p>Diagramma di sequenza completo per il sistema di gestione ordini Kebab</p>
+    </header>
+    
+    <div class="controls">
+        <button class="btn btn-primary" onclick="zoomIn()">🔍 Zoom +</button>
+        <button class="btn btn-primary" onclick="zoomOut()">🔍 Zoom -</button>
+        <button class="btn btn-secondary" onclick="resetZoom()">↺ Reset</button>
+        <button class="btn btn-secondary" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+    </div>
+    
+    <div class="diagram-container" id="diagramContainer">
+        <div class="mermaid" id="mermaidDiagram">
+sequenceDiagram
+    autonumber
+    
+    participant C as 👤 Cliente
+    participant GUI as 🖥️ CreaOrdineGUIController&lt;br/&gt;&lt;&lt;Boundary&gt;&gt;
+    participant F as 🔌 CreaOrdineFacade&lt;br/&gt;&lt;&lt;Facade&gt;&gt;
+    participant SM as 🔐 SessionManager&lt;br/&gt;&lt;&lt;Singleton&gt;&gt;
+    participant CTRL as ⚙️ CreaOrdineController&lt;br/&gt;&lt;&lt;Control&gt;&gt;
+    participant OLF as 🏭 OrdineLazyFactory&lt;br/&gt;&lt;&lt;Lazy Factory&gt;&gt;
+    participant FLF as 🏭 FoodLazyFactory&lt;br/&gt;&lt;&lt;Lazy Factory&gt;&gt;
+    participant FF as 🔧 FoodFactory&lt;br/&gt;&lt;&lt;Factory&gt;&gt;
+    participant VC as 🎫 UsaVoucherController&lt;br/&gt;&lt;&lt;Control&gt;&gt;
+    participant VLF as 🏭 VoucherLazyFactory&lt;br/&gt;&lt;&lt;Lazy Factory&gt;&gt;
+    participant ORD as 📦 Ordine&lt;br/&gt;&lt;&lt;Entity&gt;&gt;
+    participant FOOD as 🍔 Food&lt;br/&gt;&lt;&lt;Entity&gt;&gt;
+    participant DEC as 🧅 DecoratorAddOn&lt;br/&gt;&lt;&lt;Decorator&gt;&gt;
+    participant V as 🎟️ Voucher&lt;br/&gt;&lt;&lt;Strategy&gt;&gt;
+    participant DAO as 💾 OrdineDAO&lt;br/&gt;&lt;&lt;DAO&gt;&gt;
+    participant DB as 🗄️ Database
+
+    rect rgb(230, 245, 255)
+        Note over C,DB: 📋 FASE 1: INIZIALIZZAZIONE ORDINE
+        
+        C->>+GUI: Accede alla pagina Crea Ordine
+        GUI->>GUI: initialize()
+        GUI->>+SM: getSessionTokenKey()
+        SM-->>-GUI: tokenKey
+        
+        alt tokenKey == null
+            GUI->>C: mostraErrore - Devi effettuare il login
+        else tokenKey valido
+            GUI->>+F: new CreaOrdineFacade(tokenKey)
+            F->>+SM: getSessionUserByTokenKey(tokenKey)
+            SM-->>-F: User con ruolo Cliente
+            F->>+CTRL: new CreaOrdineController()
+            CTRL->>+VC: new UsaVoucherController()
+            VC-->>-CTRL: UsaVoucherController
+            CTRL-->>-F: CreaOrdineController
+            F-->>-GUI: CreaOrdineFacade
+        end
+    end
+    
+    rect rgb(255, 245, 230)
+        Note over C,DB: 📋 FASE 2: CARICAMENTO PRODOTTI DISPONIBILI
+        
+        GUI->>+F: getProdottiBaseDisponibili()
+        F->>+CTRL: getProdottiBaseDisponibili()
+        CTRL->>+FLF: getInstance().getAllFoodBase()
+        FLF->>+DAO: getAllFoodBase()
+        DAO->>+DB: SELECT * FROM food WHERE tipo=BASE
+        DB-->>-DAO: ResultSet
+        DAO-->>-FLF: List Food
+        FLF-->>-CTRL: List Food
+        CTRL->>CTRL: convertFoodListToBeanList()
+        CTRL-->>-F: List FoodBean
+        F-->>-GUI: prodottiBaseDisponibili
+        
+        GUI->>+F: getAddOnDisponibili()
+        F->>+CTRL: getAddOnDisponibili()
+        CTRL->>+FLF: getInstance().getAllAddOn()
+        FLF-->>-CTRL: List Food addOns
+        CTRL-->>-F: List FoodBean
+        F-->>-GUI: addOnDisponibili
+    end
+    
+    rect rgb(230, 255, 230)
+        Note over C,DB: 📋 FASE 3: CREAZIONE NUOVO ORDINE
+        
+        GUI->>+F: inizializzaNuovoOrdine()
+        F->>+CTRL: inizializzaNuovoOrdine(clienteId)
+        CTRL->>+OLF: getInstance().newOrdine(clienteId)
+        OLF->>+DAO: getNextNumeroOrdine()
+        DAO->>+DB: SELECT MAX(numero_ordine) + 1
+        DB-->>-DAO: nextNumero
+        DAO-->>-OLF: Long numeroOrdine
+        OLF->>+ORD: new Ordine(clienteId)
+        ORD-->>-OLF: Ordine
+        OLF-->>-CTRL: Ordine
+        CTRL->>CTRL: OrdineMapper.toBean(ordine)
+        CTRL-->>-F: OrdineBean
+        F-->>-GUI: OrdineBean
+        GUI->>GUI: aggiornaRiepilogo()
+    end
+    
+    rect rgb(255, 230, 255)
+        Note over C,DB: 📋 FASE 4: AGGIUNTA PRODOTTO CON ADD-ON - Pattern Decorator
+        
+        C->>GUI: Seleziona prodotto e add-on
+        C->>GUI: Click Aggiungi Prodotto
+        GUI->>+F: aggiungiProdottoAOrdine(foodBean)
+        F->>+CTRL: aggiungiProdottoAOrdine(foodBean)
+        
+        Note over CTRL,FF: PATTERN FACTORY - Creazione prodotto base
+        CTRL->>+FF: creaProdottoBase(PaninoDonerKebab)
+        FF->>+FOOD: new PaninoDonerKebab()
+        FOOD-->>-FF: Food prodotto
+        FF-->>-CTRL: Food prodotto
+        
+        Note over CTRL,DEC: PATTERN DECORATOR - Applicazione add-on
+        loop Per ogni addOn selezionato
+            CTRL->>+FF: applicaDecorator(prodotto, addOnClasse)
+            FF->>+DEC: new Decorator(prodotto)
+            DEC-->>-FF: Food decorato
+            FF-->>-CTRL: Food decorato
+        end
+        
+        CTRL->>+ORD: aggiungiProdotto(prodottoDecorato)
+        ORD-->>-CTRL: void
+        CTRL-->>-F: true
+        F-->>-GUI: true
+        GUI->>GUI: aggiornaRiepilogo()
+        GUI->>C: mostraInfo - Prodotto aggiunto!
+    end
+    
+    rect rgb(255, 255, 230)
+        Note over C,DB: 📋 FASE 5: VISUALIZZAZIONE RIEPILOGO
+        
+        GUI->>+F: getRiepilogoOrdine()
+        F->>+CTRL: getRiepilogoOrdine()
+        CTRL->>+ORD: getProdotti()
+        ORD-->>-CTRL: List Food
+        
+        loop Per ogni Food
+            CTRL->>+FOOD: getDescrizione()
+            FOOD-->>-CTRL: descrizione
+            CTRL->>+FOOD: getCosto()
+            FOOD-->>-CTRL: costo
+            CTRL->>+FOOD: getDurata()
+            FOOD-->>-CTRL: durata
+        end
+        
+        CTRL->>+ORD: getSubtotale()
+        ORD-->>-CTRL: subtotale
+        CTRL->>+ORD: getSconto()
+        ORD->>+V: calcolaSconto(subtotale)
+        V-->>-ORD: sconto
+        ORD-->>-CTRL: sconto
+        CTRL->>+ORD: getTotale()
+        ORD-->>-CTRL: totale
+        CTRL-->>-F: RiepilogoOrdineBean
+        F-->>-GUI: RiepilogoOrdineBean
+        GUI->>GUI: aggiornaVistaConRiepilogo()
+    end
+    
+    rect rgb(230, 255, 255)
+        Note over C,DB: 📋 FASE 6: APPLICAZIONE VOUCHER - Pattern Strategy
+        
+        C->>GUI: Inserisce codice voucher
+        C->>GUI: Click Applica Voucher
+        GUI->>+F: applicaVoucher(codiceVoucher)
+        F->>+CTRL: applicaVoucher(codiceVoucher)
+        CTRL->>+VC: applicaVoucherAOrdine(ordine, codice)
+        VC->>+VLF: getInstance().getVoucherByCodice(codice)
+        VLF->>+DAO: getVoucherByCodice(codice)
+        DAO->>+DB: SELECT * FROM voucher WHERE codice=?
+        DB-->>-DAO: ResultSet
+        DAO-->>-VLF: Voucher
+        VLF-->>-VC: Voucher
+        VC->>+V: isValido()
+        V-->>-VC: true
+        VC->>+ORD: applicaVoucher(voucher)
+        ORD-->>-VC: void
+        VC->>VC: convertVoucherToBean()
+        VC-->>-CTRL: VoucherBean
+        CTRL-->>-F: VoucherBean
+        F-->>-GUI: VoucherBean
+        GUI->>GUI: aggiornaRiepilogo()
+        GUI->>C: mostraInfo - Voucher applicato!
+    end
+    
+    rect rgb(230, 255, 230)
+        Note over C,DB: 📋 FASE 7: CONFERMA E SALVATAGGIO ORDINE
+        
+        C->>GUI: Click Conferma Ordine
+        GUI->>+F: confermaOrdine()
+        F->>+CTRL: confermaOrdine()
+        CTRL->>+OLF: salvaOrdine(ordineCorrente)
+        OLF->>+DAO: insert(ordine)
+        DAO->>+DB: INSERT INTO ordine
+        DB-->>-DAO: void
+        DAO->>+DB: INSERT INTO ordine_prodotto
+        DB-->>-DAO: void
+        DAO-->>-OLF: void
+        OLF-->>-CTRL: void
+        CTRL-->>-F: true
+        F-->>-GUI: true
+        GUI->>C: mostraInfo - Ordine confermato!
+        GUI->>GUI: returnToMainPage()
+    end
+    
+    rect rgb(255, 235, 235)
+        Note over C,DB: 📋 SCENARIO ALTERNATIVO: ANNULLAMENTO
+        
+        C->>GUI: Click Annulla Ordine
+        GUI->>+F: annullaOrdine()
+        F->>+CTRL: annullaOrdine()
+        CTRL->>CTRL: ordineCorrente = null
+        CTRL-->>-F: void
+        F-->>-GUI: void
+        GUI->>GUI: resetVistaCompleta()
+        GUI->>GUI: returnToMainPage()
+    end
+        </div>
+    </div>
+    
+    <div class="legend">
+        <h2>🏷️ Legenda Partecipanti</h2>
+        <div class="legend-grid">
+            <div class="legend-item">
+                <span class="legend-icon">👤</span>
+                <div class="legend-text"><strong>Cliente</strong> - Utente che crea l'ordine (Actor)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">🖥️</span>
+                <div class="legend-text"><strong>CreaOrdineGUIController</strong> - Controller JavaFX (Boundary)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">🔌</span>
+                <div class="legend-text"><strong>CreaOrdineFacade</strong> - Punto di ingresso semplificato (Facade)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">🔐</span>
+                <div class="legend-text"><strong>SessionManager</strong> - Gestione sessioni utente (Singleton)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">⚙️</span>
+                <div class="legend-text"><strong>CreaOrdineController</strong> - Logica di business (Control)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">🏭</span>
+                <div class="legend-text"><strong>LazyFactory</strong> - Creazione lazy con caching (Factory)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">🔧</span>
+                <div class="legend-text"><strong>FoodFactory</strong> - Crea prodotti e decorators (Factory)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">🎫</span>
+                <div class="legend-text"><strong>UsaVoucherController</strong> - Gestione voucher (Control)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">📦</span>
+                <div class="legend-text"><strong>Ordine</strong> - Entità ordine (Entity)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">🍔</span>
+                <div class="legend-text"><strong>Food</strong> - Prodotto base (Component)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">🧅</span>
+                <div class="legend-text"><strong>DecoratorAddOn</strong> - Add-on decoratore (Decorator)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">🎟️</span>
+                <div class="legend-text"><strong>Voucher</strong> - Strategia di sconto (Strategy)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">💾</span>
+                <div class="legend-text"><strong>OrdineDAO</strong> - Accesso ai dati (DAO)</div>
+            </div>
+            <div class="legend-item">
+                <span class="legend-icon">🗄️</span>
+                <div class="legend-text"><strong>Database</strong> - Database persistenza (External)</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="phases">
+        <h2>📊 Fasi del Flusso Principale</h2>
+        <ul class="phase-list">
+            <li>
+                <span class="phase-number">1</span>
+                <div><strong>Inizializzazione</strong> - Cliente accede → Verifica sessione → Crea Facade e Controller</div>
+            </li>
+            <li>
+                <span class="phase-number">2</span>
+                <div><strong>Caricamento Dati</strong> - Recupera prodotti base e add-on disponibili dal Database</div>
+            </li>
+            <li>
+                <span class="phase-number">3</span>
+                <div><strong>Nuovo Ordine</strong> - Genera numero ordine → Crea entità Ordine → Cache locale</div>
+            </li>
+            <li>
+                <span class="phase-number">4</span>
+                <div><strong>Aggiungi Prodotto</strong> - Factory crea base → Decorator applica add-on → Aggiungi a Ordine</div>
+            </li>
+            <li>
+                <span class="phase-number">5</span>
+                <div><strong>Riepilogo</strong> - Calcola subtotale, sconto e totale → Ritorna Bean formattato</div>
+            </li>
+            <li>
+                <span class="phase-number">6</span>
+                <div><strong>Applica Voucher</strong> - Cerca voucher → Valida → Applica strategia sconto</div>
+            </li>
+            <li>
+                <span class="phase-number">7</span>
+                <div><strong>Conferma Ordine</strong> - Salva ordine nel DB → Notifica successo → Torna a home</div>
+            </li>
+        </ul>
+    </div>
+    
+    <footer>
+        <p>📚 ISPW Final Exam - Use Case "Crea Ordine" - Sequence Diagram</p>
+        <p>Pattern Utilizzati: BCE, Facade, Factory, Decorator, Strategy, Lazy Initialization</p>
+    </footer>
+    
+    <script>
+        // Fallback mechanism for loading Mermaid from multiple CDNs
+        const cdnUrls = [
+            'https://unpkg.com/mermaid@10/dist/mermaid.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js',
+            'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js'
+        ];
+        
+        let loaded = false;
+        
+        function loadMermaid(urls, index = 0) {
+            if (index >= urls.length || loaded) {
+                if (!loaded) {
+                    console.error('Impossibile caricare Mermaid da nessun CDN');
+                    showFallbackMessage();
+                }
+                return;
+            }
+            
+            const script = document.createElement('script');
+            script.src = urls[index];
+            script.onload = function() {
+                loaded = true;
+                initializeMermaid();
+            };
+            script.onerror = function() {
+                console.warn('Fallback CDN ' + index + ' failed, trying next...');
+                loadMermaid(urls, index + 1);
+            };
+            document.head.appendChild(script);
+        }
+        
+        function initializeMermaid() {
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({
+                    startOnLoad: true,
+                    theme: 'default',
+                    securityLevel: 'loose',
+                    sequence: {
+                        diagramMarginX: 50,
+                        diagramMarginY: 10,
+                        actorMargin: 80,
+                        width: 180,
+                        height: 65,
+                        boxMargin: 10,
+                        boxTextMargin: 5,
+                        noteMargin: 10,
+                        messageMargin: 35,
+                        mirrorActors: true,
+                        bottomMarginAdj: 1,
+                        useMaxWidth: false,
+                        rightAngles: false,
+                        showSequenceNumbers: true
+                    }
+                });
+                mermaid.run();
+            }
+        }
+        
+        function showFallbackMessage() {
+            const diagram = document.getElementById('mermaidDiagram');
+            if (diagram) {
+                diagram.innerHTML = '<div style="padding:20px; background:#fff3cd; border:1px solid #ffc107; border-radius:8px; margin:20px;">' +
+                    '<h3 style="color:#856404;">⚠️ Impossibile caricare il renderer del diagramma</h3>' +
+                    '<p>Il diagramma non può essere visualizzato perché la libreria Mermaid non è disponibile.</p>' +
+                    '<p><strong>Alternative per visualizzare il diagramma:</strong></p>' +
+                    '<ol>' +
+                    '<li>Apri il file <code>sequence_diagram_crea_ordine.md</code> su GitHub (supporto nativo Mermaid)</li>' +
+                    '<li>Copia il codice Mermaid su <a href="https://mermaid.live" target="_blank">mermaid.live</a></li>' +
+                    '<li>Usa VS Code con l\'estensione Mermaid Preview</li>' +
+                    '</ol>' +
+                    '</div>';
+            }
+        }
+        
+        // Start loading
+        loadMermaid(cdnUrls);
+    </script>
+    
+    <script>
+        let currentZoom = 1;
+        const zoomStep = 0.1;
+        const minZoom = 0.3;
+        const maxZoom = 2;
+        
+        function zoomIn() {
+            if (currentZoom < maxZoom) {
+                currentZoom += zoomStep;
+                applyZoom();
+            }
+        }
+        
+        function zoomOut() {
+            if (currentZoom > minZoom) {
+                currentZoom -= zoomStep;
+                applyZoom();
+            }
+        }
+        
+        function resetZoom() {
+            currentZoom = 1;
+            applyZoom();
+        }
+        
+        function applyZoom() {
+            const diagram = document.getElementById('mermaidDiagram');
+            diagram.style.transform = `scale(${currentZoom})`;
+            diagram.style.transformOrigin = 'top left';
+        }
+        
+        function toggleFullscreen() {
+            const container = document.getElementById('diagramContainer');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    alert(`Errore fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
